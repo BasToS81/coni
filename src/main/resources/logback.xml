@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<jmxConfigurator />
+
+	<!-- The unit test appender -->
+	<appender name="out" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%-15thread|%50logger{45}| %msg%n</Pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.gor" level="debug" additivity="false">
+		<appender-ref ref="out" />
+	</logger>
+
+	<root level="error">
+		<appender-ref ref="out" />
+	</root>
+
+</configuration>

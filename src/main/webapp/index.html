@@ -1,0 +1,27 @@
+<html ng-app="ShellPhotosAngular">
+
+<title>Sell Photos</title>
+
+<script type="text/javascript" src="/js/angular.min.js"></script>
+<script type="text/javascript" src="js/sellphotos.js"></script>
+<link rel="stylesheet" type="text/css" href="css/sellphotos.css">
+
+<body ng-controller="GlobalController">
+
+
+	<div width=100% style="background-color: #b0c4de;">
+		<form ng-controller="UserController" action="#" ng-submit="getUser()">
+			<label for="username">Nom :</label> <input type="text" id="username"
+				ng-model="$parent.user.name"> <br>
+			<button type="submit">Get User</button>
+
+		</form>
+	</div>
+
+	<div width=100% style="background-color: #00ffde;">
+		<div>Bonjour {{user.name}} !</div>
+		<div>Vous venez de l'école : {{user.school}}</div>
+	</div>
+</body>
+
+</html>
