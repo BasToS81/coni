@@ -1,27 +1,38 @@
-<html ng-app="ShellPhotosAngular">
+<!DOCTYPE html>
+<html lang="fr" ng-app="ShellPhotosAngular">
 
-<title>Sell Photos</title>
-
-<script type="text/javascript" src="/js/angular.min.js"></script>
-<script type="text/javascript" src="js/sellphotos.js"></script>
-<link rel="stylesheet" type="text/css" href="css/sellphotos.css">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+	
+	<link rel="stylesheet" href="webjars/bootstrap/3.3.0/css/bootstrap.css"/>
+	
+	<script type="text/javascript" src="webjars/angularjs/1.3.1/angular.min.js"></script>
+	
+	<title>Sell photos</title>
+	
+	<!-- Custom scripts -->
+	<link href="css/signin.css" rel="stylesheet" />
+	<script type="text/javascript" src="js/sellphotos.js" ></script>
+</head>
 
 <body ng-controller="GlobalController">
 
-
-	<div width=100% style="background-color: #b0c4de;">
-		<form ng-controller="UserController" action="#" ng-submit="getUser()">
-			<label for="username">Nom :</label> <input type="text" id="username"
-				ng-model="$parent.user.name"> <br>
-			<button type="submit">Get User</button>
-
+	<div class="container">
+		<form class="form-signin" role="form" ng-controller="UserController" action="#" ng-submit="getUser()">
+			<h2 class="form-signin-heading">Bienvenue !</h2>
+			<input type="text" class="form-control" placeholder="Nom de l'élève" required autofocus ng-model="$parent.user.name" />
+			<input type="password" class="form-control" placeholder="Mot de passe" required>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Entrer</button>
 		</form>
-	</div>
 
-	<div width=100% style="background-color: #00ffde;">
+	</div>
+	<div width=100% >
 		<div>Bonjour {{user.name}} !</div>
-		<div>Vous venez de l'�cole : {{user.school}}</div>
+		<div>Vous venez de l'école : {{user.school}}</div>
 	</div>
 </body>
-
 </html>
