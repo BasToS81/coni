@@ -1,12 +1,13 @@
 var myApp = angular.module('ShellPhotosAngular', []);
 
 
-function GlobalController($scope, $http, $timeout) {
+myApp.controller('GlobalController', ['$scope',  function($scope) {
 	$scope.usertest = "";
 	$scope.user = {name : "", school : "" };
-};
+}
+]);
 
-function UserController($scope, $http, $timeout) {
+myApp.controller('UserController', ['$scope', '$http', function($scope, $http) {
 	/*
 	 * Lancement de la requête de test
 	 */
@@ -23,4 +24,5 @@ function UserController($scope, $http, $timeout) {
 
 	};
 
-};
+}
+]);
