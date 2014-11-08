@@ -8,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Eleve {
@@ -17,34 +20,37 @@ public class Eleve {
 	private Long id;
 
 	@Basic
-	private String identifiant_chiffre;
+	private String identifiantChiffre;
 	
-	@Basic
+	@ManyToOne
 	private Famille famille;
 	
-	@Basic
+	@ManyToOne
 	private Classe classe;
 	
-	@Basic
+	@OneToOne(mappedBy = "eleve")
 	private CommandeEleve commandeEnCours;
 	
-	@Basic
+	@OneToMany(mappedBy = "eleve")
 	private List<CommandeEleve> commandesEnAttenteValidationPayement;
 	
-	@Basic
+	@OneToMany(mappedBy = "eleve")
 	private List<CommandeEleve> commandesEnAttenteValidationEcole;
 	
-	@Basic
+	@OneToMany(mappedBy = "eleve")
 	private List<CommandeEleve> commandesEnLivraison;
 	
-	@Basic
+	@OneToMany(mappedBy = "eleve")
 	private List<CommandeEleve> commandesLivrees;
 
 	@Basic
 	private Date dateLimiteAcces;
 
+	@OneToOne
+	private Utilisateur utilisateur;
 	
-	
+    @Basic
+    private String nom;
 	
 	
     /**
@@ -66,31 +72,42 @@ public class Eleve {
     }
 
 
-
-
     
+    
+    /**
+     * @return the nom
+     */
+    public String getNom() {
+        return nom;
+    }
+
+
+    /**
+     * @param nom the nom to set
+     */
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
     /**
      * @return the identifiant_chiffre
      */
-    public String getIdentifiant_chiffre() {
-        return identifiant_chiffre;
+    public String getIdentifiantChiffre() {
+        return identifiantChiffre;
     }
-
-
-
 
     
     /**
-     * @param identifiant_chiffre the identifiant_chiffre to set
+     * @param identifiantChiffre the identifiantChiffre to set
      */
-    public void setIdentifiant_chiffre(String identifiant_chiffre) {
-        this.identifiant_chiffre = identifiant_chiffre;
+    public void setIdentifiantChiffre(String identifiantChiffre) {
+        this.identifiantChiffre = identifiantChiffre;
     }
 
 
 
 
-    
+
     /**
      * @return the famille
      */
@@ -266,9 +283,33 @@ public class Eleve {
 
 
 
+    
+    /**
+     * @return the utilisateur
+     */
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+
+
+
+
+    
+    /**
+     * @param utilisateur the utilisateur to set
+     */
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+
+
+
+
     @Override
 	public String toString() {
-		return "Eleve [id=" + id + ", identifiant_chiffre=" + identifiant_chiffre + ", nbCommandeEnAttenteValidPayement=" + commandesEnAttenteValidationPayement.size()+ ", nbCommandeEnAttenteValidEcole=" + commandesEnAttenteValidationEcole.size() + ", nbCommandeEnLivraison=" + commandesEnLivraison.size()+ ", nbCommandeLivrees=" + commandesLivrees.size() + "]";
+		return "Eleve [id=" + id + ", nom=" + nom + ", identifiant_chiffre=" + identifiantChiffre + ", nbCommandeEnAttenteValidPayement=" + commandesEnAttenteValidationPayement.size()+ ", nbCommandeEnAttenteValidEcole=" + commandesEnAttenteValidationEcole.size() + ", nbCommandeEnLivraison=" + commandesEnLivraison.size()+ ", nbCommandeLivrees=" + commandesLivrees.size() + "]";
 	}
 	
 }

@@ -1,10 +1,13 @@
 package com.gor.sellphotos.dao;
 
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Responsable {
@@ -13,13 +16,14 @@ public class Responsable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Basic
+	@OneToOne
 	private Utilisateur utilisateur;
 	
-	
-	
+	@ManyToOne
 	private Ecole ecole;
 	
+    @Basic
+    private String nom;
 	
 	
     /**
@@ -75,9 +79,31 @@ public class Responsable {
     }
 
 
+    
+    
+    
+    /**
+     * @return the nom
+     */
+    public String getNom() {
+        return nom;
+    }
+
+
+
+    
+    /**
+     * @param nom the nom to set
+     */
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+
+
     @Override
 	public String toString() {
-		return "Responsable [id=" + id  + "]";
+		return "Responsable [id=" + id  + ", nom=" + nom + "]";
 	}
 	
 }

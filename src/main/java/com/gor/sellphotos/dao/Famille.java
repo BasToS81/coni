@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Famille {
@@ -15,10 +17,10 @@ public class Famille {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Basic
+	@OneToMany(mappedBy = "famille")
 	private List<Eleve> eleves;
 	
-	@Basic
+	@OneToOne
 	private Utilisateur utilisateur;
 	
 

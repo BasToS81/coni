@@ -9,6 +9,6 @@ import com.gor.sellphotos.dao.Utilisateur;
 
 public interface EcoleRepository extends CrudRepository<Ecole, Long> {
 	
-	public List<Ecole> findByName(String name);
+	public Ecole findByNumeroEcole(String numeroEcole);
 
 }

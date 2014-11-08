@@ -11,6 +11,12 @@ import javax.persistence.Id;
 @Entity
 public class Utilisateur {
 	
+    public enum TypeUtilisateur {
+        ELEVE,
+        RESPONSABLE,
+        ADMINISTRATEUR
+    }
+    
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -21,20 +27,10 @@ public class Utilisateur {
 	@Basic
 	private String codeAcces;
 	
-	@Basic
-	private String nom;
-	
 	@Enumerated(EnumType.STRING)
-	private String typeUtilisateur;
+	private TypeUtilisateur typeUtilisateur;
 
 
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
 
 	/**
 	 * @return the identifiant
@@ -64,9 +60,41 @@ public class Utilisateur {
 		this.codeAcces = codeAcces;
 	}
 
-	@Override
+	
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    
+    /**
+     * @return the typeUtilisateur
+     */
+    public TypeUtilisateur getTypeUtilisateur() {
+        return typeUtilisateur;
+    }
+
+    
+    /**
+     * @param typeUtilisateur the typeUtilisateur to set
+     */
+    public void setTypeUtilisateur(TypeUtilisateur typeUtilisateur) {
+        this.typeUtilisateur = typeUtilisateur;
+    }
+
+    @Override
 	public String toString() {
-		return "Utilisateur [id=" + id + ", nom=" + nom + ", identifiant=" + identifiant + ", code d'acces=" + codeAcces + "]";
+		return "Utilisateur [id=" + id + ", identifiant=" + identifiant + ", code d'acces=" + codeAcces + "]";
 	}
 	
 }

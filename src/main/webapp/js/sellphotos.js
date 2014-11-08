@@ -2,22 +2,22 @@ var myApp = angular.module('ShellPhotosAngular', []);
 
 
 myApp.controller('GlobalController', ['$scope',  function($scope) {
-	$scope.usertest = "";
-	$scope.user = {name : "", school : "" };
+	$scope.utilisateurtest = "";
+	$scope.utilisateur = {identifiant : "", codeAcces : "" };
 }
 ]);
 
-myApp.controller('UserController', ['$scope', '$http', function($scope, $http) {
+myApp.controller('UtilisateurController', ['$scope', '$http', function($scope, $http) {
 	/*
 	 * Lancement de la requête de test
 	 */
-	$scope.getUser = function() {
-		var url = 'rest/user?name=' + $scope.user.name;
+	$scope.getUtilisateur = function() {
+		var url = 'rest/utilisateur?identifiant=' + $scope.utilisateur.identifiant;
 		$http.get(url, {
 			timeout : 5000
 		}).success(function(data, status, headers, config) {
-			$scope.user.name = data.name;
-			$scope.user.school = data.school
+			$scope.utilisateur.identifiant = data.identifiant;
+			$scope.utilisateur.codeAcces = data.codeAcces;
 		}).error(function(data, status, headers, config) {
 			alert("Impossible de trouver l'utilisateur : " + data)
 		});

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class CommandeProduit {
@@ -13,10 +14,10 @@ public class CommandeProduit {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Basic
+	@ManyToOne
 	private CommandeEleve commandeEleve;
 	
-	@Basic
+	@ManyToOne
 	private Produit produit;
 	
 	@Basic

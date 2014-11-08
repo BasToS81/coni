@@ -22,17 +22,17 @@
 <body ng-controller="GlobalController">
 
 	<div class="container">
-		<form class="form-signin" role="form" ng-controller="UserController" action="#" ng-submit="getUser()">
+		<form class="form-signin" role="form" ng-controller="UtilisateurController" action="#" ng-submit="getUtilisateur()">
 			<h2 class="form-signin-heading">Bienvenue !</h2>
-			<input type="text" class="form-control" placeholder="Nom de l'élève" required autofocus ng-model="$parent.user.name" />
-			<input type="password" class="form-control" placeholder="Mot de passe" required>
+			<input type="text" class="form-control" placeholder="Identifiant" required autofocus ng-model="$parent.utilisateur.identifiant" />
+			<input type="password" class="form-control" placeholder="Code d'accès" ng-model="$parent.utilisateur.codeAcces" required>
 			<button class="btn btn-lg btn-primary btn-block" type="submit">Entrer</button>
 		</form>
 
 	</div>
 	<div width=100% >
-		<div>Bonjour {{user.name}} !</div>
-		<div>Vous venez de l'école : {{user.school}}</div>
+		<div>Bonjour {{utilisateur.identifiant}} !</div>
+		<div>Votre code d'accès est : {{utilisateur.codeAcces}}</div>
 	</div>
 </body>
 </html>

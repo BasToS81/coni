@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class ModeleEtTarif {
@@ -15,13 +17,13 @@ public class ModeleEtTarif {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Basic
+	@OneToOne(mappedBy="modeleEtTarif")
 	private Ecole ecole;
 	
-	@Basic
+	@OneToMany
 	private List<Produit> modeleEtTarifPrincipal;
 	
-	@Basic
+	@OneToMany
 	private List<Produit> modeleEtTarifSupplementaire;
 
 

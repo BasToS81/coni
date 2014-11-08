@@ -5,13 +5,26 @@ import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class CommandeEleve {
 	
+    public enum StatutCommandeEleve {
+        EN_COURS,
+        EN_ATTENTE_PAYEMENT,
+        EN_ATTENTE_VALID_RESPONSABLE,
+        EN_LIVRAISON,
+        LIVREE,
+        ABANDONNEE
+    }
+    
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -25,16 +38,16 @@ public class CommandeEleve {
 	@Basic
 	private String moyenPayement;
 	
-	@Basic
-	private String statut;
+	@Enumerated(EnumType.STRING)
+	private StatutCommandeEleve statut;
 	
 	@Basic
 	private Date dateValidation;
 	
-	@Basic
+	@OneToMany(mappedBy = "commandeEleve")
 	private List<CommandeProduit> produitsCommandes;
 	
-	@Basic
+	@ManyToOne
 	private CommandeEcole commandeEcole;
 	
 	@Basic
@@ -43,7 +56,7 @@ public class CommandeEleve {
 	@Basic
 	private Date dateLivraison;
 	
-	@Basic
+	@ManyToOne
 	private Eleve eleve;
 	
 	
@@ -143,7 +156,7 @@ public class CommandeEleve {
     /**
      * @return the statut
      */
-    public String getStatut() {
+    public StatutCommandeEleve getStatut() {
         return statut;
     }
 
@@ -154,7 +167,7 @@ public class CommandeEleve {
     /**
      * @param statut the statut to set
      */
-    public void setStatut(String statut) {
+    public void setStatut(StatutCommandeEleve statut) {
         this.statut = statut;
     }
 
