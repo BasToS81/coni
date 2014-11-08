@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.gor.sellphotos.dao.Utilisateur;
 
-public interface UserRepository extends CrudRepository<Utilisateur, Long> {
+public interface UtilisateurRepository extends CrudRepository<Utilisateur, Long> {
 	
 	public List<Utilisateur> findByName(String name);
 

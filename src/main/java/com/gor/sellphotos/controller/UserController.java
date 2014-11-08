@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.gor.sellphotos.dao.Utilisateur;
-import com.gor.sellphotos.repository.UserRepository;
+import com.gor.sellphotos.repository.UtilisateurRepository;
 
 /**
  *
@@ -25,7 +25,7 @@ public class UserController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
-	private UserRepository userRepository;
+	private UtilisateurRepository userRepository;
 
 	@RequestMapping("/rest/utilisateur")
 	@ResponseBody
@@ -38,7 +38,7 @@ public class UserController {
 			LOGGER.debug("Création de l'utilisateur {}", nom);
 			utilisateur = new Utilisateur();
 			utilisateur.setNom(nom);
-			utilisateur.setEcole("Ecole de " + nom);
+			utilisateur.setIdentifiant("Identifiant de " + nom);
 			userRepository.save(utilisateur);
 		} else {
 			utilisateur = utilisateurs.get(0);

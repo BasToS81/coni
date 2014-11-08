@@ -1,5 +1,7 @@
 package com.gor.sellphotos.dao;
 
+import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,10 @@ public class Classe {
 	private Long id;
 
 
+    @Basic
+    private String identifiant_chiffre;
+    
+    
 	@Basic
 	private String nom;
 	
@@ -21,12 +27,12 @@ public class Classe {
 	private Ecole ecole;
 	
 	@Basic
-	private Eleve[] eleves;
+	private List<Eleve> eleves;
 
 
 	@Override
 	public String toString() {
-		return "Utilisateur [id=" + id + ", nom=" + nom + ", identifiant=" + identifiant + ", code d'acces=" + codeAcces + "]";
+		return "Utilisateur [id=" + id + ", nom=" + nom + ", identifiant_chiffre=" + identifiant_chiffre + ", nbEleves=" + eleves.size() + "]";
 	}
 	
 }
