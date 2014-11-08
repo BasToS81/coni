@@ -9,6 +9,7 @@ import com.gor.sellphotos.dao.Utilisateur;
 
 public interface EleveRepository extends CrudRepository<Eleve, Long> {
 	
-	public List<Eleve> findByName(String name);
+    
+	public Eleve findByIdentifiantChiffre(String identifiantChiffre);
 
 }

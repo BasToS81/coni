@@ -44,19 +44,10 @@ public class UserController extends AbstractRestHandler {
 	@RequestMapping("/rest/utilisateur")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public Utilisateur getUtilisateur(@RequestParam("nom") String nom) {
-		LOGGER.debug("loading user {}", nom);
-		Utilisateur utilisateur = null;
-		List<Utilisateur> utilisateurs = userRepository.findByName(nom);
-		if (!CollectionUtils.isEmpty(utilisateurs)) {
-			LOGGER.debug("Création de l'utilisateur {}", nom);
-			utilisateur = new Utilisateur();
-			utilisateur.setNom(nom);
-			utilisateur.setIdentifiant("Identifiant de " + nom);
-			userRepository.save(utilisateur);
-		} else {
-			utilisateur = utilisateurs.get(0);
-		}
+	public Utilisateur getUtilisateur(@RequestParam("identifiant") String identifiant) {
+		LOGGER.debug("loading user {}", identifiant);
+		Utilisateur utilisateur = userRepository.findByIdentifiant(identifiant);
+		
 		LOGGER.debug("utilisateurs {}", utilisateur);
 		return utilisateur;
 	}

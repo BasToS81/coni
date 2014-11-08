@@ -8,8 +8,8 @@ import com.gor.sellphotos.dao.Produit;
 import com.gor.sellphotos.dao.Responsable;
 import com.gor.sellphotos.dao.Utilisateur;
 
-public interface ProduitRepository extends CrudRepository<Responsable, Long> {
+public interface ProduitRepository extends CrudRepository<Produit, Long> {
 	
-	public List<Responsable> findByName(String name);
+	public Produit findByIdentifiant(String identifiant);
 
 }

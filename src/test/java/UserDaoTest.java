@@ -29,7 +29,7 @@ public class UserDaoTest {
 
     /** The parser. */
     @Autowired
-    private UtilisateurRepository userRepository;
+    private UtilisateurRepository utilisateurRepository;
 
     /**
      * Exception.
@@ -39,13 +39,9 @@ public class UserDaoTest {
      */
     @Test
     public void saveUtilisateur() {
-    	List<Utilisateur> utilisateurs = userRepository.findByName("saveUtilisateur");
-    	System.out.println(utilisateurs.size());
-    	System.out.println(Arrays.asList(utilisateurs));
-    	
-    	Utilisateur utilisateur = new Utilisateur();
-    	utilisateur.setNom("saveUtilisateur");
-    	userRepository.save(utilisateur);
+    	Utilisateur utilisateur = utilisateurRepository.findByIdentifiant("gogier");
+    	utilisateur.setCodeAcces("azerty");
+    	utilisateurRepository.save(utilisateur);
     }
 
 }

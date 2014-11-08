@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Ecole {
@@ -17,7 +19,7 @@ public class Ecole {
 	private Long id;
 
 	@Basic
-	private String identifiant_chiffre;
+	private String identifiantChiffre;
 		
 	@Basic
 	private String numeroEcole;
@@ -40,22 +42,22 @@ public class Ecole {
 	@Basic
 	private String nomResponsablePrincipal;
 	
-	@Basic
+	@OneToMany(mappedBy = "ecole")
 	private List<Responsable> responsables;
 	
-	@Basic
+	@OneToMany(mappedBy = "ecole")
 	private List<Classe> classes;
 	
-	@Basic
+	@OneToOne
 	private ModeleEtTarif modeleEtTarif;
 
-	@Basic
+	@OneToOne(mappedBy = "ecole")
 	private CommandeEcole commandeEnCours;
 	
-	@Basic
+	@OneToMany(mappedBy = "ecole")
 	private List<CommandeEcole> commandeEnLivraison;
 	
-	@Basic
+	@OneToMany(mappedBy = "ecole")
 	private List<CommandeEcole> commandeLivrees;
 	
 	@Basic
@@ -93,8 +95,8 @@ public class Ecole {
     /**
      * @return the identifiant_chiffre
      */
-    public String getIdentifiant_chiffre() {
-        return identifiant_chiffre;
+    public String getIdentifiantChiffre() {
+        return identifiantChiffre;
     }
 
 
@@ -103,8 +105,8 @@ public class Ecole {
     /**
      * @param identifiant_chiffre the identifiant_chiffre to set
      */
-    public void setIdentifiant_chiffre(String identifiant_chiffre) {
-        this.identifiant_chiffre = identifiant_chiffre;
+    public void setIdentifiant_chiffre(String identifiantChiffre) {
+        this.identifiantChiffre = identifiantChiffre;
     }
 
 
@@ -431,7 +433,7 @@ public class Ecole {
 
     @Override
 	public String toString() {
-		return "Utilisateur [id=" + id + ", nom=" + nomEtablissement + ", numeroEcole=" + numeroEcole + ", identifiant_chiffre=" + identifiant_chiffre + ", ville=" + villeEtablissement + "]";
+		return "Utilisateur [id=" + id + ", nom=" + nomEtablissement + ", numeroEcole=" + numeroEcole + ", identifiant_chiffre=" + identifiantChiffre + ", ville=" + villeEtablissement + "]";
 	}
 	
 }

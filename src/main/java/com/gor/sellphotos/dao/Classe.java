@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Classe {
@@ -23,10 +25,10 @@ public class Classe {
 	@Basic
 	private String nom;
 	
-	@Basic
+	@ManyToOne
 	private Ecole ecole;
 	
-	@Basic
+	@OneToMany(mappedBy = "classe")
 	private List<Eleve> eleves;
 
 

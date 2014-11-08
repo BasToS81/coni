@@ -8,6 +8,6 @@ import com.gor.sellphotos.dao.Utilisateur;
 
 public interface UtilisateurRepository extends CrudRepository<Utilisateur, Long> {
 	
-	public List<Utilisateur> findByName(String name);
+	public Utilisateur findByIdentifiant(String identifiant);
 
 }
