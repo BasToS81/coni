@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.gor.sellphotos.dao.User;
+import com.gor.sellphotos.dao.Utilisateur;
 import com.gor.sellphotos.repository.UserRepository;
 
 // TODO: Auto-generated Javadoc
@@ -38,14 +38,14 @@ public class UserDaoTest {
      *             the x path expression exception
      */
     @Test
-    public void saveUser() {
-    	List<User> users = userRepository.findByName("saveUser");
-    	System.out.println(users.size());
-    	System.out.println(Arrays.asList(users));
+    public void saveUtilisateur() {
+    	List<Utilisateur> utilisateurs = userRepository.findByName("saveUtilisateur");
+    	System.out.println(utilisateurs.size());
+    	System.out.println(Arrays.asList(utilisateurs));
     	
-    	User user = new User();
-    	user.setName("saveUser");
-    	userRepository.save(user);
+    	Utilisateur utilisateur = new Utilisateur();
+    	utilisateur.setNom("saveUtilisateur");
+    	userRepository.save(utilisateur);
     }
 
 }
