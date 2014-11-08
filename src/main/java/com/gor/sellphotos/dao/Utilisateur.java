@@ -2,6 +2,8 @@ package com.gor.sellphotos.dao;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +23,9 @@ public class Utilisateur {
 	
 	@Basic
 	private String nom;
+	
+	@Enumerated(EnumType.STRING)
+	private String typeUtilisateur;
 
 
 	public String getNom() {

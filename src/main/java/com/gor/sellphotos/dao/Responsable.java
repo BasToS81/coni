@@ -1,7 +1,5 @@
 package com.gor.sellphotos.dao;
 
-import java.util.List;
-
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,66 +7,45 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Famille {
+public class Responsable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Basic
-	private List<Eleve> eleves;
-	
+
 	@Basic
 	private Utilisateur utilisateur;
 	
-
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
-
-
-
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
-	/**
-	 * @return the eleves
-	 */
-	public List<Eleve> getEleves() {
-		return eleves;
-	}
-
-
-
-
-	/**
-	 * @param eleves the eleves to set
-	 */
-	public void setEleves(List<Eleve> eleves) {
-		this.eleves = eleves;
-	}
-
-
-
-
 	
+	
+	private Ecole ecole;
+	
+	
+	
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+
+    
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    
     /**
      * @return the utilisateur
      */
     public Utilisateur getUtilisateur() {
         return utilisateur;
     }
-
-
 
 
     
@@ -80,11 +57,27 @@ public class Famille {
     }
 
 
+    
+    /**
+     * @return the ecole
+     */
+    public Ecole getEcole() {
+        return ecole;
+    }
+
+
+    
+    /**
+     * @param ecole the ecole to set
+     */
+    public void setEcole(Ecole ecole) {
+        this.ecole = ecole;
+    }
 
 
     @Override
 	public String toString() {
-		return "Famille [id=" + id + ", nbEleves=" + eleves.size() + "]";
+		return "Responsable [id=" + id  + "]";
 	}
 	
 }

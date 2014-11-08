@@ -52,7 +52,7 @@ public class UserController extends AbstractRestHandler {
 			LOGGER.debug("Création de l'utilisateur {}", nom);
 			utilisateur = new Utilisateur();
 			utilisateur.setNom(nom);
-			utilisateur.setEcole("Ecole de " + nom);
+			utilisateur.setIdentifiant("Identifiant de " + nom);
 			userRepository.save(utilisateur);
 		} else {
 			utilisateur = utilisateurs.get(0);

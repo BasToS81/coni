@@ -14,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.gor.sellphotos.dao.Utilisateur;
-import com.gor.sellphotos.repository.UserRepository;
+import com.gor.sellphotos.repository.UtilisateurRepository;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -29,7 +29,7 @@ public class UserDaoTest {
 
     /** The parser. */
     @Autowired
-    private UserRepository userRepository;
+    private UtilisateurRepository userRepository;
 
     /**
      * Exception.
