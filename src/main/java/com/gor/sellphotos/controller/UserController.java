@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.gor.sellphotos.dao.User;
+import com.gor.sellphotos.dao.Utilisateur;
 import com.gor.sellphotos.repository.UserRepository;
 
 /**
@@ -27,24 +27,24 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@RequestMapping("/rest/user")
+	@RequestMapping("/rest/utilisateur")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public User getUser(@RequestParam("name") String name) {
-		LOGGER.debug("loading user {}", name);
-		User user = null;
-		List<User> users = userRepository.findByName(name);
-		if (!CollectionUtils.isEmpty(users)) {
-			LOGGER.debug("creating user {}", name);
-			user = new User();
-			user.setName(name);
-			user.setSchool("School for " + name);
-			userRepository.save(user);
+	public Utilisateur getUtilisateur(@RequestParam("nom") String nom) {
+		LOGGER.debug("loading user {}", nom);
+		Utilisateur utilisateur = null;
+		List<Utilisateur> utilisateurs = userRepository.findByName(nom);
+		if (!CollectionUtils.isEmpty(utilisateurs)) {
+			LOGGER.debug("Création de l'utilisateur {}", nom);
+			utilisateur = new Utilisateur();
+			utilisateur.setNom(nom);
+			utilisateur.setEcole("Ecole de " + nom);
+			userRepository.save(utilisateur);
 		} else {
-			user = users.get(0);
+			utilisateur = utilisateurs.get(0);
 		}
-		LOGGER.debug("user {}", user);
-		return user;
+		LOGGER.debug("utilisateurs {}", utilisateur);
+		return utilisateur;
 	}
 
 }

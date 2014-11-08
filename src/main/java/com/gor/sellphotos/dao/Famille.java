@@ -7,37 +7,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class User {
+public class Famille {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Basic
-	private String name;
+	private String identifiant;
 	
-	@Basic
-	private String school;
 
-	public String getName() {
-		return name;
+	public String getNom() {
+		return nom;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setNom(String nom) {
+		this.nom = nom;
 	}
 
-	public String getSchool() {
-		return school;
+	public String getEcole() {
+		return ecole;
 	}
 
-	public void setSchool(String school) {
-		this.school = school;
+	public void setEcole(String ecole) {
+		this.ecole = ecole;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", school=" + school + "]";
+		return "Utilisateur [id=" + id + ", nom=" + nom + ", ecole=" + ecole + "]";
 	}
 	
 }
