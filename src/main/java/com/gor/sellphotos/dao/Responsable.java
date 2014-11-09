@@ -10,11 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Responsable {
+public class Responsable extends Utilisateur {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 
 	@OneToOne
 	private Utilisateur utilisateur;
@@ -22,27 +19,6 @@ public class Responsable {
 	@ManyToOne
 	private Ecole ecole;
 	
-    @Basic
-    private String nom;
-	
-	
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
-
-
-    
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
     
     /**
      * @return the utilisateur
@@ -79,31 +55,10 @@ public class Responsable {
     }
 
 
-    
-    
-    
-    /**
-     * @return the nom
-     */
-    public String getNom() {
-        return nom;
-    }
-
-
-
-    
-    /**
-     * @param nom the nom to set
-     */
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-
 
     @Override
 	public String toString() {
-		return "Responsable [id=" + id  + ", nom=" + nom + "]";
+		return "Responsable [id=" + getId()  +  "]";
 	}
 	
 }

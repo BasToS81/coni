@@ -13,11 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Eleve {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class Eleve extends Utilisateur {
 
 	@Basic
 	private String identifiantChiffre;
@@ -49,45 +45,7 @@ public class Eleve {
 	@OneToOne
 	private Utilisateur utilisateur;
 	
-    @Basic
-    private String nom;
 	
-	
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
-
-
-
-
-    
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    
-    
-    /**
-     * @return the nom
-     */
-    public String getNom() {
-        return nom;
-    }
-
-
-    /**
-     * @param nom the nom to set
-     */
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
 
     /**
      * @return the identifiant_chiffre
@@ -309,7 +267,7 @@ public class Eleve {
 
     @Override
 	public String toString() {
-		return "Eleve [id=" + id + ", nom=" + nom + ", identifiant_chiffre=" + identifiantChiffre + ", nbCommandeEnAttenteValidPayement=" + commandesEnAttenteValidationPayement.size()+ ", nbCommandeEnAttenteValidEcole=" + commandesEnAttenteValidationEcole.size() + ", nbCommandeEnLivraison=" + commandesEnLivraison.size()+ ", nbCommandeLivrees=" + commandesLivrees.size() + "]";
+		return "Eleve [id=" + getId() + ", identifiant_chiffre=" + identifiantChiffre + ", nbCommandeEnAttenteValidPayement=" + commandesEnAttenteValidationPayement.size()+ ", nbCommandeEnAttenteValidEcole=" + commandesEnAttenteValidationEcole.size() + ", nbCommandeEnLivraison=" + commandesEnLivraison.size()+ ", nbCommandeLivrees=" + commandesLivrees.size() + "]";
 	}
 	
 }
