@@ -69,7 +69,6 @@
 			<artifactId>spring-boot-starter-jetty</artifactId>
 		</dependency>
 
-
 		<!-- H2 -->
 		<dependency>
 			<groupId>com.h2database</groupId>

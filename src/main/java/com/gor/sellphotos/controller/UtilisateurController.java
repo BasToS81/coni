@@ -25,17 +25,23 @@ public class UtilisateurController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UtilisateurController.class);
 
 	@Autowired
-	private UtilisateurRepository userRepository;
+	private UtilisateurRepository utilisateurRepository;
 
 	@RequestMapping("/rest/utilisateur")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public Utilisateur getUtilisateur(@RequestParam("identifiant") String identifiant) {
+	/**
+	 * Retourne le type de l'utilisateur
+	 * @param identifiant
+	 * @param codeAcces
+	 * @return
+	 */
+	public String getUtilisateur(@RequestParam("identifiant") String identifiant, @RequestParam("codeAcces") String codeAcces) {
 		LOGGER.debug("loading user {}", identifiant);
-		Utilisateur utilisateur = userRepository.findByIdentifiant(identifiant);
+		Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(identifiant);
 		
-		LOGGER.debug("utilisateurs {}", utilisateur);
-		return utilisateur;
+		LOGGER.debug("utilisateur {}", utilisateur);
+		return utilisateur.getTypeUtilisateur().getClass().getName();
 	}
 
 }

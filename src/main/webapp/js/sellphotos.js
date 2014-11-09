@@ -26,3 +26,23 @@ myApp.controller('UtilisateurController', ['$scope', '$http', function($scope, $
 
 }
 ]);
+
+myApp.controller('FamilleController', ['$scope', '$http', function($scope, $http) {
+	/*
+	 * Lancement de la requête de test
+	 */
+	$scope.getFamille = function() {
+		var url = 'rest/famille?identifiant=' + $scope.utilisateur.identifiant;
+		$http.get(url, {
+			timeout : 5000
+		}).success(function(data, status, headers, config) {
+			$scope.utilisateur.identifiant = data.identifiant;
+			$scope.utilisateur.codeAcces = data.codeAcces;
+		}).error(function(data, status, headers, config) {
+			alert("Impossible de trouver l'utilisateur : " + data)
+		});
+
+	};
+
+}
+]);
