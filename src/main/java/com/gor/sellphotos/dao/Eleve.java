@@ -13,8 +13,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Eleve extends Utilisateur {
+public class Eleve  {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
 	@Basic
 	private String identifiantChiffre;
 	
@@ -45,7 +49,19 @@ public class Eleve extends Utilisateur {
 	@OneToOne
 	private Utilisateur utilisateur;
 	
-	
+	/**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     /**
      * @return the identifiant_chiffre
