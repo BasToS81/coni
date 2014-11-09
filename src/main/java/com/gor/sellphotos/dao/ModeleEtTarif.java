@@ -17,6 +17,9 @@ public class ModeleEtTarif {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Basic
+	private String nomReference;
+	
 	@OneToOne(mappedBy="modeleEtTarif")
 	private Ecole ecole;
 	
@@ -49,7 +52,29 @@ public class ModeleEtTarif {
 
 
 
-	/**
+	
+    /**
+     * @return the nomReference
+     */
+    public String getNomReference() {
+        return nomReference;
+    }
+
+
+
+
+    
+    /**
+     * @param nomReference the nomReference to set
+     */
+    public void setNomReference(String nomReference) {
+        this.nomReference = nomReference;
+    }
+
+
+
+
+    /**
 	 * @return the ecole
 	 */
 	public Ecole getEcole() {

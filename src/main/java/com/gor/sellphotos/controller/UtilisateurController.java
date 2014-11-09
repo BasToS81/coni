@@ -36,12 +36,17 @@ public class UtilisateurController {
 	 * @param codeAcces
 	 * @return
 	 */
-	public String getUtilisateur(@RequestParam("identifiant") String identifiant, @RequestParam("codeAcces") String codeAcces) {
+	public String getUtilisateur(@RequestParam("identifiant") String identifiant) {
 		LOGGER.debug("loading user {}", identifiant);
 		Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(identifiant);
 		
+		String nom = null;
+		if(utilisateur!=null)
+		    nom = utilisateur.getTypeUtilisateur().getClass().getName();
+		else
+		    nom = "";
 		LOGGER.debug("utilisateur {}", utilisateur);
-		return utilisateur.getTypeUtilisateur().getClass().getName();
+		return nom;
 	}
 
 }
