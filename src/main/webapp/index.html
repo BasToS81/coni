@@ -32,13 +32,17 @@
 		<div>Bonjour {{user.name}} !</div>
 		<div>Vous venez de l'école : {{user.school}}</div>
 	</div>
+	<div width=100% >
+		<div>Bonjour {{utilisateur.identifiant}} !</div>
+		<div>Votre code d'accès est : {{utilisateur.codeAcces}}</div>
+	</div>
+	
+	<div class="container">
+		<form class="form-signin" role="form" ng-controller="ImportController" action="#" ng-submit="getDonnees()">
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Importer</button>
+		</form>
 
-Bienvenue 
-</div>
-
-	<script type="text/javascript">
-	    window.user = {{ user|safe }};
-	</script>
-
+	</div>
+	
 </body>
 </html>

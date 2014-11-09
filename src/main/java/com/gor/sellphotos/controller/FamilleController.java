@@ -26,41 +26,43 @@ import com.gor.sellphotos.repository.FamilleRepository;
 @Controller
 public class FamilleController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FamilleController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FamilleController.class);
 
-	@Autowired
-	private FamilleRepository familleRepository;
+    @Autowired
+    private FamilleRepository familleRepository;
 
-	@Autowired
+    @Autowired
     private EleveRepository eleveRepository;
-	
-	@RequestMapping("/rest/famille")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public FamilleDTO getFamille(@RequestParam("identifiant") String identifiant) {
-		LOGGER.debug("loading user {}", identifiant);
-		Famille famille = familleRepository.findByIdentifiantUtilisateur(identifiant);
-		
-		FamilleDTO familleDTO = new FamilleDTO();
-		familleDTO.setNomEcole(famille.getEcole().getNomEtablissement());
-		List<EleveDTO> elevesDTO = new ArrayList<EleveDTO>();
-		for(Eleve eleve : famille.getEleves()) {
-		    EleveDTO eleveDTO = new EleveDTO();
-		    eleveDTO.setCheminAccesImageEleve(famille.getEcole().getIdentifiantChiffre() + "/" + eleve.getClasse().getIdentifiant_chiffre() + "/" + eleve.getIdentifiantChiffre());
-		                   
-		    eleveDTO.setDateLimiteAcces(eleve.getDateLimiteAcces());
-		    eleveDTO.setIdentifiantChiffre(eleve.getIdentifiantChiffre());
-		    eleveDTO.setNomClasse(eleve.getClasse().getNom());
-		    eleveDTO.setNomEleve(eleve.getUtilisateur().getNom());
-		    elevesDTO.add(eleveDTO);
-		}
-		familleDTO.setEleves(elevesDTO);
-		familleDTO.setCheminAccesImageGroupe(famille.getEcole().getIdentifiantChiffre());
-		familleDTO.setIdentifiantChiffreEcole(famille.getEcole().getIdentifiantChiffre());
 
-		
-		LOGGER.debug("famille {}", famille);
-		return familleDTO;
-	}
+    @RequestMapping("/rest/famille")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public FamilleDTO getFamille(@RequestParam("identifiant") String identifiant) {
+        LOGGER.debug("loading user {}", identifiant);
+        FamilleDTO familleDTO = null;
+        Famille famille = familleRepository.findByIdentifiantUtilisateur(identifiant);
+        if (famille != null) {
+            familleDTO = new FamilleDTO();
+            familleDTO.setNomEcole(famille.getEcole().getNomEtablissement());
+            List<EleveDTO> elevesDTO = new ArrayList<EleveDTO>();
+            for (Eleve eleve : famille.getEleves()) {
+                EleveDTO eleveDTO = new EleveDTO();
+                eleveDTO.setCheminAccesImageEleve(famille.getEcole().getIdentifiantChiffre() + "/" + eleve.getClasse().getIdentifiant_chiffre() + "/"
+                                + eleve.getIdentifiantChiffre());
+
+                eleveDTO.setDateLimiteAcces(eleve.getDateLimiteAcces());
+                eleveDTO.setIdentifiantChiffre(eleve.getIdentifiantChiffre());
+                eleveDTO.setNomClasse(eleve.getClasse().getNom());
+                eleveDTO.setNomEleve(eleve.getUtilisateur().getNom());
+                elevesDTO.add(eleveDTO);
+            }
+            familleDTO.setEleves(elevesDTO);
+            familleDTO.setCheminAccesImageGroupe(famille.getEcole().getIdentifiantChiffre());
+            familleDTO.setIdentifiantChiffreEcole(famille.getEcole().getIdentifiantChiffre());
+
+        }
+        LOGGER.debug("famille {}", famille);
+        return familleDTO;
+    }
 
 }
