@@ -7,8 +7,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class Utilisateur {
 	
     public enum TypeUtilisateur {
@@ -18,7 +21,7 @@ public class Utilisateur {
     }
     
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private Long id;
 
 	@Basic
@@ -30,8 +33,12 @@ public class Utilisateur {
 	@Enumerated(EnumType.STRING)
 	private TypeUtilisateur typeUtilisateur;
 
+	   
+    @Basic
+    private String nom;
 
 
+    
 	/**
 	 * @return the identifiant
 	 */
@@ -91,10 +98,28 @@ public class Utilisateur {
     public void setTypeUtilisateur(TypeUtilisateur typeUtilisateur) {
         this.typeUtilisateur = typeUtilisateur;
     }
+    
+    
+
+    
+    /**
+     * @return the nom
+     */
+    public String getNom() {
+        return nom;
+    }
+
+    
+    /**
+     * @param nom the nom to set
+     */
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
     @Override
 	public String toString() {
-		return "Utilisateur [id=" + id + ", identifiant=" + identifiant + ", code d'acces=" + codeAcces + "]";
+		return "Utilisateur [id=" + id + ", nom=" + nom + ", identifiant=" + identifiant + ", code d'acces=" + codeAcces + "]";
 	}
 	
 }
