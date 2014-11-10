@@ -1,5 +1,6 @@
 package com.gor.sellphotos.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,65 +14,69 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class Ecole {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 
-	@Basic
-	private String identifiantChiffre;
-		
-	@Basic
-	private String numeroEcole;
-	
-	@Basic
-	private String saison;
-	
-	@Basic
-	private String nomEtablissement;
-	
-	@Basic
-	private String adresseEtablissement;
-	
-	@Basic
-	private String codePostalEtablissement;
-	
-	@Basic
-	private String villeEtablissement;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Basic
-	private String nomResponsablePrincipal;
-	
-	@OneToMany(mappedBy = "ecole")
-	private List<Responsable> responsables;
-	
-	@OneToMany(mappedBy = "ecole")
-	private List<Classe> classes;
-	
-	@OneToOne
-	private ModeleEtTarif modeleEtTarif;
+    @Basic
+    private String identifiantChiffre;
 
-	@OneToOne(mappedBy = "ecole")
-	private CommandeEcole commandeEnCours;
-	
-	@OneToMany(mappedBy = "ecole")
-	private List<CommandeEcole> commandeEnLivraison;
-	
-	@OneToMany(mappedBy = "ecole")
-	private List<CommandeEcole> commandeLivrees;
-	
-	@Basic
-	private Date dateLimiteDesCommandesEleves;
-	
-	@Basic
-	private Date dateLimiteDesCommandesEcoles;
+    @Basic
+    private String numeroEcole;
 
-	@Basic
-	private Date dateLimiteAcces;
-	
-	
+    @Basic
+    private String saison;
 
-	
+    @Basic
+    private String nomEtablissement;
+
+    @Basic
+    private String adresseEtablissement;
+
+    @Basic
+    private String codePostalEtablissement;
+
+    @Basic
+    private String villeEtablissement;
+
+    @Basic
+    private String nomResponsablePrincipal;
+
+    @OneToMany(mappedBy = "ecole")
+    private List<Responsable> responsables;
+
+    @OneToMany(mappedBy = "ecole")
+    private List<Classe> classes;
+
+    @OneToOne
+    private ModeleEtTarif modeleEtTarif;
+
+    @OneToOne(mappedBy = "ecole")
+    private CommandeEcole commandeEnCours;
+
+    @OneToMany(mappedBy = "ecole")
+    private List<CommandeEcole> commandeEnLivraison;
+
+    @OneToMany(mappedBy = "ecole")
+    private List<CommandeEcole> commandeLivrees;
+
+    @Basic
+    private Date dateLimiteDesCommandesEleves;
+
+    @Basic
+    private Date dateLimiteDesCommandesEcoles;
+
+    @Basic
+    private Date dateLimiteAcces;
+
+    public Ecole() {
+        responsables = new ArrayList<Responsable>();
+        classes = new ArrayList<Classe>();
+        commandeEnLivraison = new ArrayList<CommandeEcole>();
+        commandeLivrees = new ArrayList<CommandeEcole>();
+    }
+
     /**
      * @return the id
      */
@@ -79,9 +84,6 @@ public class Ecole {
         return id;
     }
 
-
-
-    
     /**
      * @param id the id to set
      */
@@ -89,9 +91,6 @@ public class Ecole {
         this.id = id;
     }
 
-
-
-    
     /**
      * @return the identifiant_chiffre
      */
@@ -99,9 +98,6 @@ public class Ecole {
         return identifiantChiffre;
     }
 
-
-
-    
     /**
      * @param identifiant_chiffre the identifiant_chiffre to set
      */
@@ -109,9 +105,6 @@ public class Ecole {
         this.identifiantChiffre = identifiantChiffre;
     }
 
-
-
-    
     /**
      * @return the numeroEcole
      */
@@ -119,9 +112,6 @@ public class Ecole {
         return numeroEcole;
     }
 
-
-
-    
     /**
      * @param numeroEcole the numeroEcole to set
      */
@@ -129,9 +119,6 @@ public class Ecole {
         this.numeroEcole = numeroEcole;
     }
 
-
-
-    
     /**
      * @return the saison
      */
@@ -139,9 +126,6 @@ public class Ecole {
         return saison;
     }
 
-
-
-    
     /**
      * @param saison the saison to set
      */
@@ -149,9 +133,6 @@ public class Ecole {
         this.saison = saison;
     }
 
-
-
-    
     /**
      * @return the nomEtablissement
      */
@@ -159,9 +140,6 @@ public class Ecole {
         return nomEtablissement;
     }
 
-
-
-    
     /**
      * @param nomEtablissement the nomEtablissement to set
      */
@@ -169,9 +147,6 @@ public class Ecole {
         this.nomEtablissement = nomEtablissement;
     }
 
-
-
-    
     /**
      * @return the adresseEtablissement
      */
@@ -179,9 +154,6 @@ public class Ecole {
         return adresseEtablissement;
     }
 
-
-
-    
     /**
      * @param adresseEtablissement the adresseEtablissement to set
      */
@@ -189,9 +161,6 @@ public class Ecole {
         this.adresseEtablissement = adresseEtablissement;
     }
 
-
-
-    
     /**
      * @return the codePostalEtablissement
      */
@@ -199,9 +168,6 @@ public class Ecole {
         return codePostalEtablissement;
     }
 
-
-
-    
     /**
      * @param codePostalEtablissement the codePostalEtablissement to set
      */
@@ -209,9 +175,6 @@ public class Ecole {
         this.codePostalEtablissement = codePostalEtablissement;
     }
 
-
-
-    
     /**
      * @return the villeEtablissement
      */
@@ -219,9 +182,6 @@ public class Ecole {
         return villeEtablissement;
     }
 
-
-
-    
     /**
      * @param villeEtablissement the villeEtablissement to set
      */
@@ -229,9 +189,6 @@ public class Ecole {
         this.villeEtablissement = villeEtablissement;
     }
 
-
-
-    
     /**
      * @return the nomResponsablePrincipal
      */
@@ -239,9 +196,6 @@ public class Ecole {
         return nomResponsablePrincipal;
     }
 
-
-
-    
     /**
      * @param nomResponsablePrincipal the nomResponsablePrincipal to set
      */
@@ -249,9 +203,6 @@ public class Ecole {
         this.nomResponsablePrincipal = nomResponsablePrincipal;
     }
 
-
-
-    
     /**
      * @return the responsables
      */
@@ -259,9 +210,6 @@ public class Ecole {
         return responsables;
     }
 
-
-
-    
     /**
      * @param responsables the responsables to set
      */
@@ -269,9 +217,17 @@ public class Ecole {
         this.responsables = responsables;
     }
 
+    /**
+     * @param responsables the responsables to set
+     */
+    public void addResponsables(Responsable responsable) {
+        if (responsable != null) {
+            // affectation de l'école
+            responsable.setEcole(this);
+            this.responsables.add(responsable);
+        }
+    }
 
-
-    
     /**
      * @return the classes
      */
@@ -279,9 +235,6 @@ public class Ecole {
         return classes;
     }
 
-
-
-    
     /**
      * @param classes the classes to set
      */
@@ -289,9 +242,6 @@ public class Ecole {
         this.classes = classes;
     }
 
-
-
-    
     /**
      * @return the modeleEtTarif
      */
@@ -299,9 +249,6 @@ public class Ecole {
         return modeleEtTarif;
     }
 
-
-
-    
     /**
      * @param modeleEtTarif the modeleEtTarif to set
      */
@@ -309,9 +256,6 @@ public class Ecole {
         this.modeleEtTarif = modeleEtTarif;
     }
 
-
-
-    
     /**
      * @return the commandeEnCours
      */
@@ -319,9 +263,6 @@ public class Ecole {
         return commandeEnCours;
     }
 
-
-
-    
     /**
      * @param commandeEnCours the commandeEnCours to set
      */
@@ -329,9 +270,6 @@ public class Ecole {
         this.commandeEnCours = commandeEnCours;
     }
 
-
-
-    
     /**
      * @return the commandeEnLivraison
      */
@@ -339,9 +277,6 @@ public class Ecole {
         return commandeEnLivraison;
     }
 
-
-
-    
     /**
      * @param commandeEnLivraison the commandeEnLivraison to set
      */
@@ -349,9 +284,6 @@ public class Ecole {
         this.commandeEnLivraison = commandeEnLivraison;
     }
 
-
-
-    
     /**
      * @return the commandeLivrees
      */
@@ -359,9 +291,6 @@ public class Ecole {
         return commandeLivrees;
     }
 
-
-
-    
     /**
      * @param commandeLivrees the commandeLivrees to set
      */
@@ -369,9 +298,6 @@ public class Ecole {
         this.commandeLivrees = commandeLivrees;
     }
 
-
-
-    
     /**
      * @return the dateLimiteDesCommandesEleves
      */
@@ -379,9 +305,6 @@ public class Ecole {
         return dateLimiteDesCommandesEleves;
     }
 
-
-
-    
     /**
      * @param dateLimiteDesCommandesEleves the dateLimiteDesCommandesEleves to set
      */
@@ -389,9 +312,6 @@ public class Ecole {
         this.dateLimiteDesCommandesEleves = dateLimiteDesCommandesEleves;
     }
 
-
-
-    
     /**
      * @return the dateLimiteDesCommandesEcoles
      */
@@ -399,9 +319,6 @@ public class Ecole {
         return dateLimiteDesCommandesEcoles;
     }
 
-
-
-    
     /**
      * @param dateLimiteDesCommandesEcoles the dateLimiteDesCommandesEcoles to set
      */
@@ -409,9 +326,6 @@ public class Ecole {
         this.dateLimiteDesCommandesEcoles = dateLimiteDesCommandesEcoles;
     }
 
-
-
-    
     /**
      * @return the dateLimiteAcces
      */
@@ -419,9 +333,6 @@ public class Ecole {
         return dateLimiteAcces;
     }
 
-
-
-    
     /**
      * @param dateLimiteAcces the dateLimiteAcces to set
      */
@@ -429,11 +340,10 @@ public class Ecole {
         this.dateLimiteAcces = dateLimiteAcces;
     }
 
-
-
     @Override
-	public String toString() {
-		return "Utilisateur [id=" + id + ", nom=" + nomEtablissement + ", numeroEcole=" + numeroEcole + ", identifiant_chiffre=" + identifiantChiffre + ", ville=" + villeEtablissement + "]";
-	}
-	
+    public String toString() {
+        return "Utilisateur [id=" + id + ", nom=" + nomEtablissement + ", numeroEcole=" + numeroEcole + ", identifiant_chiffre=" + identifiantChiffre
+                        + ", ville=" + villeEtablissement + "]";
+    }
+
 }
