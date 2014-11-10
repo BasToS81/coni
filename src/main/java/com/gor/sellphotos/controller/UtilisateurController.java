@@ -23,9 +23,9 @@ import com.gor.sellphotos.repository.UserRepository;
  *
  */
 @Controller
-public class UserController extends AbstractRestHandler {
+public class UtilisateurController extends AbstractRestHandler {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilisateurController.class);
 
 	@Autowired
 	private UserRepository userRepository;
@@ -39,28 +39,29 @@ public class UserController extends AbstractRestHandler {
 		return dto;
 	}
 
-
-
 	@RequestMapping("/rest/utilisateur")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	/**
-	 * Retourne le type de l'utilisateur
-	 * @param identifiant
-	 * @param codeAcces
-	 * @return
-	 */
-	public String getUtilisateur(@RequestParam("identifiant") String identifiant) {
-		LOGGER.debug("loading user {}", identifiant);
-		Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(identifiant);
-		
-		String nom = null;
-		if(utilisateur!=null)
-		    nom = utilisateur.getTypeUtilisateur().getClass().getName();
-		else
-		    nom = "";
-		LOGGER.debug("utilisateur {}", utilisateur);
-		return nom;
-	}
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    /**
+     * Retourne le type de l'utilisateur
+     * @param identifiant
+     * @param codeAcces
+     * @return
+     */
+    public String getUtilisateur(@RequestParam("identifiant") String identifiant) {
+        LOGGER.debug("loading user {}", identifiant);
+        Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(identifiant);
+
+        LOGGER.debug("utilisateur {}", utilisateur);
+        String nom = null;
+        if (utilisateur != null) {
+            LOGGER.debug("type utilisateur {}", utilisateur.getTypeUtilisateur());
+            nom = utilisateur.getTypeUtilisateur().name();
+        }
+        else
+            nom = "";
+        LOGGER.debug("utilisateur {}", utilisateur);
+        return nom;
+    }
 
 }
