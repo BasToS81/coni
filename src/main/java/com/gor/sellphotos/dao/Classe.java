@@ -1,5 +1,6 @@
 package com.gor.sellphotos.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -12,26 +13,27 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class Classe {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Basic
     private String identifiantChiffre;
-        
-	@Basic
-	private String nom;
-	
-	@ManyToOne
-	private Ecole ecole;
-	
-	@OneToMany(mappedBy = "classe")
-	private List<Eleve> eleves;
 
-	
+    @Basic
+    private String nom;
 
-	
+    @ManyToOne
+    private Ecole ecole;
+
+    @OneToMany(mappedBy = "classe")
+    private List<Eleve> eleves;
+
+    public Classe() {
+        eleves = new ArrayList<Eleve>();
+    }
+
     /**
      * @return the id
      */
@@ -39,9 +41,6 @@ public class Classe {
         return id;
     }
 
-
-
-    
     /**
      * @param id the id to set
      */
@@ -49,29 +48,20 @@ public class Classe {
         this.id = id;
     }
 
-
-
-    
     /**
      * @return the identifiant_chiffre
      */
-    public String getIdentifiant_chiffre() {
+    public String getIdentifiantChiffre() {
         return identifiantChiffre;
     }
 
-
-
-    
     /**
      * @param identifiant_chiffre the identifiant_chiffre to set
      */
-    public void setIdentifiant_chiffre(String identifiant_chiffre) {
-        this.identifiantChiffre = identifiant_chiffre;
+    public void setIdentifiantChiffre(String identifiantChiffre) {
+        this.identifiantChiffre = identifiantChiffre;
     }
 
-
-
-    
     /**
      * @return the nom
      */
@@ -79,9 +69,6 @@ public class Classe {
         return nom;
     }
 
-
-
-    
     /**
      * @param nom the nom to set
      */
@@ -89,9 +76,6 @@ public class Classe {
         this.nom = nom;
     }
 
-
-
-    
     /**
      * @return the ecole
      */
@@ -99,9 +83,6 @@ public class Classe {
         return ecole;
     }
 
-
-
-    
     /**
      * @param ecole the ecole to set
      */
@@ -109,9 +90,6 @@ public class Classe {
         this.ecole = ecole;
     }
 
-
-
-    
     /**
      * @return the eleves
      */
@@ -119,9 +97,6 @@ public class Classe {
         return eleves;
     }
 
-
-
-    
     /**
      * @param eleves the eleves to set
      */
@@ -129,11 +104,16 @@ public class Classe {
         this.eleves = eleves;
     }
 
-
+    /**
+     * @param eleves the eleves to add
+     */
+    public void addEleve(Eleve eleve) {
+        eleves.add(eleve);
+    }
 
     @Override
-	public String toString() {
-		return "Utilisateur [id=" + id + ", nom=" + nom + ", identifiant_chiffre=" + identifiantChiffre + ", nbEleves=" + eleves.size() + "]";
-	}
-	
+    public String toString() {
+        return "Utilisateur [id=" + id + ", nom=" + nom + ", identifiant_chiffre=" + identifiantChiffre + ", nbEleves=" + eleves.size() + "]";
+    }
+
 }

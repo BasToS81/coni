@@ -35,17 +35,24 @@ public class UtilisateurController {
      */
     public String getUtilisateur(@RequestParam("identifiant") String identifiant) {
         LOGGER.debug("loading user {}", identifiant);
-        Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(identifiant);
+        String nom = "";
 
-        LOGGER.debug("utilisateur {}", utilisateur);
-        String nom = null;
-        if (utilisateur != null) {
-            LOGGER.debug("type utilisateur {}", utilisateur.getTypeUtilisateur());
-            nom = utilisateur.getTypeUtilisateur().name();
+        try {
+            Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(identifiant);
+
+            LOGGER.debug("utilisateur {}", utilisateur);
+
+            if (utilisateur != null) {
+                LOGGER.debug("type utilisateur {}", utilisateur.getTypeUtilisateur());
+                nom = utilisateur.getTypeUtilisateur().name();
+                LOGGER.debug("nom type utilisateur {}", nom);
+            }
+
+            LOGGER.debug("utilisateur {}", utilisateur);
         }
-        else
-            nom = "";
-        LOGGER.debug("utilisateur {}", utilisateur);
+        catch (Exception e) {
+            LOGGER.error(e.getLocalizedMessage());
+        }
         return nom;
     }
 
