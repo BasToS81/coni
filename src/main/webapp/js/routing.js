@@ -9,7 +9,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	            'content@':{templateUrl : 'login.html', controller : 'LoginCtrl'}
 		 }
 	}).state('familleHome', {
-		url : '/famille',
+		url : '/famille/',
 		views: {
             'content@':{templateUrl : '/famille/profile.html',
 		controller : 'FamilleCtrl',

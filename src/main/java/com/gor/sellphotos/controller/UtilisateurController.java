@@ -1,23 +1,19 @@
 package com.gor.sellphotos.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.gor.sellphotos.dao.Utilisateur;
 import com.gor.sellphotos.dao.FamilleDto;
-import com.gor.sellphotos.dao.User;
-import com.gor.sellphotos.repository.UserRepository;
+import com.gor.sellphotos.dao.Utilisateur;
+import com.gor.sellphotos.repository.UtilisateurRepository;
 
 /**
  *
@@ -28,7 +24,7 @@ public class UtilisateurController extends AbstractRestHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilisateurController.class);
 
 	@Autowired
-	private UserRepository userRepository;
+	private UtilisateurRepository utilisateurRepository;
 
 	@RequestMapping("/ws/famille/loadData/{name}")
 	@ResponseBody
@@ -50,17 +46,24 @@ public class UtilisateurController extends AbstractRestHandler {
      */
     public String getUtilisateur(@RequestParam("identifiant") String identifiant) {
         LOGGER.debug("loading user {}", identifiant);
-        Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(identifiant);
+        String nom = "";
 
-        LOGGER.debug("utilisateur {}", utilisateur);
-        String nom = null;
-        if (utilisateur != null) {
-            LOGGER.debug("type utilisateur {}", utilisateur.getTypeUtilisateur());
-            nom = utilisateur.getTypeUtilisateur().name();
+        try {
+            Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(identifiant);
+
+            LOGGER.debug("utilisateur {}", utilisateur);
+
+            if (utilisateur != null) {
+                LOGGER.debug("type utilisateur {}", utilisateur.getTypeUtilisateur());
+                nom = utilisateur.getTypeUtilisateur().name();
+                LOGGER.debug("nom type utilisateur {}", nom);
+            }
+
+            LOGGER.debug("utilisateur {}", utilisateur);
         }
-        else
-            nom = "";
-        LOGGER.debug("utilisateur {}", utilisateur);
+        catch (Exception e) {
+            LOGGER.error(e.getLocalizedMessage());
+        }
         return nom;
     }
 

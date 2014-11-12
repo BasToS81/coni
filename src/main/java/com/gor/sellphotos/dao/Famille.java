@@ -1,12 +1,9 @@
 package com.gor.sellphotos.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -14,29 +11,37 @@ import javax.persistence.OneToOne;
 @Entity
 public class Famille extends Utilisateur {
 
+    @OneToMany(mappedBy = "famille")
+    private List<Eleve> eleves;
 
-	@OneToMany(mappedBy = "famille")
-	private List<Eleve> eleves;
-	
-	@OneToOne
-	private Utilisateur utilisateur;
-	
+    @OneToOne
+    private Utilisateur utilisateur;
+
     @ManyToOne
     private Ecole ecole;
-    
-	/**
-	 * @return the eleves
-	 */
-	public List<Eleve> getEleves() {
-		return eleves;
-	}
 
-	/**
-	 * @param eleves the eleves to set
-	 */
-	public void setEleves(List<Eleve> eleves) {
-		this.eleves = eleves;
-	}
+    public Famille() {
+        eleves = new ArrayList<Eleve>();
+        setTypeUtilisateur(Utilisateur.TypeUtilisateur.ELEVE);
+    }
+
+    /**
+     * @return the eleves
+     */
+    public List<Eleve> getEleves() {
+        return eleves;
+    }
+
+    /**
+     * @param eleves the eleves to set
+     */
+    public void setEleves(List<Eleve> eleves) {
+        this.eleves = eleves;
+    }
+
+    public void addEleves(Eleve eleve) {
+        eleves.add(eleve);
+    }
 
     /**
      * @return the utilisateur
@@ -66,10 +71,9 @@ public class Famille extends Utilisateur {
         this.ecole = ecole;
     }
 
-
     @Override
-	public String toString() {
-		return "Famille [id=" + getId() + ", nbEleves=" + eleves.size() + "]";
-	}
-	
+    public String toString() {
+        return "Famille [id=" + getId() + ", nbEleves=" + eleves.size() + "]";
+    }
+
 }

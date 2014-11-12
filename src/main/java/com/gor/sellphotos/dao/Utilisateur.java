@@ -1,6 +1,7 @@
 package com.gor.sellphotos.dao;
 
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -11,63 +12,59 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
 @Entity
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Utilisateur {
-	
+
     public enum TypeUtilisateur {
         ELEVE,
         RESPONSABLE,
         ADMINISTRATEUR
     }
-    
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	private Long id;
 
-	@Basic
-	private String identifiant;
-	
-	@Basic
-	private String codeAcces;
-	
-	@Enumerated(EnumType.STRING)
-	private TypeUtilisateur typeUtilisateur;
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private Long id;
 
-	   
+    @Column(unique = true)
+    private String identifiant;
+
+    @Basic
+    private String codeAcces;
+
+    @Enumerated(EnumType.STRING)
+    private TypeUtilisateur typeUtilisateur;
+
     @Basic
     private String nom;
 
+    /**
+     * @return the identifiant
+     */
+    public String getIdentifiant() {
+        return identifiant;
+    }
 
-    
-	/**
-	 * @return the identifiant
-	 */
-	public String getIdentifiant() {
-		return identifiant;
-	}
+    /**
+     * @param identifiant the identifiant to set
+     */
+    public void setIdentifiant(String identifiant) {
+        this.identifiant = identifiant;
+    }
 
-	/**
-	 * @param identifiant the identifiant to set
-	 */
-	public void setIdentifiant(String identifiant) {
-		this.identifiant = identifiant;
-	}
+    /**
+     * @return the codeAcces
+     */
+    public String getCodeAcces() {
+        return codeAcces;
+    }
 
-	/**
-	 * @return the codeAcces
-	 */
-	public String getCodeAcces() {
-		return codeAcces;
-	}
+    /**
+     * @param codeAcces the codeAcces to set
+     */
+    public void setCodeAcces(String codeAcces) {
+        this.codeAcces = codeAcces;
+    }
 
-	/**
-	 * @param codeAcces the codeAcces to set
-	 */
-	public void setCodeAcces(String codeAcces) {
-		this.codeAcces = codeAcces;
-	}
-
-	
     /**
      * @return the id
      */
@@ -75,7 +72,6 @@ public class Utilisateur {
         return id;
     }
 
-    
     /**
      * @param id the id to set
      */
@@ -83,7 +79,6 @@ public class Utilisateur {
         this.id = id;
     }
 
-    
     /**
      * @return the typeUtilisateur
      */
@@ -91,17 +86,13 @@ public class Utilisateur {
         return typeUtilisateur;
     }
 
-    
     /**
      * @param typeUtilisateur the typeUtilisateur to set
      */
     public void setTypeUtilisateur(TypeUtilisateur typeUtilisateur) {
         this.typeUtilisateur = typeUtilisateur;
     }
-    
-    
 
-    
     /**
      * @return the nom
      */
@@ -109,7 +100,6 @@ public class Utilisateur {
         return nom;
     }
 
-    
     /**
      * @param nom the nom to set
      */
@@ -118,8 +108,8 @@ public class Utilisateur {
     }
 
     @Override
-	public String toString() {
-		return "Utilisateur [id=" + id + ", nom=" + nom + ", identifiant=" + identifiant + ", code d'acces=" + codeAcces + "]";
-	}
-	
+    public String toString() {
+        return "Utilisateur [id=" + id + ", nom=" + nom + ", identifiant=" + identifiant + ", code d'acces=" + codeAcces + "]";
+    }
+
 }

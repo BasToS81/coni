@@ -1,8 +1,9 @@
 var myApp = angular.module('ShellPhotosAngular', [ 'ui.router' ]);
 
 myApp.controller('GlobalCtrl', [ '$scope', function($scope) {
-	$scope.user = {
-		name : "",
+	$scope.utilisateur = {
+		identifiant  : "", 
+		codeAcces : "",
 		school : "",
 		roles : ""
 	};

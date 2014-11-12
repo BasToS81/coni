@@ -13,43 +13,43 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Eleve  {
+public class Eleve {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-	@Basic
-	private String identifiantChiffre;
-	
-	@ManyToOne
-	private Famille famille;
-	
-	@ManyToOne
-	private Classe classe;
-	
-	@OneToOne(mappedBy = "eleve")
-	private CommandeEleve commandeEnCours;
-	
-	@OneToMany(mappedBy = "eleve")
-	private List<CommandeEleve> commandesEnAttenteValidationPayement;
-	
-	@OneToMany(mappedBy = "eleve")
-	private List<CommandeEleve> commandesEnAttenteValidationEcole;
-	
-	@OneToMany(mappedBy = "eleve")
-	private List<CommandeEleve> commandesEnLivraison;
-	
-	@OneToMany(mappedBy = "eleve")
-	private List<CommandeEleve> commandesLivrees;
 
-	@Basic
-	private Date dateLimiteAcces;
+    @Basic
+    private String identifiantChiffre;
 
-	@OneToOne
-	private Utilisateur utilisateur;
-	
-	/**
+    @ManyToOne
+    private Famille famille;
+
+    @ManyToOne
+    private Classe classe;
+
+    @OneToOne(mappedBy = "eleve")
+    private CommandeEleve commandeEnCours;
+
+    @OneToMany(mappedBy = "eleve")
+    private List<CommandeEleve> commandesEnAttenteValidationPayement;
+
+    @OneToMany(mappedBy = "eleve")
+    private List<CommandeEleve> commandesEnAttenteValidationEcole;
+
+    @OneToMany(mappedBy = "eleve")
+    private List<CommandeEleve> commandesEnLivraison;
+
+    @OneToMany(mappedBy = "eleve")
+    private List<CommandeEleve> commandesLivrees;
+
+    @Basic
+    private Date dateLimiteAcces;
+
+    @OneToOne
+    private Utilisateur utilisateur;
+
+    /**
      * @return the id
      */
     public Long getId() {
@@ -70,17 +70,12 @@ public class Eleve  {
         return identifiantChiffre;
     }
 
-    
     /**
      * @param identifiantChiffre the identifiantChiffre to set
      */
     public void setIdentifiantChiffre(String identifiantChiffre) {
         this.identifiantChiffre = identifiantChiffre;
     }
-
-
-
-
 
     /**
      * @return the famille
@@ -89,21 +84,16 @@ public class Eleve  {
         return famille;
     }
 
-
-
-
-    
     /**
      * @param famille the famille to set
      */
     public void setFamille(Famille famille) {
-        this.famille = famille;
+        if (famille != null) {
+            famille.addEleves(this);
+            this.famille = famille;
+        }
     }
 
-
-
-
-    
     /**
      * @return the classe
      */
@@ -111,10 +101,6 @@ public class Eleve  {
         return classe;
     }
 
-
-
-
-    
     /**
      * @param classe the classe to set
      */
@@ -122,10 +108,6 @@ public class Eleve  {
         this.classe = classe;
     }
 
-
-
-
-    
     /**
      * @return the commandeEnCours
      */
@@ -133,10 +115,6 @@ public class Eleve  {
         return commandeEnCours;
     }
 
-
-
-
-    
     /**
      * @param commandeEnCours the commandeEnCours to set
      */
@@ -144,10 +122,6 @@ public class Eleve  {
         this.commandeEnCours = commandeEnCours;
     }
 
-
-
-
-    
     /**
      * @return the commandesEnAttenteValidationPayement
      */
@@ -155,10 +129,6 @@ public class Eleve  {
         return commandesEnAttenteValidationPayement;
     }
 
-
-
-
-    
     /**
      * @param commandesEnAttenteValidationPayement the commandesEnAttenteValidationPayement to set
      */
@@ -166,10 +136,6 @@ public class Eleve  {
         this.commandesEnAttenteValidationPayement = commandesEnAttenteValidationPayement;
     }
 
-
-
-
-    
     /**
      * @return the commandesEnAttenteValidationEcole
      */
@@ -177,10 +143,6 @@ public class Eleve  {
         return commandesEnAttenteValidationEcole;
     }
 
-
-
-
-    
     /**
      * @param commandesEnAttenteValidationEcole the commandesEnAttenteValidationEcole to set
      */
@@ -188,10 +150,6 @@ public class Eleve  {
         this.commandesEnAttenteValidationEcole = commandesEnAttenteValidationEcole;
     }
 
-
-
-
-    
     /**
      * @return the commandesEnLivraison
      */
@@ -199,10 +157,6 @@ public class Eleve  {
         return commandesEnLivraison;
     }
 
-
-
-
-    
     /**
      * @param commandesEnLivraison the commandesEnLivraison to set
      */
@@ -210,10 +164,6 @@ public class Eleve  {
         this.commandesEnLivraison = commandesEnLivraison;
     }
 
-
-
-
-    
     /**
      * @return the commandesLivrees
      */
@@ -221,10 +171,6 @@ public class Eleve  {
         return commandesLivrees;
     }
 
-
-
-
-    
     /**
      * @param commandesLivrees the commandesLivrees to set
      */
@@ -232,10 +178,6 @@ public class Eleve  {
         this.commandesLivrees = commandesLivrees;
     }
 
-
-
-
-    
     /**
      * @return the dateLimiteAcces
      */
@@ -243,10 +185,6 @@ public class Eleve  {
         return dateLimiteAcces;
     }
 
-
-
-
-    
     /**
      * @param dateLimiteAcces the dateLimiteAcces to set
      */
@@ -254,10 +192,6 @@ public class Eleve  {
         this.dateLimiteAcces = dateLimiteAcces;
     }
 
-
-
-
-    
     /**
      * @return the utilisateur
      */
@@ -265,11 +199,6 @@ public class Eleve  {
         return utilisateur;
     }
 
-
-
-
-
-    
     /**
      * @param utilisateur the utilisateur to set
      */
@@ -277,13 +206,11 @@ public class Eleve  {
         this.utilisateur = utilisateur;
     }
 
-
-
-
-
     @Override
-	public String toString() {
-		return "Eleve [id=" + getId() + ", identifiant_chiffre=" + identifiantChiffre + ", nbCommandeEnAttenteValidPayement=" + commandesEnAttenteValidationPayement.size()+ ", nbCommandeEnAttenteValidEcole=" + commandesEnAttenteValidationEcole.size() + ", nbCommandeEnLivraison=" + commandesEnLivraison.size()+ ", nbCommandeLivrees=" + commandesLivrees.size() + "]";
-	}
-	
+    public String toString() {
+        return "Eleve [id=" + getId() + ", identifiant_chiffre=" + identifiantChiffre + ", nbCommandeEnAttenteValidPayement="
+                        + commandesEnAttenteValidationPayement.size() + ", nbCommandeEnAttenteValidEcole=" + commandesEnAttenteValidationEcole.size()
+                        + ", nbCommandeEnLivraison=" + commandesEnLivraison.size() + ", nbCommandeLivrees=" + commandesLivrees.size() + "]";
+    }
+
 }

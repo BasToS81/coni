@@ -47,7 +47,7 @@ public class FamilleController {
             List<EleveDTO> elevesDTO = new ArrayList<EleveDTO>();
             for (Eleve eleve : famille.getEleves()) {
                 EleveDTO eleveDTO = new EleveDTO();
-                eleveDTO.setCheminAccesImageEleve(famille.getEcole().getIdentifiantChiffre() + "/" + eleve.getClasse().getIdentifiant_chiffre() + "/"
+                eleveDTO.setCheminAccesImageEleve(famille.getEcole().getIdentifiantChiffre() + "/" + eleve.getClasse().getIdentifiantChiffre() + "/"
                                 + eleve.getIdentifiantChiffre());
 
                 eleveDTO.setDateLimiteAcces(eleve.getDateLimiteAcces());
