@@ -1,28 +1,33 @@
-var myApp = angular.module('ShellPhotosAngular', []);
+var myApp = angular.module('ShellPhotosAngular', [ 'ui.router' ]);
 
-
-myApp.controller('GlobalController', ['$scope',  function($scope) {
-	$scope.usertest = "";
-	$scope.user = {name : "", school : "" };
-}
-]);
-
-myApp.controller('UserController', ['$scope', '$http', function($scope, $http) {
-	/*
-	 * Lancement de la requête de test
-	 */
-	$scope.getUser = function() {
-		var url = 'rest/user?name=' + $scope.user.name;
-		$http.get(url, {
-			timeout : 5000
-		}).success(function(data, status, headers, config) {
-			$scope.user.name = data.name;
-			$scope.user.school = data.school
-		}).error(function(data, status, headers, config) {
-			alert("Impossible de trouver l'utilisateur : " + data)
-		});
-
+myApp.controller('GlobalCtrl', [ '$scope', function($scope) {
+	$scope.user = {
+		name : "",
+		school : "",
+		roles : ""
 	};
+} ]);
 
-}
-]);
+
+myApp.service('Auth', function() {
+	var user = window.user;
+	var userData = '';
+	return {
+		getUser : function() {
+			return user;
+		},
+		setUser : function(newUser) {
+			user = newUser;
+		},
+		isConnected : function() {
+			return !!user;
+		},
+		getUserData : function() {
+			return userData;
+		},
+		setUserData : function(newUserData) {
+			userData = newUserData;
+		}
+	};
+});
+
