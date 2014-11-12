@@ -6,16 +6,20 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
 		url : '/',
 		 views: {
-	            'content@':{templateUrl : 'login.html', controller : 'LoginCtrl'}
+	            'content@':{
+	            	templateUrl : 'login.html', 
+	            	controller : 'LoginCtrl'
+	            }
 		 }
 	}).state('familleHome', {
 		url : '/famille/',
 		views: {
-            'content@':{templateUrl : '/famille/profile.html',
-		controller : 'FamilleCtrl',
-		resolve : {
-			familleData : loadFamilleData
-		}
+            'content@':{
+            	templateUrl : '/famille/profile.html',
+				controller : 'FamilleCtrl',
+				resolve : {
+					familleData : loadFamilleData
+				}
             }}
 	});
 });
