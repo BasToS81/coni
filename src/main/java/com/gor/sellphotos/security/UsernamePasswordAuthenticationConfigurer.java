@@ -19,69 +19,69 @@ import org.springframework.security.web.util.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gor.sellphotos.dao.UserDto;
+import com.gor.sellphotos.dto.UserDto;
 
 /**
  * http://java.dzone.com/articles/secure-rest-services-using
  * 
  * @author QWBT2550
- *
  */
-public class UsernamePasswordAuthenticationConfigurer extends AbstractAuthenticationFilterConfigurer<HttpSecurity,UsernamePasswordAuthenticationConfigurer,UsernamePasswordAuthenticationFilter> {
-	
-	protected UsernamePasswordAuthenticationConfigurer(String defaultLoginProcessingUrl) {
-		super(new UsernamePasswordAuthenticationFilter(), defaultLoginProcessingUrl);
-	}
+public class UsernamePasswordAuthenticationConfigurer extends
+                AbstractAuthenticationFilterConfigurer<HttpSecurity, UsernamePasswordAuthenticationConfigurer, UsernamePasswordAuthenticationFilter> {
 
-	
-	@Override
-	public void configure(HttpSecurity http) throws Exception {
-		super.configure(http);
-		// Otherwise filter redirect response instead of leave it to background service
-		getAuthenticationFilter().setAuthenticationSuccessHandler(new AuthSuccessHandler());
-		getAuthenticationFilter().setAuthenticationFailureHandler(new AuthFailureHandler());
-	}
-	
-	@Override
-	protected RequestMatcher createLoginProcessingUrlMatcher(
-			String loginProcessingUrl) {
-		System.out.println("Creating login");
-		return new AntPathRequestMatcher(loginProcessingUrl, "POST");
-	}
-	
+    protected UsernamePasswordAuthenticationConfigurer(String defaultLoginProcessingUrl) {
+        super(new UsernamePasswordAuthenticationFilter(), defaultLoginProcessingUrl);
+    }
 
-	private static class AuthSuccessHandler implements AuthenticationSuccessHandler {
-			@Override
-			public void onAuthenticationSuccess(HttpServletRequest request,
-					HttpServletResponse response, Authentication authentication)
-					throws IOException, ServletException {
-			
-				response.setStatus(HttpServletResponse.SC_OK);
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        super.configure(http);
+        // Otherwise filter redirect response instead of leave it to background service
+        getAuthenticationFilter().setAuthenticationSuccessHandler(new AuthSuccessHandler());
+        getAuthenticationFilter().setAuthenticationFailureHandler(new AuthFailureHandler());
+    }
 
-		        UserDto user = new UserDto();
-		        user.setName((String) authentication.getPrincipal());
-		        for (GrantedAuthority authority : authentication.getAuthorities()) {
-		        	user.addRole(authority.getAuthority());
-		        }
+    @Override
+    protected RequestMatcher createLoginProcessingUrlMatcher(
+                    String loginProcessingUrl) {
 
-		        
-		        ObjectMapper mapper = new ObjectMapper();
-		        
-		        PrintWriter writer = response.getWriter();
-		        mapper.writeValue(writer, user);
-		        writer.flush();
-			}
-	}
-	
-	private static class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
-	    @Override
-	    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-	            AuthenticationException exception) throws IOException, ServletException {
-	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-	        PrintWriter writer = response.getWriter();
-	        writer.write(exception.getMessage());
-	        writer.flush();
-	    }
-	}
+        System.out.println("Creating login");
+        return new AntPathRequestMatcher(loginProcessingUrl, "POST");
+    }
+
+    private static class AuthSuccessHandler implements AuthenticationSuccessHandler {
+
+        @Override
+        public void onAuthenticationSuccess(HttpServletRequest request,
+                        HttpServletResponse response, Authentication authentication)
+                        throws IOException, ServletException {
+
+            response.setStatus(HttpServletResponse.SC_OK);
+
+            UserDto user = new UserDto();
+            user.setName((String) authentication.getPrincipal());
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                user.addRole(authority.getAuthority());
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            PrintWriter writer = response.getWriter();
+            mapper.writeValue(writer, user);
+            writer.flush();
+        }
+    }
+
+    private static class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+
+        @Override
+        public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                        AuthenticationException exception) throws IOException, ServletException {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            PrintWriter writer = response.getWriter();
+            writer.write(exception.getMessage());
+            writer.flush();
+        }
+    }
 
 }

@@ -2,18 +2,32 @@ package com.gor.sellphotos.dto;
 
 import java.util.List;
 
+public class FamilleDTO {
 
-public class FamilleDTO  {
-	
-	private List<EleveDTO> eleves;
-	
-	private String nomEcole;
-	
-	private String identifiantChiffreEcole;
-	
+    private long idFamille;
+
+    private List<EleveDTO> eleves;
+
+    private String nomEcole;
+
+    private String identifiantChiffreEcole;
+
     private String cheminAccesImageGroupe;
 
-    
+    /**
+     * @return the idFamille
+     */
+    public long getIdFamille() {
+        return idFamille;
+    }
+
+    /**
+     * @param idFamille the idFamille to set
+     */
+    public void setIdFamille(long idFamille) {
+        this.idFamille = idFamille;
+    }
+
     /**
      * @return the eleves
      */
@@ -21,7 +35,6 @@ public class FamilleDTO  {
         return eleves;
     }
 
-    
     /**
      * @param eleves the eleves to set
      */
@@ -29,7 +42,6 @@ public class FamilleDTO  {
         this.eleves = eleves;
     }
 
-    
     /**
      * @return the nomEcole
      */
@@ -37,7 +49,6 @@ public class FamilleDTO  {
         return nomEcole;
     }
 
-    
     /**
      * @param nomEcole the nomEcole to set
      */
@@ -45,7 +56,6 @@ public class FamilleDTO  {
         this.nomEcole = nomEcole;
     }
 
-    
     /**
      * @return the identifiantChiffreEcole
      */
@@ -53,7 +63,6 @@ public class FamilleDTO  {
         return identifiantChiffreEcole;
     }
 
-    
     /**
      * @param identifiantChiffreEcole the identifiantChiffreEcole to set
      */
@@ -61,7 +70,6 @@ public class FamilleDTO  {
         this.identifiantChiffreEcole = identifiantChiffreEcole;
     }
 
-    
     /**
      * @return the cheminAccesImageGroupe
      */
@@ -69,7 +77,6 @@ public class FamilleDTO  {
         return cheminAccesImageGroupe;
     }
 
-    
     /**
      * @param cheminAccesImageGroupe the cheminAccesImageGroupe to set
      */
@@ -77,7 +84,8 @@ public class FamilleDTO  {
         this.cheminAccesImageGroupe = cheminAccesImageGroupe;
     }
 
-	
-
-	
+    @Override
+    public String toString() {
+        return "Famille [idFamille=" + getIdFamille() + ", id_chiffre=" + getIdentifiantChiffreEcole() + ", nbEleves=" + eleves.size() + "]";
+    }
 }

@@ -2,22 +2,20 @@ package com.gor.sellphotos.dto;
 
 import java.util.Date;
 
+public class EleveDTO {
 
-public class EleveDTO  {
-  
-	
-	private String identifiantChiffre;
-	
-	private String nomClasse;
-	
-	private String nomEleve;
-	
-	private String cheminAccesImageEleve;
-	private String cheminAccesImageGroupe;
-	
-	private Date dateLimiteAcces;
+    private String identifiantChiffre;
 
-    
+    private String nomClasse;
+
+    private String nomEleve;
+
+    private String cheminAccesImageEleve;
+
+    private String cheminAccesImageGroupe;
+
+    private Date dateLimiteAcces;
+
     /**
      * @return the identifiantChiffre
      */
@@ -25,7 +23,6 @@ public class EleveDTO  {
         return identifiantChiffre;
     }
 
-    
     /**
      * @param identifiantChiffre the identifiantChiffre to set
      */
@@ -33,7 +30,6 @@ public class EleveDTO  {
         this.identifiantChiffre = identifiantChiffre;
     }
 
-    
     /**
      * @return the nomClasse
      */
@@ -41,7 +37,6 @@ public class EleveDTO  {
         return nomClasse;
     }
 
-    
     /**
      * @param nomClasse the nomClasse to set
      */
@@ -49,7 +44,6 @@ public class EleveDTO  {
         this.nomClasse = nomClasse;
     }
 
-    
     /**
      * @return the nomEleve
      */
@@ -57,7 +51,6 @@ public class EleveDTO  {
         return nomEleve;
     }
 
-    
     /**
      * @param nomEleve the nomEleve to set
      */
@@ -65,7 +58,6 @@ public class EleveDTO  {
         this.nomEleve = nomEleve;
     }
 
-    
     /**
      * @return the cheminAccesImageEleve
      */
@@ -73,7 +65,6 @@ public class EleveDTO  {
         return cheminAccesImageEleve;
     }
 
-    
     /**
      * @param cheminAccesImageEleve the cheminAccesImageEleve to set
      */
@@ -81,7 +72,6 @@ public class EleveDTO  {
         this.cheminAccesImageEleve = cheminAccesImageEleve;
     }
 
-    
     /**
      * @return the cheminAccesImageGroupe
      */
@@ -89,7 +79,6 @@ public class EleveDTO  {
         return cheminAccesImageGroupe;
     }
 
-    
     /**
      * @param cheminAccesImageGroupe the cheminAccesImageGroupe to set
      */
@@ -97,7 +86,6 @@ public class EleveDTO  {
         this.cheminAccesImageGroupe = cheminAccesImageGroupe;
     }
 
-    
     /**
      * @return the dateLimiteAcces
      */
@@ -105,7 +93,6 @@ public class EleveDTO  {
         return dateLimiteAcces;
     }
 
-    
     /**
      * @param dateLimiteAcces the dateLimiteAcces to set
      */
@@ -113,6 +100,9 @@ public class EleveDTO  {
         this.dateLimiteAcces = dateLimiteAcces;
     }
 
-    
-	
+    @Override
+    public String toString() {
+        return "Famille [idFamille=" + getIdentifiantChiffre() + ", nomClasse=" + getNomClasse() + ", nomEleve=" + getNomEleve() + "]";
+    }
+
 }

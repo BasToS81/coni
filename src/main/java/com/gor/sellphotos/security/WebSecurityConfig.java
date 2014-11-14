@@ -6,59 +6,60 @@ import org.springframework.security.config.annotation.authentication.configurers
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebMvcSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		System.out.println("configure");
 
-		// Non géré dans notre application angular... pour l'instant...
-		http.csrf().disable();
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        System.out.println("configure");
 
-		// Pas d'acces anonyme
-		// http.anonymous().disable();
+        // Non géré dans notre application angular... pour l'instant...
+        http.csrf().disable();
 
-		// URL publiques
-		http.authorizeRequests()
-				.antMatchers("/", "/*.html", "/webjars/**", "/css/**",
-						"/js/**", "/famille/**", "/public/**").permitAll()
-				.anyRequest().authenticated();
+        // Pas d'acces anonyme
+        // http.anonymous().disable();
 
-		// URL privées et roles associées
-		http.authorizeRequests().antMatchers("/ws/famille/**")
-				.access("hasRole('ROLE_FAMILLE')").antMatchers("/ws/ecole/**")
-				.access("hasRole('ROLE_ECOLE')");
+        // URL publiques
+        http.authorizeRequests()
+                        .antMatchers("/", "/*.html", "/webjars/**", "/css/**",
+                                        "/js/**", "/famille/**", "/public/**").permitAll()
+                        .anyRequest().authenticated();
 
-		/*
-		 * Utilisation du filter Username & password. Il est normalement activé
-		 * lorsqu'on utilise le mécanisme de FormLogin de SpringSecurity qui
-		 * permet de rediriger l'utilisateur vers des pages de Login / Echec
-		 * configurées. Avec AngularJS, on propose un service REST et c'est
-		 * l'appli qui gère ensuite.
-		 */
-		UsernamePasswordAuthenticationConfigurer configurer = new UsernamePasswordAuthenticationConfigurer(
-				"/ws/login");
-		http.apply(configurer);
+        // URL privées et roles associées
+        http.authorizeRequests().antMatchers("/ws/famille/**")
+                        .access("hasRole('ROLE_FAMILLE')").antMatchers("/ws/ecole/**")
+                        .access("hasRole('ROLE_ECOLE')").antMatchers("/ws/admin/**")
+                        .access("hasRole('ROLE_ADMINISTRATEUR')");
 
-		// Authorize logout
-		http.logout().permitAll();
-	}
+        /*
+         * Utilisation du filter Username & password. Il est normalement activé
+         * lorsqu'on utilise le mécanisme de FormLogin de SpringSecurity qui
+         * permet de rediriger l'utilisateur vers des pages de Login / Echec
+         * configurées. Avec AngularJS, on propose un service REST et c'est
+         * l'appli qui gère ensuite.
+         */
+        UsernamePasswordAuthenticationConfigurer configurer = new UsernamePasswordAuthenticationConfigurer(
+                        "/ws/login");
+        http.apply(configurer);
 
-	@Configuration
-	protected static class AuthenticationConfiguration extends
-			GlobalAuthenticationConfigurerAdapter {
+        // Authorize logout
+        http.logout().permitAll();
+    }
 
-		@Override
-		public void init(AuthenticationManagerBuilder auth) throws Exception {
-			/*
-			 * On set notre authentication handler customisé
-			 */
-			auth.authenticationProvider(new AuthenticationProviderImpl());
-		}
+    @Configuration
+    protected static class AuthenticationConfiguration extends
+                    GlobalAuthenticationConfigurerAdapter {
 
-	}
+        @Override
+        public void init(AuthenticationManagerBuilder auth) throws Exception {
+            /*
+             * On set notre authentication handler customisé
+             */
+            auth.authenticationProvider(new AuthenticationProviderImpl());
+        }
+
+    }
 
 }

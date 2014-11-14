@@ -4,25 +4,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
-public class Famille extends Utilisateur {
+public class Famille {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @OneToMany(mappedBy = "famille")
     private List<Eleve> eleves;
-
-    @OneToOne
-    private Utilisateur utilisateur;
 
     @ManyToOne
     private Ecole ecole;
 
     public Famille() {
         eleves = new ArrayList<Eleve>();
-        setTypeUtilisateur(Utilisateur.TypeUtilisateur.ELEVE);
+    }
+
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
@@ -41,20 +57,6 @@ public class Famille extends Utilisateur {
 
     public void addEleves(Eleve eleve) {
         eleves.add(eleve);
-    }
-
-    /**
-     * @return the utilisateur
-     */
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
-    }
-
-    /**
-     * @param utilisateur the utilisateur to set
-     */
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
     }
 
     /**

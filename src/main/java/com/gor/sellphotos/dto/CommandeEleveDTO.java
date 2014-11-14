@@ -3,33 +3,30 @@ package com.gor.sellphotos.dto;
 import java.util.Date;
 import java.util.List;
 
-
 public class CommandeEleveDTO {
 
-
-	private Long id;
+    private Long id;
 
     private String identifiant;
-    
-	private Date dateCommande;
-	
-	private String moyenPayement;
-	
-	private String statut;
-	
-	private Date dateValidation;
-	
-	private List<CommandeProduitDTO> produitsCommandes;
-	
-	private CommandeEcoleDTO commandeEcole;
-	
-	private double montant;
 
-	private Date dateLivraison;
-	
-	private EleveDTO eleve;
+    private Date dateCommande;
 
-    
+    private String moyenPayement;
+
+    private String statut;
+
+    private Date dateValidation;
+
+    private List<CommandeProduitDTO> produitsCommandes;
+
+    private CommandeEcoleDTO commandeEcole;
+
+    private double montant;
+
+    private Date dateLivraison;
+
+    private String identifiantEleve;
+
     /**
      * @return the id
      */
@@ -37,7 +34,6 @@ public class CommandeEleveDTO {
         return id;
     }
 
-    
     /**
      * @param id the id to set
      */
@@ -45,7 +41,6 @@ public class CommandeEleveDTO {
         this.id = id;
     }
 
-    
     /**
      * @return the identifiant
      */
@@ -53,7 +48,6 @@ public class CommandeEleveDTO {
         return identifiant;
     }
 
-    
     /**
      * @param identifiant the identifiant to set
      */
@@ -61,7 +55,6 @@ public class CommandeEleveDTO {
         this.identifiant = identifiant;
     }
 
-    
     /**
      * @return the dateCommande
      */
@@ -69,7 +62,6 @@ public class CommandeEleveDTO {
         return dateCommande;
     }
 
-    
     /**
      * @param dateCommande the dateCommande to set
      */
@@ -77,7 +69,6 @@ public class CommandeEleveDTO {
         this.dateCommande = dateCommande;
     }
 
-    
     /**
      * @return the moyenPayement
      */
@@ -85,7 +76,6 @@ public class CommandeEleveDTO {
         return moyenPayement;
     }
 
-    
     /**
      * @param moyenPayement the moyenPayement to set
      */
@@ -93,7 +83,6 @@ public class CommandeEleveDTO {
         this.moyenPayement = moyenPayement;
     }
 
-    
     /**
      * @return the statut
      */
@@ -101,7 +90,6 @@ public class CommandeEleveDTO {
         return statut;
     }
 
-    
     /**
      * @param statut the statut to set
      */
@@ -109,7 +97,6 @@ public class CommandeEleveDTO {
         this.statut = statut;
     }
 
-    
     /**
      * @return the dateValidation
      */
@@ -117,7 +104,6 @@ public class CommandeEleveDTO {
         return dateValidation;
     }
 
-    
     /**
      * @param dateValidation the dateValidation to set
      */
@@ -125,7 +111,6 @@ public class CommandeEleveDTO {
         this.dateValidation = dateValidation;
     }
 
-    
     /**
      * @return the produitsCommandes
      */
@@ -133,7 +118,6 @@ public class CommandeEleveDTO {
         return produitsCommandes;
     }
 
-    
     /**
      * @param produitsCommandes the produitsCommandes to set
      */
@@ -141,7 +125,6 @@ public class CommandeEleveDTO {
         this.produitsCommandes = produitsCommandes;
     }
 
-    
     /**
      * @return the commandeEcole
      */
@@ -149,7 +132,6 @@ public class CommandeEleveDTO {
         return commandeEcole;
     }
 
-    
     /**
      * @param commandeEcole the commandeEcole to set
      */
@@ -157,7 +139,6 @@ public class CommandeEleveDTO {
         this.commandeEcole = commandeEcole;
     }
 
-    
     /**
      * @return the montant
      */
@@ -165,7 +146,6 @@ public class CommandeEleveDTO {
         return montant;
     }
 
-    
     /**
      * @param montant the montant to set
      */
@@ -173,7 +153,6 @@ public class CommandeEleveDTO {
         this.montant = montant;
     }
 
-    
     /**
      * @return the dateLivraison
      */
@@ -181,7 +160,6 @@ public class CommandeEleveDTO {
         return dateLivraison;
     }
 
-    
     /**
      * @param dateLivraison the dateLivraison to set
      */
@@ -189,21 +167,18 @@ public class CommandeEleveDTO {
         this.dateLivraison = dateLivraison;
     }
 
-    
     /**
-     * @return the eleve
+     * @return the identifiantEleve
      */
-    public EleveDTO getEleve() {
-        return eleve;
+    public String getIdentifiantEleve() {
+        return identifiantEleve;
     }
 
-    
     /**
-     * @param eleve the eleve to set
+     * @param identifiantEleve the identifiantEleve to set
      */
-    public void setEleve(EleveDTO eleve) {
-        this.eleve = eleve;
+    public void setIdentifiantEleve(String identifiantEleve) {
+        this.identifiantEleve = identifiantEleve;
     }
-	
-	
+
 }

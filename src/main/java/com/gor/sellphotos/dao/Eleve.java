@@ -5,19 +5,12 @@ import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Eleve {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Eleve extends Utilisateur {
 
     @Basic
     private String identifiantChiffre;
@@ -46,21 +39,9 @@ public class Eleve {
     @Basic
     private Date dateLimiteAcces;
 
-    @OneToOne
-    private Utilisateur utilisateur;
+    public Eleve() {
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
+        setTypeUtilisateur(Utilisateur.TypeUtilisateur.ELEVE);
     }
 
     /**
@@ -190,20 +171,6 @@ public class Eleve {
      */
     public void setDateLimiteAcces(Date dateLimiteAcces) {
         this.dateLimiteAcces = dateLimiteAcces;
-    }
-
-    /**
-     * @return the utilisateur
-     */
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
-    }
-
-    /**
-     * @param utilisateur the utilisateur to set
-     */
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
     }
 
     @Override

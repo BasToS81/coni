@@ -210,17 +210,18 @@ public class ImportController {
         int nbEleves = Integer.parseInt(classePropertie.getProperty("nbEleves"));
         for (int i = 1; i < nbEleves - 1; i++) {
             String identifiant = classePropertie.getProperty("eleve_" + i + ".identifiant");
+
+            Eleve eleve = new Eleve();
+            eleve.setIdentifiant(classePropertie.getProperty("eleve_" + i + ".identifiant"));
+            eleve.setCodeAcces(classePropertie.getProperty("eleve_" + i + ".codeAcces"));
+            eleve.setNom(classePropertie.getProperty("eleve_" + i + ".nom"));
+            eleve.setDateLimiteAcces(ecole.getDateLimiteAcces());
+
             Famille famille = familleRepository.findByIdentifiantUtilisateur(identifiant);
             if (famille == null) {
                 famille = new Famille();
-
-                famille.setIdentifiant(classePropertie.getProperty("eleve_" + i + ".identifiant"));
-                famille.setCodeAcces(classePropertie.getProperty("eleve_" + i + ".codeAcces"));
-                famille.setNom(classePropertie.getProperty("eleve_" + i + ".nom"));
+                familleRepository.save(famille);
             }
-            Eleve eleve = new Eleve();
-            eleve.setDateLimiteAcces(ecole.getDateLimiteAcces());
-            familleRepository.save(famille);
             eleve.setFamille(famille);
             eleveRepository.save(eleve);
 

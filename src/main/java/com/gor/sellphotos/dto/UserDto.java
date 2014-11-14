@@ -1,4 +1,4 @@
-package com.gor.sellphotos.dao;
+package com.gor.sellphotos.dto;
 
 import java.util.ArrayList;
 import java.util.List;
