@@ -44,8 +44,6 @@ public class UsernamePasswordAuthenticationConfigurer extends
     @Override
     protected RequestMatcher createLoginProcessingUrlMatcher(
                     String loginProcessingUrl) {
-
-        System.out.println("Creating login");
         return new AntPathRequestMatcher(loginProcessingUrl, "POST");
     }
 

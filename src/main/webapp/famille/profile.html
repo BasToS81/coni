@@ -1,11 +1,41 @@
 <div ng-controller="FamilleCtrl" >
 
-http://stackoverflow.com/questions/24224060/how-to-reference-a-controller-inside-a-sub-module-in-angularjs
 
-Acces Famille OK
+	<div class="col-md-12">Acces Famille OK</div>
+	<div class="col-md-3">Etablissement</div>
+	<div class="col-md-9">{{ecole}}</div>
 
-<div>{{logged()}}</div>
-<div>{{familyName}}</div>
+	<div class="col-md-3">Classe</div>
+	<div class="col-md-9">{{classe}}</div>
 
-Bienvenue 
+	<div class="col-md-3">Eleve</div>
+	<div class="col-md-9">{{eleveNom}}</div>
+
+	<div class="col-md-12">Visualisation des photos</div>
+
+
+	<div class="col-md-12">
+
+
+
+
+ <accordion close-others="oneAtATime">
+    <accordion-group heading="Commande en cours" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
+		TODO en attente commande
+    </accordion-group>
+    <accordion-group heading="Commande validées, en attente de paiement">
+		TODO en attente paiement
+    </accordion-group>
+    <accordion-group heading="Commande en attente de validation du reponsable de l'école">
+		TODO en attente validation
+    </accordion-group>
+    <accordion-group heading="Commande en cours de livraison">
+    	TODO En cours de livraison
+    </accordion-group>
+    <accordion-group heading="Commande livrées">
+    	TODO livrées
+    </accordion-group>
+  </accordion>
+</div>
+
 </div>

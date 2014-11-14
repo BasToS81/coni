@@ -173,11 +173,16 @@ public class Eleve extends Utilisateur {
         this.dateLimiteAcces = dateLimiteAcces;
     }
 
-    @Override
-    public String toString() {
+    public String toStringComplet() {
         return "Eleve [id=" + getId() + ", identifiant_chiffre=" + identifiantChiffre + ", nbCommandeEnAttenteValidPayement="
                         + commandesEnAttenteValidationPayement.size() + ", nbCommandeEnAttenteValidEcole=" + commandesEnAttenteValidationEcole.size()
                         + ", nbCommandeEnLivraison=" + commandesEnLivraison.size() + ", nbCommandeLivrees=" + commandesLivrees.size() + "]";
     }
+
+    @Override
+    public String toString() {
+        return "Eleve [identifiantChiffre=" + identifiantChiffre + ", dateLimiteAcces=" + dateLimiteAcces + ", toString()=" + super.toString() + "]";
+    }
+
 
 }

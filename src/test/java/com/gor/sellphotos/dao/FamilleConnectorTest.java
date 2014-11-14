@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -13,7 +14,6 @@ import com.gor.sellphotos.controller.FamilleController;
 import com.gor.sellphotos.controller.ImportController;
 import com.gor.sellphotos.dto.FamilleDTO;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class OTADaemonCallableTest.
  */
@@ -26,6 +26,12 @@ public class FamilleConnectorTest {
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(FamilleConnectorTest.class);
 
+    @Autowired
+    ImportController importController;
+
+    @Autowired
+    FamilleController familleController;
+
     /**
      * Exception.
      * 
@@ -35,10 +41,8 @@ public class FamilleConnectorTest {
     @Test
     public void getFamille() {
         LOGGER.info("Test getFamille");
-        ImportController importController = new ImportController();
         importController.importDonnees();
 
-        FamilleController familleController = new FamilleController();
         FamilleDTO f = familleController.getFamille("0001");
         LOGGER.debug("famille : " + f);
 

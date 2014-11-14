@@ -7,11 +7,9 @@ myApp.controller('LoginCtrl', [ '$scope', '$http', '$state', '$timeout', 'Auth',
 	$scope.errorMessage = '';
 	
 	$scope.login = function() {
-		
 		var data = "j_username=" + $scope.username + "&j_password="
 				+ $scope.password + "&submit=Login";
-		$http
-				.post('/ws/login', data, {
+		$http.post('/ws/login', data, {
 					headers : {
 						'Content-Type' : 'application/x-www-form-urlencoded',
 					}
@@ -24,10 +22,23 @@ myApp.controller('LoginCtrl', [ '$scope', '$http', '$state', '$timeout', 'Auth',
 									roles : data.role
 							};
 							Auth.setUser(user);
-							if (user.roles.indexOf("ROLE_FAMILLE") >= 0) {
-								$timeout(function() {
-									$state.go('familleHome');
-								},0);
+							
+							var state = "";
+							if (user.roles.indexOf("ELEVE") >= 0) {
+									state = 'famille';
+							}
+							else if (user.roles.indexOf("RESPONSABLE") >= 0) {
+								state = 'ecole';
+							}
+							
+							/*
+							 * Appel du bon profil ou rôle inconnu
+							 */
+							if (state == ""){
+								$scope.errorMessage = 'Rôle inconnu : ' + user.roles;
+							}
+							else {
+								$state.go('generic', {type:state, "identifiant": user.name});
 							}
 						})
 				.error(
@@ -41,10 +52,22 @@ myApp.controller('LoginCtrl', [ '$scope', '$http', '$state', '$timeout', 'Auth',
 							}
 						});
 	};
+	
 	$scope.logout = function() {
-		$http.get('/ws/logout').success(
-				function(data, status, headers, config) {
-					console.info('logged out');
-				});
+		$http.get('/ws/logout')
+		.success(
+			function(data, status, headers, config) {
+				disconnect(Auth, $state);
+			})
+		.error(
+			function(data, status, headers, config) {
+				disconnect(Auth, $state);
+			});
 	};
 } ]);
+
+
+function disconnect(Auth, $state) {
+	Auth.setUserData(null);
+	$state.go('home');
+}

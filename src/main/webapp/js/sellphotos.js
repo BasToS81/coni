@@ -1,14 +1,43 @@
-var myApp = angular.module('ShellPhotosAngular', [ 'ui.router' ]);
+var myApp = angular.module('ShellPhotosAngular', [ 'ui.router','ui.bootstrap'
+]);
 
 myApp.controller('GlobalCtrl', [ '$scope', function($scope) {
 	$scope.utilisateur = {
-		identifiant  : "", 
+		identifiant : "",
 		codeAcces : "",
 		school : "",
 		roles : ""
 	};
-} ]);
+}
+]);
 
+myApp.factory('myHttpInterceptor', function($q, $location) {
+	return {
+		response : function(response) {
+			return response;
+		},
+		responseError : function(response) {
+			if (response.status == 401) {
+				$location.path('/').replace();
+			}
+			return $q.reject(response);
+		}
+	};
+});
+
+myApp.config([ '$httpProvider', function($httpProvider) {
+	$httpProvider.interceptors.push('myHttpInterceptor');
+}
+]);
+
+myApp.run([ '$rootScope', function($rootScope, $httpProvider) {
+
+	$rootScope.$on('$stateChangeError', function(event, unfoundState, toParams, fromState, fromParams, error) {
+		   console.log(unfoundState);
+		   console.log(error);
+	});
+}
+]);
 
 myApp.service('Auth', function() {
 	var user = window.user;
@@ -31,4 +60,3 @@ myApp.service('Auth', function() {
 		}
 	};
 });
-

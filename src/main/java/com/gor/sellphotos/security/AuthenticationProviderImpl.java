@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,6 +13,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+
+import com.gor.sellphotos.dao.Utilisateur;
+import com.gor.sellphotos.repository.UtilisateurRepository;
 
 /**
  * Class which defined the authentication logic
@@ -24,6 +28,8 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationProviderImpl.class);
 
+    @Autowired
+    UtilisateurRepository utilisateurRepository;
 
     /*
      * (non-Javadoc)
@@ -36,18 +42,22 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
         // Get field values
-        final String userNameForm = authentication.getPrincipal().toString();
-        final String userPasswordForm = authentication.getCredentials().toString();
+        final String identifiant = authentication.getPrincipal().toString();
+        final String password = authentication.getCredentials().toString();
         
-        if (userNameForm.equals("Famille") && userPasswordForm.equals("1")) {
-        	List<GrantedAuthority> grantedAuths = new ArrayList<>();
-            grantedAuths.add(new SimpleGrantedAuthority("ROLE_FAMILLE"));
-            return new UsernamePasswordAuthenticationToken(userNameForm, userPasswordForm, grantedAuths);
+        LOGGER.debug("Trying to log : {}", identifiant);
+
+        Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(identifiant);
+        LOGGER.debug("User found : {}", utilisateur);
+        if (utilisateur == null) {
+            return null;
         }
-        if (userNameForm.equals("Ecole") && userPasswordForm.equals("2")) {
-        	List<GrantedAuthority> grantedAuths = new ArrayList<>();
-            grantedAuths.add(new SimpleGrantedAuthority("ROLE_ECOLE"));
-            return new UsernamePasswordAuthenticationToken(userNameForm, userPasswordForm, grantedAuths);
+        
+        if (password.equals(utilisateur.getCodeAcces())) {
+            LOGGER.debug("User authentication OK");
+            List<GrantedAuthority> grantedAuths = new ArrayList<>();
+            grantedAuths.add(new SimpleGrantedAuthority(utilisateur.getTypeUtilisateur().name()));
+            return new UsernamePasswordAuthenticationToken(identifiant, password, grantedAuths);
         }
         
         return null;

@@ -62,7 +62,7 @@ public class ImportController {
     @RequestMapping("/public/rest/import")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public String importDonnees() {
+    public ImportDTO importDonnees() {
         LOGGER.debug("import donnees");
         String resultatImport = "Non OK";
 
@@ -89,7 +89,7 @@ public class ImportController {
         }
 
         LOGGER.debug("fin d'import de données : {}", resultatImport);
-        return resultatImport;
+        return new ImportDTO(resultatImport);
     }
 
     private void chargeConfigurationEcole(File dossierEcole) throws Exception {

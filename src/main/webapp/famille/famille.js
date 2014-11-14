@@ -1,10 +1,14 @@
-myApp.controller('FamilleCtrl', ['$scope', '$http', 'Auth', function($scope, $http, Auth) {
+myApp.controller('FamilleCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
 
-	$scope.familyName = "TEST";
+	$scope.ecole = "TEST";
+	
+	$scope.urlParams = $stateParams.identifiant;
 	
 	$scope.logged = function() {
-//		alert('ok');
-		 $scope.familyName = Auth.getUserData().school;
+		 $scope.ecole = Auth.getUserData().nomEcole;
+		 return "OK";
 	}
 }
 ]);
+
+//http://plnkr.co/edit/z9RQKgNBTRbigyQs7OGW?p=preview

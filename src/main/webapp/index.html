@@ -12,6 +12,8 @@
 
 <script type="text/javascript" src="webjars/angularjs/1.3.1/angular.min.js"></script>
 <script type="text/javascript" src="webjars/angular-ui-router/0.2.11/angular-ui-router.min.js"></script>
+<script type="text/javascript" src="webjars/angular-ui-bootstrap/0.11.2/ui-bootstrap-tpls.min.js"></script>
+
 
 <title>Sell photos</title>
 
@@ -20,6 +22,7 @@
 <script type="text/javascript" src="js/sellphotos.js"></script>
 <script type="text/javascript" src="js/login.js"></script>
 <script type="text/javascript" src="js/import.js"></script>
+<script type="text/javascript" src="ecole/ecole.js"></script>
 <script type="text/javascript" src="famille/famille.js"></script>
 <script type="text/javascript" src="js/routing.js"></script>
 
@@ -27,18 +30,24 @@
 
 <body ng-controller="GlobalCtrl">
 
+
+
 	<div ui-view="content"></div>
 
-	<div width=100% >
-		<div>Bonjour {{utilisateur.identifiant}} !</div>
-		<div>Votre code d'accès est : {{utilisateur.codeAcces}}</div>
-	</div>
-	
+
+
+
 	<div class="container">
 		<form class="form-signin" role="form" ng-controller="ImportController" action="#" ng-submit="getDonnees()">
 			<button class="btn btn-lg btn-primary btn-block" type="submit">Importer</button>
+			<div class="form-error" ngShow="statusImport == ''">{{statusImport}}</div>
 		</form>
-
+	</div>
+	
+	<div class="container">
+		<form class="form-signin" role="form" ng-controller="LoginCtrl" action="#" ng-submit="logout()">
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Se déconnecter</button>
+		</form>
 	</div>
 	
 </body>
