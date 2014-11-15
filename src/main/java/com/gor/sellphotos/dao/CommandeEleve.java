@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class CommandeEleve {
-	
+
     public enum StatutCommandeEleve {
         EN_COURS,
         EN_ATTENTE_PAYEMENT,
@@ -24,45 +24,44 @@ public class CommandeEleve {
         LIVREE,
         ABANDONNEE
     }
-    
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Basic
     private String identifiant;
-    
-	@Basic
-	private Date dateCommande;
-	
-	@Basic
-	private String moyenPayement;
-	
-	@Enumerated(EnumType.STRING)
-	private StatutCommandeEleve statut;
-	
-	@Basic
-	private Date dateValidation;
-	
-	@OneToMany(mappedBy = "commandeEleve")
-	private List<CommandeProduit> produitsCommandes;
-	
-	@ManyToOne
-	private CommandeEcole commandeEcole;
-	
-	@Basic
-	private double montant;
 
-	@Basic
-	private Date dateLivraison;
-	
-	@ManyToOne
-	private Eleve eleve;
-	
-	
-	
+    @Basic
+    private Date dateCommande;
 
-	
+    @Basic
+    private String moyenPayement;
+
+    @Enumerated(EnumType.STRING)
+    private StatutCommandeEleve statut;
+
+    @Basic
+    private Date dateValidation;
+
+    @OneToMany(mappedBy = "commandeEleve")
+    private List<CommandeProduit> produitsCommandes;
+
+    @ManyToOne
+    private CommandeEcole commandeEcole;
+
+    @Basic
+    private double montant;
+
+    @Basic
+    private Date dateLivraison;
+
+    @ManyToOne
+    private Eleve eleve;
+
+    @Basic
+    private Produit.TypeProduit typeCommande;
+
     /**
      * @return the id
      */
@@ -70,10 +69,6 @@ public class CommandeEleve {
         return id;
     }
 
-
-
-
-    
     /**
      * @param id the id to set
      */
@@ -81,11 +76,6 @@ public class CommandeEleve {
         this.id = id;
     }
 
-
-
-
-    
-    
     /**
      * @return the identifiant
      */
@@ -93,21 +83,12 @@ public class CommandeEleve {
         return identifiant;
     }
 
-
-
-
-
-    
     /**
      * @param identifiant the identifiant to set
      */
     public void setIdentifiant(String identifiant) {
         this.identifiant = identifiant;
     }
-
-
-
-
 
     /**
      * @return the dateCommande
@@ -116,10 +97,6 @@ public class CommandeEleve {
         return dateCommande;
     }
 
-
-
-
-    
     /**
      * @param dateCommande the dateCommande to set
      */
@@ -127,10 +104,6 @@ public class CommandeEleve {
         this.dateCommande = dateCommande;
     }
 
-
-
-
-    
     /**
      * @return the moyenPayement
      */
@@ -138,10 +111,6 @@ public class CommandeEleve {
         return moyenPayement;
     }
 
-
-
-
-    
     /**
      * @param moyenPayement the moyenPayement to set
      */
@@ -149,10 +118,6 @@ public class CommandeEleve {
         this.moyenPayement = moyenPayement;
     }
 
-
-
-
-    
     /**
      * @return the statut
      */
@@ -160,10 +125,6 @@ public class CommandeEleve {
         return statut;
     }
 
-
-
-
-    
     /**
      * @param statut the statut to set
      */
@@ -171,10 +132,6 @@ public class CommandeEleve {
         this.statut = statut;
     }
 
-
-
-
-    
     /**
      * @return the dateValidation
      */
@@ -182,10 +139,6 @@ public class CommandeEleve {
         return dateValidation;
     }
 
-
-
-
-    
     /**
      * @param dateValidation the dateValidation to set
      */
@@ -193,10 +146,6 @@ public class CommandeEleve {
         this.dateValidation = dateValidation;
     }
 
-
-
-
-    
     /**
      * @return the produitsCommandes
      */
@@ -204,10 +153,6 @@ public class CommandeEleve {
         return produitsCommandes;
     }
 
-
-
-
-    
     /**
      * @param produitsCommandes the produitsCommandes to set
      */
@@ -215,10 +160,10 @@ public class CommandeEleve {
         this.produitsCommandes = produitsCommandes;
     }
 
+    public void addProduitCommande(CommandeProduit produitCommande) {
+        this.produitsCommandes.add(produitCommande);
+    }
 
-
-
-    
     /**
      * @return the commandeEcole
      */
@@ -226,10 +171,6 @@ public class CommandeEleve {
         return commandeEcole;
     }
 
-
-
-
-    
     /**
      * @param commandeEcole the commandeEcole to set
      */
@@ -237,10 +178,6 @@ public class CommandeEleve {
         this.commandeEcole = commandeEcole;
     }
 
-
-
-
-    
     /**
      * @return the montant
      */
@@ -248,10 +185,6 @@ public class CommandeEleve {
         return montant;
     }
 
-
-
-
-    
     /**
      * @param montant the montant to set
      */
@@ -259,10 +192,6 @@ public class CommandeEleve {
         this.montant = montant;
     }
 
-
-
-
-    
     /**
      * @return the dateLivraison
      */
@@ -270,10 +199,6 @@ public class CommandeEleve {
         return dateLivraison;
     }
 
-
-
-
-    
     /**
      * @param dateLivraison the dateLivraison to set
      */
@@ -281,10 +206,6 @@ public class CommandeEleve {
         this.dateLivraison = dateLivraison;
     }
 
-
-
-
-    
     /**
      * @return the eleve
      */
@@ -292,10 +213,6 @@ public class CommandeEleve {
         return eleve;
     }
 
-
-
-
-    
     /**
      * @param eleve the eleve to set
      */
@@ -303,12 +220,23 @@ public class CommandeEleve {
         this.eleve = eleve;
     }
 
+    /**
+     * @return the typeCommande
+     */
+    public Produit.TypeProduit getTypeCommande() {
+        return typeCommande;
+    }
 
-
+    /**
+     * @param typeCommande the typeCommande to set
+     */
+    public void setTypeCommande(Produit.TypeProduit typeCommande) {
+        this.typeCommande = typeCommande;
+    }
 
     @Override
-	public String toString() {
-		return "Utilisateur [id=" + id + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montant=" + montant + "]";
-	}
-	
+    public String toString() {
+        return "Utilisateur [id=" + id + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montant=" + montant + "]";
+    }
+
 }

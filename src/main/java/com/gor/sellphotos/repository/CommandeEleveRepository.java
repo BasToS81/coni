@@ -10,6 +10,10 @@ import com.gor.sellphotos.dao.CommandeEleve;
 
 public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, Long> {
 
+    public final static String COUNT_BY_ID_ELEVE = "SELECT count(ce) " +
+                    "FROM CommandeEleve ce LEFT JOIN ce.eleve e " +
+                    "WHERE e.identifiant = :idEleve";
+
     public final static String FIND_BY_ID_ELEVE = "SELECT ce " +
                     "FROM CommandeEleve ce LEFT JOIN ce.eleve e " +
                     "WHERE e.identifiant = :idEleve";
@@ -48,5 +52,8 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
 
     @Query(FIND_CMD_DE_TOUTE_LA_FAMILLE_BY_ID_ELEVE)
     public List<CommandeEleve> findCmdDeTouteLaFamilleByIdEleve(@Param("idEleve") String identifiantEleve);
+
+    @Query(COUNT_BY_ID_ELEVE)
+    public int countByIdEleve(@Param("idEleve") String identifiantEleve);
 
 }

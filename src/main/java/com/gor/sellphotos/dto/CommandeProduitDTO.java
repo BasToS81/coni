@@ -1,52 +1,13 @@
 package com.gor.sellphotos.dto;
 
-
-
 public class CommandeProduitDTO {
-	
-	private Long id;
 
-	private CommandeEleveDTO commandeEleve;
-	
-	private ProduitDTO produit;
-	
-	private int quantite;
+    private ProduitDTO produit;
 
-	private double montant;
+    private int quantite;
 
-    
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+    private double montant;
 
-    
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    
-    /**
-     * @return the commandeEleve
-     */
-    public CommandeEleveDTO getCommandeEleve() {
-        return commandeEleve;
-    }
-
-    
-    /**
-     * @param commandeEleve the commandeEleve to set
-     */
-    public void setCommandeEleve(CommandeEleveDTO commandeEleve) {
-        this.commandeEleve = commandeEleve;
-    }
-
-    
     /**
      * @return the produit
      */
@@ -54,7 +15,6 @@ public class CommandeProduitDTO {
         return produit;
     }
 
-    
     /**
      * @param produit the produit to set
      */
@@ -62,7 +22,6 @@ public class CommandeProduitDTO {
         this.produit = produit;
     }
 
-    
     /**
      * @return the quantite
      */
@@ -70,7 +29,6 @@ public class CommandeProduitDTO {
         return quantite;
     }
 
-    
     /**
      * @param quantite the quantite to set
      */
@@ -78,7 +36,6 @@ public class CommandeProduitDTO {
         this.quantite = quantite;
     }
 
-    
     /**
      * @return the montant
      */
@@ -86,7 +43,6 @@ public class CommandeProduitDTO {
         return montant;
     }
 
-    
     /**
      * @param montant the montant to set
      */
@@ -94,6 +50,4 @@ public class CommandeProduitDTO {
         this.montant = montant;
     }
 
-	
-	
 }
