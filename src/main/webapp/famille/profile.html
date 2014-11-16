@@ -1,41 +1,58 @@
-<div ng-controller="FamilleCtrl" >
+<div class="col-md-12 panel panel-default" ng-controller="FamilleCtrl">
+	{{logged()}}
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title">Information générales</h3>
+		</div>
+		<div class="panel-body">
+			<div class="col-md-3">Etablissement</div>
+			<div class="col-md-9">{{ecole}}</div>
+
+			<div class="col-md-3">Classe</div>
+			<div class="col-md-9">{{classe}}</div>
+
+			<div class="col-md-3">Eleve</div>
+			<div class="col-md-9">{{eleveNom}}</div>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title">Visualisation des photos</h3>
+		</div>
+		<div class="panel-body">
+			<div class="col-md-3">Photos1</div>
+			<div class="col-md-3">Photos2</div>
+			<div class="col-md-3">Photos3</div>
+			<div class="col-md-3">Photos4</div>
+			<div class="col-md-3">Photos5</div>
+			<div class="col-md-3">Photos6</div>
+
+			<div class="col-md-12">
+				<button type="button" class="col-md-2 col-md-offset-5 btn btn-default">Commander</button>
+			</div>
+		</div>
+	</div>
 
 
-	<div class="col-md-12">Acces Famille OK</div>
-	<div class="col-md-3">Etablissement</div>
-	<div class="col-md-9">{{ecole}}</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 class="panel-title">Commandes</h3>
+		</div>
 
-	<div class="col-md-3">Classe</div>
-	<div class="col-md-9">{{classe}}</div>
+		<div class="panel-body">
 
-	<div class="col-md-3">Eleve</div>
-	<div class="col-md-9">{{eleveNom}}</div>
+			<accordion close-others="oneAtATime"> <accordion-group heading="Commande en cours"
+				is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled"> TODO en attente commande </accordion-group> <accordion-group
+				heading="Commande validées, en attente de paiement"> TODO en attente paiement </accordion-group> <accordion-group
+				heading="Commande en attente de validation du reponsable de l'école"> TODO en attente validation </accordion-group>
+			<accordion-group heading="Commande en cours de livraison"> TODO En cours de livraison </accordion-group> <accordion-group
+				heading="Commande livrées"> TODO livrées </accordion-group> </accordion>
 
-	<div class="col-md-12">Visualisation des photos</div>
+		</div>
 
-
-	<div class="col-md-12">
-
-
-
-
- <accordion close-others="oneAtATime">
-    <accordion-group heading="Commande en cours" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
-		TODO en attente commande
-    </accordion-group>
-    <accordion-group heading="Commande validées, en attente de paiement">
-		TODO en attente paiement
-    </accordion-group>
-    <accordion-group heading="Commande en attente de validation du reponsable de l'école">
-		TODO en attente validation
-    </accordion-group>
-    <accordion-group heading="Commande en cours de livraison">
-    	TODO En cours de livraison
-    </accordion-group>
-    <accordion-group heading="Commande livrées">
-    	TODO livrées
-    </accordion-group>
-  </accordion>
+	</div>
 </div>
 
 </div>

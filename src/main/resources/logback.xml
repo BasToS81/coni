@@ -14,7 +14,7 @@
 		<appender-ref ref="out" />
 	</logger>
 
-	<logger name="org.springframework.security" level="debug" additivity="false">
+	<logger name="org.springframework.security" level="error" additivity="false">
 		<appender-ref ref="out" />
 	</logger>
 

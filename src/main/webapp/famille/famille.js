@@ -6,7 +6,6 @@ myApp.controller('FamilleCtrl', ['$scope', '$http', 'Auth', '$stateParams', func
 	
 	$scope.logged = function() {
 		 $scope.ecole = Auth.getUserData().nomEcole;
-		 return "OK";
 	}
 }
 ]);
