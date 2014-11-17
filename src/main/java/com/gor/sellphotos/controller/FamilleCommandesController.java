@@ -273,7 +273,7 @@ public class FamilleCommandesController {
             // Sauvegarde des nouveaux produits + enrichissement en sortie avec les modeles existants
             for (CommandeProduitDTO cmdProdDTO : listeDesProduitsCommandes) {
                 // vérification si c'est le même produit
-                if (prodOfCommande.getProduit().getId().equals(produit.getId())) {
+                if (cmdProdDTO.getProduit().getId().equals(produit.getId())) {
                     CommandeProduit newCmdProd = new CommandeProduit();
                     newCmdProd.setMontant(cmdProdDTO.getMontant());
                     newCmdProd.setQuantite(cmdProdDTO.getQuantite());
