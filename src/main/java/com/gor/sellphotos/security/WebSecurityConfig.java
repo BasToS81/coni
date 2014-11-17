@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// URL publiques
 		http.authorizeRequests()
 				.antMatchers("/", "/*.html", "/webjars/**", "/css/**",
- "/js/**", "/famille/*.js", "/public/**").permitAll()
+ "/js/**", "/famille/*.js", "/ecole/*.js", "/public/**").permitAll()
 				.anyRequest().authenticated();
 
 		// URL privées et roles associées

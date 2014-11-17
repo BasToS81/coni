@@ -21,10 +21,21 @@ public class SellPhotos {
     private static final Logger LOGGER = LoggerFactory.getLogger(SellPhotos.class);
 
     public static void main(final String[] args) throws Exception {
-        
         SpringApplication.run(SellPhotos.class, args);
     }
     
+    // @Bean
+    // public Server initH2Server() {
+    // try {
+    // Server server = Server.createTcpServer().start();
+    // System.out.println("URL: jdbc:h2:" + server.getURL() + "/mem:test");
+    // return server;
+    // } catch (SQLException e) {
+    // e.printStackTrace();
+    // }
+    // return null;
+    // }
+
     @PreDestroy
     public void exit() {
         LOGGER.info("Exiting SellPhotos");
