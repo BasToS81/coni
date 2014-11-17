@@ -3,11 +3,14 @@ package com.gor.sellphotos.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,7 +33,7 @@ import com.gor.sellphotos.repository.FamilleRepository;
  *
  */
 @Controller
-public class FamilleController {
+public class FamilleController extends AbstractRestHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FamilleController.class);
 
@@ -43,10 +46,11 @@ public class FamilleController {
     @Autowired
     private CommandeEleveRepository commandeEleveRepository;
 
-    @RequestMapping("/famille/get")
+    @RequestMapping("/ws/famille/loadData/{identifiant}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public FamilleDTO getFamille(@RequestParam("identifiant") String identifiant) {
+    @Transactional
+    public FamilleDTO getFamille(@PathVariable("identifiant") String identifiant) {
         LOGGER.debug("loading user {}", identifiant);
         FamilleDTO familleDTO = null;
         Famille famille = familleRepository.findByIdentifiantUtilisateur(identifiant);
@@ -74,7 +78,7 @@ public class FamilleController {
         return familleDTO;
     }
 
-    @RequestMapping("/famille/commande/get")
+    @RequestMapping("/ws/famille/commande/get")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public List<CommandeEleveDTO> getCommandesFamille(@RequestParam("identifiant") String identifiantEleve) {

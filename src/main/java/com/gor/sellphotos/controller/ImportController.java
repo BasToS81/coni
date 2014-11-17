@@ -128,6 +128,7 @@ public class ImportController {
                     resp.setNom(listDonneesDuResponsable[0]);
                     resp.setIdentifiant(listDonneesDuResponsable[1]);
                     resp.setCodeAcces(listDonneesDuResponsable[2]);
+                    resp.setEcole(ecole);
                     responsableRepository.save(resp);
                     ecole.addResponsables(resp);
                     // sauvegarde du responsable
@@ -220,6 +221,7 @@ public class ImportController {
             Famille famille = familleRepository.findByIdentifiantUtilisateur(identifiant);
             if (famille == null) {
                 famille = new Famille();
+                famille.setEcole(ecole);
                 familleRepository.save(famille);
             }
             eleve.setFamille(famille);

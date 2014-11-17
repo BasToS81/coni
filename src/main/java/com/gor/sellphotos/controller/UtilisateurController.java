@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.gor.sellphotos.dto.EcoleDTO;
-import com.gor.sellphotos.dto.FamilleDTO;
 import com.gor.sellphotos.repository.UtilisateurRepository;
 
 /**
@@ -24,15 +23,6 @@ public class UtilisateurController extends AbstractRestHandler {
 
 	@Autowired
 	private UtilisateurRepository utilisateurRepository;
-
-	@RequestMapping("/ws/famille/loadData/{name}")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-    public FamilleDTO getFamilleData(@PathVariable String name) {
-        FamilleDTO dto = new FamilleDTO();
-        dto.setNomEcole("ecole de " + name);
-		return dto;
-	}
 
     @RequestMapping("/ws/ecole/loadData/{name}")
     @ResponseBody
