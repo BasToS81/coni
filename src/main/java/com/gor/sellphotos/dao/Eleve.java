@@ -48,7 +48,8 @@ public class Eleve extends Utilisateur {
      * @return the identifiant_chiffre
      */
     public String getIdentifiantChiffre() {
-        return identifiantChiffre;
+        /* TODO : Mettre à jour l'identifiant chiffre */
+        return "idChiffreEleve_" + getId();
     }
 
     /**
@@ -101,6 +102,8 @@ public class Eleve extends Utilisateur {
      */
     public void setCommandeEnCours(CommandeEleve commandeEnCours) {
         this.commandeEnCours = commandeEnCours;
+        this.commandeEnCours.setEleve(this);
+        this.commandeEnCours.setStatut(CommandeEleve.StatutCommandeEleve.EN_COURS);
     }
 
     /**
@@ -183,6 +186,5 @@ public class Eleve extends Utilisateur {
     public String toString() {
         return "Eleve [identifiantChiffre=" + identifiantChiffre + ", dateLimiteAcces=" + dateLimiteAcces + ", toString()=" + super.toString() + "]";
     }
-
 
 }

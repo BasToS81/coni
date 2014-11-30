@@ -28,4 +28,5 @@ public interface EleveRepository extends CrudRepository<Eleve, Long> {
     @Query(FIND_TOUTE_LA_FAMILLE_BY_ID_ELEVE)
     public List<Eleve> findTouteLaFamilleByIdEleve(@Param("idFamille") String identifiant);
 
+    public Eleve findByIdentifiant(String identifiant);
 }

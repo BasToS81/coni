@@ -146,10 +146,11 @@ public class ImportController {
 
         mt.setNomReference(ecolePropertie.getProperty("Modele.nomReference"));
 
-        LOGGER.debug("Modele : " + mt.getNomReference());
+        LOGGER.debug("Modele : {}", mt.getNomReference());
 
         int nbProduitPrincipal = Integer.parseInt(ecolePropertie.getProperty("Modele.nbProduitPrincipal"));
-        for (int i = 1; i < nbProduitPrincipal - 1; i++) {
+        LOGGER.debug("Ajout de {} produits à réaliser", nbProduitPrincipal);
+        for (int i = 1; i < nbProduitPrincipal + 1; i++) {
             Produit produit = new Produit();
             produit.setIdentifiant(ecolePropertie.getProperty("Modele.principal_" + i + ".identifiant"));
             produit.setDesignation(ecolePropertie.getProperty("Modele.principal_" + i + ".designation"));
@@ -164,7 +165,7 @@ public class ImportController {
         }
 
         int nbProduitSupplementaire = Integer.parseInt(ecolePropertie.getProperty("Modele.nbProduitSupplementaire"));
-        for (int i = 1; i < nbProduitSupplementaire - 1; i++) {
+        for (int i = 1; i < nbProduitSupplementaire + 1; i++) {
             Produit produit = new Produit();
             produit.setIdentifiant(ecolePropertie.getProperty("Modele.supplementaire_" + i + ".identifiant"));
             produit.setDesignation(ecolePropertie.getProperty("Modele.supplementaire_" + i + ".designation"));
@@ -225,9 +226,11 @@ public class ImportController {
                 familleRepository.save(famille);
             }
             eleve.setFamille(famille);
-            eleveRepository.save(eleve);
 
             eleve.setClasse(classe);
+
+            eleveRepository.save(eleve);
+
         }
 
         classe.setEcole(ecole);

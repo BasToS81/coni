@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +19,7 @@ import com.gor.sellphotos.dao.CommandeProduit;
 import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dao.ModeleEtTarif;
 import com.gor.sellphotos.dao.Produit;
+import com.gor.sellphotos.dao.Produit.TypeProduit;
 import com.gor.sellphotos.dto.CommandeEleveDTO;
 import com.gor.sellphotos.dto.CommandeProduitDTO;
 import com.gor.sellphotos.dto.ProduitDTO;
@@ -26,6 +28,7 @@ import com.gor.sellphotos.repository.CommandeProduitRepository;
 import com.gor.sellphotos.repository.EleveRepository;
 import com.gor.sellphotos.repository.FamilleRepository;
 import com.gor.sellphotos.repository.ModeleEtTarifRepository;
+import com.gor.sellphotos.repository.ProduitRepository;
 
 /**
  *
@@ -50,9 +53,13 @@ public class FamilleCommandesController {
     @Autowired
     private CommandeProduitRepository commandeProduitRepository;
 
+    @Autowired
+    private ProduitRepository produitRepository;
+
     @RequestMapping("/famille/commande/getList")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     public List<CommandeEleveDTO> getCommandesFamille(@RequestParam("identifiant") String identifiantEleve) {
         LOGGER.debug("loading commandes famille {}", identifiantEleve);
         List<CommandeEleveDTO> commandesDTO = new ArrayList<CommandeEleveDTO>();
@@ -104,16 +111,22 @@ public class FamilleCommandesController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public CommandeEleveDTO createCommandeEleve(@RequestParam("identifiantEcole") String identifiantEcole,
-                    @RequestParam("identifiantEleve") String identifiantEleve) {
+                    @RequestParam("identifiantEleve") String identifiantEleve, @RequestParam("firstCommande") boolean firstCommande) {
         LOGGER.debug("creation de la commande {}", identifiantEcole);
 
         CommandeEleve cmd = new CommandeEleve();
 
-        Eleve eleve = eleveRepository.findByIdentifiantChiffre(identifiantEleve);
-        cmd.setEleve(eleve);
-        cmd.setStatut(CommandeEleve.StatutCommandeEleve.EN_COURS);
+        // Definition d'une commande principale ou supplementaire
+        if (firstCommande)
+            cmd.setTypeCommande(TypeProduit.PRINCIPALE);
+        else
+            cmd.setTypeCommande(TypeProduit.SUPPLEMENTAIRE);
+
+        Eleve eleve = eleveRepository.findByIdentifiant(identifiantEleve);
+        eleve.setCommandeEnCours(cmd);
 
         commandeEleveRepository.save(cmd);
+        eleveRepository.save(eleve);
 
         CommandeEleveDTO commandeEleve = new CommandeEleveDTO();
 
@@ -127,10 +140,10 @@ public class FamilleCommandesController {
 
         // Pour savoir si on prend les modeles et tarifs principal, on vérifie qu'il n'existe pas déjà une commande
         if (commandeEleveRepository.countByIdEleve(identifiantEleve) > 0) {
-            listeDesProduitsDuModele = modele.getModeleEtTarifPrincipal();
+            listeDesProduitsDuModele = produitRepository.findPrincipalByModele(modele.getId());
         }
         else {
-            listeDesProduitsDuModele = modele.getModeleEtTarifSupplementaire();
+            listeDesProduitsDuModele = produitRepository.findSupplementaireByModele(modele.getId());
         }
 
         for (Produit produit : listeDesProduitsDuModele) {
@@ -138,6 +151,8 @@ public class FamilleCommandesController {
             CommandeProduitDTO cmdProd = new CommandeProduitDTO();
             ProduitDTO prod = new ProduitDTO();
 
+            LOGGER.debug("Produit dans la nouvelle commande : " + produit.toString());
+            prod.setId(produit.getId());
             prod.setIdentifiant(produit.getIdentifiant());
             prod.setDesignation(produit.getDesignation());
             prod.setOrdre(produit.getOrdre());
@@ -177,10 +192,10 @@ public class FamilleCommandesController {
         List<Produit> listeDesProduitsDuModele = null;
 
         if (Produit.TypeProduit.PRINCIPALE.equals(cmd.getTypeCommande())) {
-            listeDesProduitsDuModele = modele.getModeleEtTarifPrincipal();
+            listeDesProduitsDuModele = produitRepository.findPrincipalByModele(modele.getId());
         }
         else {
-            listeDesProduitsDuModele = modele.getModeleEtTarifSupplementaire();
+            listeDesProduitsDuModele = produitRepository.findSupplementaireByModele(modele.getId());
         }
 
         /* TODO : améliorer l'algorithme en copiant les produits commandés et en retirant ceux trouvés de la liste pour diminuer le nombre de recherche. */
@@ -190,6 +205,7 @@ public class FamilleCommandesController {
             CommandeProduitDTO cmdProd = new CommandeProduitDTO();
             ProduitDTO prod = new ProduitDTO();
 
+            prod.setId(produit.getId());
             prod.setIdentifiant(produit.getIdentifiant());
             prod.setDesignation(produit.getDesignation());
             prod.setOrdre(produit.getOrdre());
@@ -224,6 +240,7 @@ public class FamilleCommandesController {
     @RequestMapping("/famille/commande/save")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     public CommandeEleveDTO saveCommandeEleve(@RequestParam("identifiantCommande") String identifiantCommande,
                     @RequestParam("identifiantEcole") String identifiantEcole,
                     @RequestParam("produitsCommandes") List<CommandeProduitDTO> listeDesProduitsCommandes) {
@@ -247,10 +264,10 @@ public class FamilleCommandesController {
         List<Produit> listeDesProduitsDuModele = null;
 
         if (Produit.TypeProduit.PRINCIPALE.equals(cmd.getTypeCommande())) {
-            listeDesProduitsDuModele = modele.getModeleEtTarifPrincipal();
+            listeDesProduitsDuModele = produitRepository.findPrincipalByModele(modele.getId());
         }
         else {
-            listeDesProduitsDuModele = modele.getModeleEtTarifSupplementaire();
+            listeDesProduitsDuModele = produitRepository.findSupplementaireByModele(modele.getId());
         }
 
         /* TODO : améliorer l'algorithme en copiant les produits commandés et en retirant ceux trouvés de la liste pour diminuer le nombre de recherche. */
@@ -278,6 +295,7 @@ public class FamilleCommandesController {
                     newCmdProd.setMontant(cmdProdDTO.getMontant());
                     newCmdProd.setQuantite(cmdProdDTO.getQuantite());
                     newCmdProd.setProduit(produit);
+                    newCmdProd.setCommandeEleve(cmd);
                     commandeProduitRepository.save(newCmdProd);
                     cmd.addProduitCommande(newCmdProd);
 
@@ -302,16 +320,17 @@ public class FamilleCommandesController {
     @RequestMapping("/famille/commande/del")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public List<CommandeEleveDTO> getDeleteCommandeEleve(@RequestParam("identifiant") String identifiantCommande) {
+    @Transactional
+    public List<CommandeEleveDTO> deleteCommandeEleve(@RequestParam("identifiant") String identifiantCommande) {
         LOGGER.debug("deleting commande {}", identifiantCommande);
 
         CommandeEleve commande = commandeEleveRepository.findByIdentifiant(identifiantCommande);
-
-        String identifiantEleve = commande.getEleve().getIdentifiant();
-
+        for (CommandeProduit produitCommande : commande.getProduitsCommandes()) {
+            commandeProduitRepository.delete(produitCommande);
+        }
         commandeEleveRepository.delete(commande);
 
         LOGGER.debug(" end deleting commande {}", commande);
-        return getCommandesFamille(identifiantEleve);
+        return getCommandesFamille(commande.getEleve().getIdentifiant());
     }
 }

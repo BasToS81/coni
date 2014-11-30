@@ -1,5 +1,6 @@
 package com.gor.sellphotos.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.gor.sellphotos.utils.DateUtils;
 
 @Entity
 public class CommandeEleve {
@@ -61,6 +64,12 @@ public class CommandeEleve {
 
     @Basic
     private Produit.TypeProduit typeCommande;
+
+    public CommandeEleve() {
+        produitsCommandes = new ArrayList<CommandeProduit>();
+        dateCommande = DateUtils.getCurrentDate();
+
+    }
 
     /**
      * @return the id
@@ -149,6 +158,7 @@ public class CommandeEleve {
     /**
      * @return the produitsCommandes
      */
+
     public List<CommandeProduit> getProduitsCommandes() {
         return produitsCommandes;
     }

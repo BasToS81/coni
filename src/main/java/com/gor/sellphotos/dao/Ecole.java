@@ -95,7 +95,8 @@ public class Ecole {
      * @return the identifiant_chiffre
      */
     public String getIdentifiantChiffre() {
-        return identifiantChiffre;
+        /* TODO : Mettre à jour l'identifiant chiffre */
+        return "idChiffreEcole_" + getId();
     }
 
     /**

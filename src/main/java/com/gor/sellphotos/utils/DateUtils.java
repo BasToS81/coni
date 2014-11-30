@@ -3,6 +3,7 @@ package com.gor.sellphotos.utils;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.springframework.util.StringUtils;
 
@@ -64,6 +65,10 @@ public class DateUtils {
 
     public static String formatDate(Date d, SimpleDateFormat df) {
         return d == null ? "" : df.format(d);
+    }
+
+    public static Date getCurrentDate() {
+        return (new GregorianCalendar()).getTime();
     }
 
 }
