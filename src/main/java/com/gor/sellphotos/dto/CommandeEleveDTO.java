@@ -1,31 +1,18 @@
 package com.gor.sellphotos.dto;
 
-import java.util.Date;
 import java.util.List;
 
 public class CommandeEleveDTO {
 
     private Long id;
 
-    private String identifiant;
-
-    private Date dateCommande;
-
-    private String moyenPayement;
-
-    private String statut;
-
-    private Date dateValidation;
-
     private List<CommandeProduitDTO> produitsCommandes;
-
-    private CommandeEcoleDTO commandeEcole;
 
     private double montant;
 
-    private Date dateLivraison;
-
     private String identifiantEleve;
+
+    private String typeCommande;
 
     /**
      * @return the id
@@ -39,76 +26,6 @@ public class CommandeEleveDTO {
      */
     public void setId(Long id) {
         this.id = id;
-    }
-
-    /**
-     * @return the identifiant
-     */
-    public String getIdentifiant() {
-        return identifiant;
-    }
-
-    /**
-     * @param identifiant the identifiant to set
-     */
-    public void setIdentifiant(String identifiant) {
-        this.identifiant = identifiant;
-    }
-
-    /**
-     * @return the dateCommande
-     */
-    public Date getDateCommande() {
-        return dateCommande;
-    }
-
-    /**
-     * @param dateCommande the dateCommande to set
-     */
-    public void setDateCommande(Date dateCommande) {
-        this.dateCommande = dateCommande;
-    }
-
-    /**
-     * @return the moyenPayement
-     */
-    public String getMoyenPayement() {
-        return moyenPayement;
-    }
-
-    /**
-     * @param moyenPayement the moyenPayement to set
-     */
-    public void setMoyenPayement(String moyenPayement) {
-        this.moyenPayement = moyenPayement;
-    }
-
-    /**
-     * @return the statut
-     */
-    public String getStatut() {
-        return statut;
-    }
-
-    /**
-     * @param statut the statut to set
-     */
-    public void setStatut(String statut) {
-        this.statut = statut;
-    }
-
-    /**
-     * @return the dateValidation
-     */
-    public Date getDateValidation() {
-        return dateValidation;
-    }
-
-    /**
-     * @param dateValidation the dateValidation to set
-     */
-    public void setDateValidation(Date dateValidation) {
-        this.dateValidation = dateValidation;
     }
 
     /**
@@ -126,20 +43,6 @@ public class CommandeEleveDTO {
     }
 
     /**
-     * @return the commandeEcole
-     */
-    public CommandeEcoleDTO getCommandeEcole() {
-        return commandeEcole;
-    }
-
-    /**
-     * @param commandeEcole the commandeEcole to set
-     */
-    public void setCommandeEcole(CommandeEcoleDTO commandeEcole) {
-        this.commandeEcole = commandeEcole;
-    }
-
-    /**
      * @return the montant
      */
     public double getMontant() {
@@ -154,20 +57,6 @@ public class CommandeEleveDTO {
     }
 
     /**
-     * @return the dateLivraison
-     */
-    public Date getDateLivraison() {
-        return dateLivraison;
-    }
-
-    /**
-     * @param dateLivraison the dateLivraison to set
-     */
-    public void setDateLivraison(Date dateLivraison) {
-        this.dateLivraison = dateLivraison;
-    }
-
-    /**
      * @return the identifiantEleve
      */
     public String getIdentifiantEleve() {
@@ -179,6 +68,20 @@ public class CommandeEleveDTO {
      */
     public void setIdentifiantEleve(String identifiantEleve) {
         this.identifiantEleve = identifiantEleve;
+    }
+
+    /**
+     * @return the typeCommande
+     */
+    public String getTypeCommande() {
+        return typeCommande;
+    }
+
+    /**
+     * @param typeCommande the typeCommande to set
+     */
+    public void setTypeCommande(String typeCommande) {
+        this.typeCommande = typeCommande;
     }
 
 }

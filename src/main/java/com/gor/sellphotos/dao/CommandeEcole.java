@@ -15,42 +15,39 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class CommandeEcole {
-	
+
     public enum StatutCommandeEcole {
         EN_COURS,
         EN_LIVRAISON,
         LIVREE,
         ABANDONNEE
     }
-    
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 
-	@Basic
-	private String identifiant;
-	
-	@ManyToOne
-	private Ecole ecole;
-	
-	@Basic
-	private Date dateCommande;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Enumerated(EnumType.STRING)
-	private StatutCommandeEcole statut;
-	
-	@Basic
-	private Date dateValidation;
-	
-	@OneToMany(mappedBy ="commandeEcole")
-	private List<CommandeEleve> commandesEleves;
-	
-	@Basic
-	private Date dateLivraison;
+    @Basic
+    private String identifiant;
 
-	
-	
-	
+    @ManyToOne
+    private Ecole ecole;
+
+    @Basic
+    private Date dateCommande;
+
+    @Enumerated(EnumType.STRING)
+    private StatutCommandeEcole statut;
+
+    @Basic
+    private Date dateValidation;
+
+    @OneToMany(mappedBy = "commandeEcole")
+    private List<CommandeFamille> commandesFamille;
+
+    @Basic
+    private Date dateLivraison;
+
     /**
      * @return the id
      */
@@ -58,9 +55,6 @@ public class CommandeEcole {
         return id;
     }
 
-
-
-    
     /**
      * @param id the id to set
      */
@@ -68,9 +62,6 @@ public class CommandeEcole {
         this.id = id;
     }
 
-
-
-    
     /**
      * @return the identifiant
      */
@@ -78,9 +69,6 @@ public class CommandeEcole {
         return identifiant;
     }
 
-
-
-    
     /**
      * @param identifiant the identifiant to set
      */
@@ -88,9 +76,6 @@ public class CommandeEcole {
         this.identifiant = identifiant;
     }
 
-
-
-    
     /**
      * @return the ecole
      */
@@ -98,9 +83,6 @@ public class CommandeEcole {
         return ecole;
     }
 
-
-
-    
     /**
      * @param ecole the ecole to set
      */
@@ -108,9 +90,6 @@ public class CommandeEcole {
         this.ecole = ecole;
     }
 
-
-
-    
     /**
      * @return the dateCommande
      */
@@ -118,9 +97,6 @@ public class CommandeEcole {
         return dateCommande;
     }
 
-
-
-    
     /**
      * @param dateCommande the dateCommande to set
      */
@@ -128,9 +104,6 @@ public class CommandeEcole {
         this.dateCommande = dateCommande;
     }
 
-
-
-    
     /**
      * @return the statut
      */
@@ -138,9 +111,6 @@ public class CommandeEcole {
         return statut;
     }
 
-
-
-    
     /**
      * @param statut the statut to set
      */
@@ -148,9 +118,6 @@ public class CommandeEcole {
         this.statut = statut;
     }
 
-
-
-    
     /**
      * @return the dateValidation
      */
@@ -158,9 +125,6 @@ public class CommandeEcole {
         return dateValidation;
     }
 
-
-
-    
     /**
      * @param dateValidation the dateValidation to set
      */
@@ -168,29 +132,20 @@ public class CommandeEcole {
         this.dateValidation = dateValidation;
     }
 
-
-
-    
     /**
      * @return the commandesEleves
      */
-    public List<CommandeEleve> getCommandesEleves() {
-        return commandesEleves;
+    public List<CommandeFamille> getCommandesFamille() {
+        return commandesFamille;
     }
 
-
-
-    
     /**
      * @param commandesEleves the commandesEleves to set
      */
-    public void setCommandesEleves(List<CommandeEleve> commandesEleves) {
-        this.commandesEleves = commandesEleves;
+    public void setCommandesFamille(List<CommandeFamille> commandesFamille) {
+        this.commandesFamille = commandesFamille;
     }
 
-
-
-    
     /**
      * @return the dateLivraison
      */
@@ -198,9 +153,6 @@ public class CommandeEcole {
         return dateLivraison;
     }
 
-
-
-    
     /**
      * @param dateLivraison the dateLivraison to set
      */
@@ -208,11 +160,9 @@ public class CommandeEcole {
         this.dateLivraison = dateLivraison;
     }
 
-
-
     @Override
-	public String toString() {
-		return "Utilisateur [id=" + id + ", identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + "]";
-	}
-	
+    public String toString() {
+        return "Utilisateur [id=" + id + ", identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + "]";
+    }
+
 }
