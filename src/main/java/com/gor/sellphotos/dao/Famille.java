@@ -18,6 +18,8 @@ public class Famille {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String identifiantsFraterie;
+
     @OneToMany(mappedBy = "famille")
     private List<Eleve> eleves;
 
@@ -161,11 +163,19 @@ public class Famille {
         this.commandesLivrees = commandesLivrees;
     }
 
+    public String getIdentifiantsFraterie() {
+        return identifiantsFraterie;
+    }
+
+    public void setIdentifiantsFraterie(String identifiantsFraterie) {
+        this.identifiantsFraterie = identifiantsFraterie;
+    }
+
     @Override
     public String toString() {
-        return "Famille [id=" + getId() + ", nbEleves=" + eleves.size() + ", nbCommandeEnAttenteValidPayement="
-                        + commandesEnAttenteValidationPayement.size() + ", nbCommandeEnAttenteValidEcole=" + commandesEnAttenteValidationEcole.size()
-                        + ", nbCommandeEnLivraison=" + commandesEnLivraison.size() + ", nbCommandeLivrees=" + commandesLivrees.size() + "]";
+        return "Famille [id=" + getId() + ", nbEleves=" + eleves + ", nbCommandeEnAttenteValidPayement=" + commandesEnAttenteValidationPayement
+                        + ", nbCommandeEnAttenteValidEcole=" + commandesEnAttenteValidationEcole + ", nbCommandeEnLivraison=" + commandesEnLivraison
+                        + ", nbCommandeLivrees=" + commandesLivrees + "]";
     }
 
 }

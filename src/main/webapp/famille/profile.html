@@ -1,5 +1,4 @@
-<div class="col-md-12 panel panel-default" ng-controller="FamilleCtrl">
-	{{logged()}}
+<div class="col-md-12 panel panel-default" ng-controller="FamilleCtrl" ng-init="init()">
 
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -9,11 +8,16 @@
 			<div class="col-md-3">Etablissement</div>
 			<div class="col-md-9">{{ecole}}</div>
 
-			<div class="col-md-3">Classe</div>
-			<div class="col-md-9">{{classe}}</div>
+			<div class="col-md-12">
 
-			<div class="col-md-3">Eleve</div>
-			<div class="col-md-9">{{eleveNom}}</div>
+			<div ng-repeat="eleve in eleves">
+				<div class="col-md-3 panel panel-default">
+					<div class="col-md-3">Eleve</div>
+					<div class="col-md-9">{{eleve.nomEleve}}</div>
+					<div class="col-md-3">Classe</div>
+					<div class="col-md-9">{{eleve.nomClasse}}</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -22,12 +26,11 @@
 			<h3 class="panel-title">Visualisation des photos</h3>
 		</div>
 		<div class="panel-body">
-			<div class="col-md-3">Photos1</div>
-			<div class="col-md-3">Photos2</div>
-			<div class="col-md-3">Photos3</div>
-			<div class="col-md-3">Photos4</div>
-			<div class="col-md-3">Photos5</div>
-			<div class="col-md-3">Photos6</div>
+			<div ng-repeat="eleve in eleves">
+				<div class="col-md-3"><img class="img-responsive" ng-src="/data/{{eleve.cheminAccesImageEleve}}.jpg" /></div>
+				<div class="col-md-3"><img class="img-responsive" ng-src="/data/{{eleve.cheminAccesImageGroupe}}.jpg" /></div>
+			</div>
+			<div class="col-md-3">Image fraterie</div>
 
 			<div class="col-md-12">
 				<button type="button" class="col-md-2 col-md-offset-5 btn btn-default">Commander</button>

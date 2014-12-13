@@ -15,4 +15,6 @@ public interface FamilleRepository extends CrudRepository<Famille, Long> {
     @Query(FIND_BY_IDENTIFIANT_UTILISATEUR)
     public Famille findByIdentifiantUtilisateur(@Param("idUtilisateur") String idUtilisateur);
 
+    public Famille findByIdentifiantsFraterie(String idFraterie);
+
 }
