@@ -21,7 +21,6 @@ import com.gor.sellphotos.repository.UtilisateurRepository;
  * Class which defined the authentication logic
  * 
  * @author pcpl7947
- *
  */
 @Component
 public class AuthenticationProviderImpl implements AuthenticationProvider {
@@ -33,7 +32,6 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
 
     /*
      * (non-Javadoc)
-     * 
      * @see
      * org.springframework.security.authentication.AuthenticationProvider#authenticate(org.springframework.security.
      * core.Authentication)
@@ -44,7 +42,7 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
         // Get field values
         final String identifiant = authentication.getPrincipal().toString();
         final String password = authentication.getCredentials().toString();
-        
+
         LOGGER.debug("Trying to log : {}", identifiant);
 
         Utilisateur utilisateur = utilisateurRepository.findByIdentifiant(identifiant);
@@ -52,20 +50,20 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
         if (utilisateur == null) {
             return null;
         }
-        
+
         if (password.equals(utilisateur.getCodeAcces())) {
             LOGGER.debug("User authentication OK");
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
-            grantedAuths.add(new SimpleGrantedAuthority(utilisateur.getTypeUtilisateur().name()));
+            grantedAuths.add(new SimpleGrantedAuthority(utilisateur.getRole().name()));
+            LOGGER.debug("User role : {1}", utilisateur.getRole().name());
             return new UsernamePasswordAuthenticationToken(identifiant, password, grantedAuths);
         }
-        
+        LOGGER.debug("Password don't match");
         return null;
     }
 
     /*
      * (non-Javadoc)
-     * 
      * @see org.springframework.security.authentication.AuthenticationProvider#supports(java.lang.Class)
      */
     @Override

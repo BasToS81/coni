@@ -32,7 +32,7 @@ public class Utilisateur {
     private String codeAcces;
 
     @Enumerated(EnumType.STRING)
-    private TypeUtilisateur typeUtilisateur;
+    private TypeUtilisateur role;
 
     @Basic
     private String nom;
@@ -82,15 +82,15 @@ public class Utilisateur {
     /**
      * @return the typeUtilisateur
      */
-    public TypeUtilisateur getTypeUtilisateur() {
-        return typeUtilisateur;
+    public TypeUtilisateur getRole() {
+        return role;
     }
 
     /**
      * @param typeUtilisateur the typeUtilisateur to set
      */
-    public void setTypeUtilisateur(TypeUtilisateur typeUtilisateur) {
-        this.typeUtilisateur = typeUtilisateur;
+    public void setRole(TypeUtilisateur role) {
+        this.role = role;
     }
 
     /**

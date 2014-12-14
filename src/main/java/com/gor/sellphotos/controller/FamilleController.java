@@ -3,14 +3,15 @@ package com.gor.sellphotos.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,11 +23,13 @@ import com.gor.sellphotos.dto.FamilleDTO;
 import com.gor.sellphotos.repository.CommandeEleveRepository;
 import com.gor.sellphotos.repository.EleveRepository;
 import com.gor.sellphotos.repository.FamilleRepository;
+import com.gor.sellphotos.security.SessionData;
 
 /**
  *
  */
 @Controller
+@Scope("request")
 public class FamilleController extends AbstractRestHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FamilleController.class);
@@ -40,12 +43,17 @@ public class FamilleController extends AbstractRestHandler {
     @Autowired
     private CommandeEleveRepository commandeEleveRepository;
 
-    @RequestMapping("/ws/famille/loadData/{identifiant}")
+    @Autowired
+    private SessionData sessionData;
+
+    @RequestMapping("/ws/famille/loadData")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public FamilleDTO getFamille(@PathVariable("identifiant") String identifiant) {
-        LOGGER.debug("loading user {}", identifiant);
+    public FamilleDTO getFamille(HttpSession session) {
+        LOGGER.debug("loading famille");
+        String identifiant = sessionData.getSessionsAndIdentifiant().get(session.getId());
+        LOGGER.debug("Session id= {}; identifiant= {}", session.getId(), identifiant);
         FamilleDTO familleDTO = null;
         Famille famille = familleRepository.findByIdentifiantUtilisateur(identifiant);
         if (famille != null) {
@@ -74,7 +82,6 @@ public class FamilleController extends AbstractRestHandler {
         LOGGER.debug("famille {}", famille);
         return familleDTO;
     }
-
     /*
      * @RequestMapping("/ws/famille/commande/get")
      * @ResponseBody

@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.core.Authentication;
@@ -19,7 +21,7 @@ import org.springframework.security.web.util.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gor.sellphotos.dto.UserDto;
+import com.gor.sellphotos.dto.UtilisateurDTO;
 
 /**
  * http://java.dzone.com/articles/secure-rest-services-using
@@ -28,6 +30,8 @@ import com.gor.sellphotos.dto.UserDto;
  */
 public class UsernamePasswordAuthenticationConfigurer extends
                 AbstractAuthenticationFilterConfigurer<HttpSecurity, UsernamePasswordAuthenticationConfigurer, UsernamePasswordAuthenticationFilter> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UsernamePasswordAuthenticationConfigurer.class);
 
     protected UsernamePasswordAuthenticationConfigurer(String defaultLoginProcessingUrl) {
         super(new UsernamePasswordAuthenticationFilter(), defaultLoginProcessingUrl);
@@ -54,13 +58,28 @@ public class UsernamePasswordAuthenticationConfigurer extends
                         HttpServletResponse response, Authentication authentication)
                         throws IOException, ServletException {
 
+            LOGGER.debug("Succes d'authentification");
+
             response.setStatus(HttpServletResponse.SC_OK);
 
-            UserDto user = new UserDto();
-            user.setName((String) authentication.getPrincipal());
+            UtilisateurDTO user = new UtilisateurDTO();
+
             for (GrantedAuthority authority : authentication.getAuthorities()) {
-                user.addRole(authority.getAuthority());
+
+                user.setRole(authority.getAuthority());
             }
+
+            LOGGER.debug(user.toString());
+
+            SessionData sessionData = new SessionData();
+
+            LOGGER.debug("sessionData={}, session={}", sessionData, request.getSession());
+
+            sessionData.addASessionAndIdentifiant(request.getSession().getId(), (String) authentication.getPrincipal());
+
+            request.getSession().setAttribute("sessionData", sessionData);
+
+            LOGGER.debug("sessionOK");
 
             ObjectMapper mapper = new ObjectMapper();
 

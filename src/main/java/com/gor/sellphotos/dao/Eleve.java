@@ -23,7 +23,7 @@ public class Eleve extends Utilisateur {
 
     public Eleve() {
 
-        setTypeUtilisateur(Utilisateur.TypeUtilisateur.ELEVE);
+        setRole(Utilisateur.TypeUtilisateur.ELEVE);
     }
 
     /**

@@ -6,9 +6,6 @@ myApp.value('urlDataHomeFamille', '/ws/famille/loadData/');
 
 myApp.config(function($stateProvider, $urlRouterProvider) {
 	// Set default route
-	
-	
-	
 	$urlRouterProvider.otherwise('/');
 
 	// Declare states
@@ -21,7 +18,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			}
 		}
 	}).state('generic', {
-		url : '/{type}/{identifiant}',
+		url : '/{type}',
 		views : {
 			'content@' : {
 				templateUrl : function ($stateParams){
@@ -43,7 +40,7 @@ var loadData = function($q, $http, $stateParams, $timeout, Auth) {
 	var deferred = $q.defer();
 
 	// http://stackoverflow.com/questions/22209107/angularjs-ui-router-preload-http-data-before-app-loads
-	$http.get('/ws/'+$stateParams.type+'/loadData/' + $stateParams.identifiant)
+	$http.get('/ws/'+$stateParams.type+'/loadData/')
 	.success(function(data, status, headers, config) {
 		Auth.setUserData(data);
 		$timeout(deferred.resolve, 0);

@@ -16,31 +16,35 @@ myApp.controller('LoginCtrl', [ '$scope', '$http', '$state', '$timeout', 'Auth',
 				})
 				.success(
 						function(data, status, headers, config) {
+
+							$scope.utilisateur.identifiant = data.identifiant;
+							
+							
 							var user = {
-									name : data.name,
-									school : data.school,
-									roles : data.role
+									role : data.role
 							};
 							Auth.setUser(user);
-							
+
 							var state = "";
-							if (user.roles.indexOf("ELEVE") >= 0) {
-									state = 'famille';
+							if (user.role == "ELEVE" ) {
+								state = 'famille';
 							}
-							else if (user.roles.indexOf("RESPONSABLE") >= 0) {
+							else if (user.role == "RESPONSABLE") {
 								state = 'ecole';
 							}
-							
+
 							/*
 							 * Appel du bon profil ou rôle inconnu
 							 */
 							if (state == ""){
-								$scope.errorMessage = 'Rôle inconnu : ' + user.roles;
+								$scope.errorMessage = 'Rôle inconnu : ' + user.role;
 							}
 							else {
-								$state.go('generic', {type:state, "identifiant": user.name});
+								
+								$state.go('generic', {type:state});
 							}
-						})
+						}
+						)
 				.error(
 						function(data, status, headers, config) {
 							if (status == 401) {

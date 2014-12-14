@@ -1,6 +1,5 @@
 package com.gor.sellphotos.dto;
 
-import java.util.Date;
 
 public class CommandeFamilleSyntheseDTO {
 
@@ -8,17 +7,17 @@ public class CommandeFamilleSyntheseDTO {
 
     private String identifiant;
 
-    private Date dateCommande;
+    private String dateCommande;
 
     private String moyenPayement;
 
     private String statut;
 
-    private Date dateValidation;
+    private String dateValidation;
 
     private double montant;
 
-    private Date dateLivraison;
+    private String dateLivraison;
 
     private String typeCommande;
 
@@ -53,14 +52,14 @@ public class CommandeFamilleSyntheseDTO {
     /**
      * @return the dateCommande
      */
-    public Date getDateCommande() {
+    public String getDateCommande() {
         return dateCommande;
     }
 
     /**
      * @param dateCommande the dateCommande to set
      */
-    public void setDateCommande(Date dateCommande) {
+    public void setDateCommande(String dateCommande) {
         this.dateCommande = dateCommande;
     }
 
@@ -95,14 +94,14 @@ public class CommandeFamilleSyntheseDTO {
     /**
      * @return the dateValidation
      */
-    public Date getDateValidation() {
+    public String getDateValidation() {
         return dateValidation;
     }
 
     /**
      * @param dateValidation the dateValidation to set
      */
-    public void setDateValidation(Date dateValidation) {
+    public void setDateValidation(String dateValidation) {
         this.dateValidation = dateValidation;
     }
 
@@ -123,14 +122,14 @@ public class CommandeFamilleSyntheseDTO {
     /**
      * @return the dateLivraison
      */
-    public Date getDateLivraison() {
+    public String getDateLivraison() {
         return dateLivraison;
     }
 
     /**
      * @param dateLivraison the dateLivraison to set
      */
-    public void setDateLivraison(Date dateLivraison) {
+    public void setDateLivraison(String dateLivraison) {
         this.dateLivraison = dateLivraison;
     }
 

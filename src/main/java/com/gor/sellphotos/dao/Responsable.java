@@ -11,7 +11,7 @@ public class Responsable extends Utilisateur {
 
     public Responsable() {
         super();
-        setTypeUtilisateur(Utilisateur.TypeUtilisateur.RESPONSABLE);
+        setRole(Utilisateur.TypeUtilisateur.RESPONSABLE);
     }
 
     /**

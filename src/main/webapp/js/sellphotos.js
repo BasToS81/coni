@@ -5,8 +5,8 @@ myApp.controller('GlobalCtrl', [ '$scope', function($scope) {
 	$scope.utilisateur = {
 		identifiant : "",
 		codeAcces : "",
-		school : "",
-		roles : ""
+		ecole : "",
+		role : ""
 	};
 }
 ]);

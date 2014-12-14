@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,7 +40,7 @@ import com.gor.sellphotos.utils.DateUtils;
  *
  */
 @Controller
-public class FamilleCommandesController {
+public class FamilleCommandesController extends AbstractRestHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FamilleCommandesController.class);
 
@@ -64,11 +65,11 @@ public class FamilleCommandesController {
     @Autowired
     private ProduitRepository produitRepository;
 
-    @RequestMapping("/famille/commande/getList")
+    @RequestMapping("/ws/famille/{identifiant}/commande/getList")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public List<CommandeFamilleSyntheseDTO> getCommandesFamille(@RequestParam("identifiant") String identifiantEleve) {
+    public List<CommandeFamilleSyntheseDTO> getCommandesFamille(@PathVariable("identifiant") String identifiantEleve) {
         LOGGER.debug("loading commandes famille {}", identifiantEleve);
         List<CommandeFamilleSyntheseDTO> commandesDTO = new ArrayList<CommandeFamilleSyntheseDTO>();
 
@@ -77,9 +78,9 @@ public class FamilleCommandesController {
         for (CommandeFamille commandeFamille : commandes) {
 
             CommandeFamilleSyntheseDTO cmd = new CommandeFamilleSyntheseDTO();
-            cmd.setDateCommande(commandeFamille.getDateCommande());
-            cmd.setDateLivraison(commandeFamille.getDateLivraison());
-            cmd.setDateValidation(commandeFamille.getDateValidation());
+            cmd.setDateCommande(DateUtils.formatDateTime(commandeFamille.getDateCommande()));
+            cmd.setDateLivraison(DateUtils.formatDateTime(commandeFamille.getDateLivraison()));
+            cmd.setDateValidation(DateUtils.formatDateTime(commandeFamille.getDateValidation()));
             cmd.setIdentifiant(commandeFamille.getIdentifiant());
             cmd.setMontant(commandeFamille.getMontant());
             cmd.setMoyenPayement(commandeFamille.getMoyenPayement());
