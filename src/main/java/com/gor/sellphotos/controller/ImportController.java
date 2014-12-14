@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -78,13 +79,11 @@ public class ImportController {
                     chargeConfigurationEcole(dossierEcole);
                 }
 
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             }
             resultatImport = "OK";
-        }
-        else {
+        } else {
             LOGGER.debug("dossier import non existant");
         }
 
@@ -132,10 +131,8 @@ public class ImportController {
                     responsableRepository.save(resp);
                     ecole.addResponsables(resp);
                     // sauvegarde du responsable
-                }
-                else {
-                    LOGGER.error("Le responsable de l'école {} n'est pas correctement renseigné : {}", ecole.getNumeroEcole(),
-                                    listResponsables[i]);
+                } else {
+                    LOGGER.error("Le responsable de l'école {} n'est pas correctement renseigné : {}", ecole.getNumeroEcole(), listResponsables[i]);
                 }
             }
         }
@@ -210,21 +207,32 @@ public class ImportController {
         classeRepository.save(classe);
 
         int nbEleves = Integer.parseInt(classePropertie.getProperty("nbEleves"));
-        for (int i = 1; i < nbEleves - 1; i++) {
+        System.out.println("nbEleves = " + nbEleves);
+        for (int i = 1; i <= nbEleves; i++) {
             String identifiant = classePropertie.getProperty("eleve_" + i + ".identifiant");
+            String identifiantFamille = classePropertie.getProperty("eleve_" + i + ".identifiantsFraterie");
 
             Eleve eleve = new Eleve();
-            eleve.setIdentifiant(classePropertie.getProperty("eleve_" + i + ".identifiant"));
+            eleve.setIdentifiant(identifiant);
             eleve.setCodeAcces(classePropertie.getProperty("eleve_" + i + ".codeAcces"));
             eleve.setNom(classePropertie.getProperty("eleve_" + i + ".nom"));
             eleve.setDateLimiteAcces(ecole.getDateLimiteAcces());
 
-            Famille famille = familleRepository.findByIdentifiantUtilisateur(identifiant);
+            System.out.println("Ajout eleve " + identifiant);
+
+            Famille famille = null;
+            if (!StringUtils.isEmpty(identifiantFamille)) {
+                famille = familleRepository.findByIdentifiantsFraterie(identifiantFamille);
+            }
             if (famille == null) {
                 famille = new Famille();
+                famille.setIdentifiantsFraterie(identifiantFamille);
                 famille.setEcole(ecole);
                 familleRepository.save(famille);
+            } else {
+                System.out.println("Famille found : " + famille);
             }
+
             eleve.setFamille(famille);
 
             eleve.setClasse(classe);

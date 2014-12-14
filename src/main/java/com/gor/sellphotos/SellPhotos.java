@@ -1,11 +1,15 @@
 package com.gor.sellphotos;
 
+import java.sql.SQLException;
+
 import javax.annotation.PreDestroy;
 
+import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -23,18 +27,18 @@ public class SellPhotos {
     public static void main(final String[] args) throws Exception {
         SpringApplication.run(SellPhotos.class, args);
     }
-    
-    // @Bean
-    // public Server initH2Server() {
-    // try {
-    // Server server = Server.createTcpServer().start();
-    // System.out.println("URL: jdbc:h2:" + server.getURL() + "/mem:test");
-    // return server;
-    // } catch (SQLException e) {
-    // e.printStackTrace();
-    // }
-    // return null;
-    // }
+
+    @Bean
+    public Server initH2Server() {
+        try {
+            Server server = Server.createTcpServer().start();
+            System.out.println("URL: jdbc:h2:" + server.getURL() + "/mem:test");
+            return server;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @PreDestroy
     public void exit() {
