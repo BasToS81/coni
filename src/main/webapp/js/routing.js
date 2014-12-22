@@ -9,6 +9,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise('/');
 
 	// Declare states
+	// Page login
 	$stateProvider.state('home', {
 		url : '/',
 		views : {
@@ -17,19 +18,33 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 				controller : 'LoginCtrl'
 			}
 		}
-	}).state('generic', {
+	})
+	// Page famille
+	.state('commander', {
+		url : '/famille/commande',
+		views : {
+			'content@' : {
+				
+				templateUrl : function ($stateParams){ return 'accueil.html'; }
+			},
+			'contentInterne@' : {
+				
+				templateUrl : function ($stateParams){ return '/famille/commande.html'; }
+			}
+		}
+	})
+	//Page Accueil après login
+	.state('generic', {
 		url : '/{type}',
 		views : {
 			'content@' : {
-				templateUrl : function ($stateParams){
-				    return '/' + $stateParams.type + '/profile.html';
-				},
-				controller : function ($stateParams){
-				    return $stateParams.type + 'Ctrl';
-				},
-				resolve : {
-					additionalData : loadData
-				}
+				templateUrl : function ($stateParams){  return 'accueil.html'; },
+				controller : function ($stateParams){ return $stateParams.type + 'Ctrl'; },
+				resolve : {	additionalData : loadData }
+			},
+			'contentInterne@' : {
+				templateUrl : function ($stateParams){ return '/' + $stateParams.type + '/profile.html'; },
+				
 			}
 		}
 	});

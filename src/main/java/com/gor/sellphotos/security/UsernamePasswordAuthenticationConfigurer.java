@@ -63,21 +63,19 @@ public class UsernamePasswordAuthenticationConfigurer extends
             response.setStatus(HttpServletResponse.SC_OK);
 
             UtilisateurDTO user = new UtilisateurDTO();
-
+            user.setIdentifiant(authentication.getPrincipal().toString());
             for (GrantedAuthority authority : authentication.getAuthorities()) {
-
                 user.setRole(authority.getAuthority());
             }
 
             LOGGER.debug(user.toString());
 
-            SessionData sessionData = new SessionData();
-
-            LOGGER.debug("sessionData={}, session={}", sessionData, request.getSession());
-
-            sessionData.addASessionAndIdentifiant(request.getSession().getId(), (String) authentication.getPrincipal());
-
-            request.getSession().setAttribute("sessionData", sessionData);
+            // Création des données de sécurisation de la session
+            SecuritySessionData sessionData = new SecuritySessionData();
+            // Ajout de l'identifiant
+            sessionData.setIdentifiantUtilisateur(user.getIdentifiant());
+            // Affectation à la session (à l'élément de sécurité de la session)
+            ((UPAWithSessionDataToken) authentication).setSessionData(sessionData);
 
             LOGGER.debug("sessionOK");
 

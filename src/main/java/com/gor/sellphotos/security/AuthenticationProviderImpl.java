@@ -56,7 +56,7 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority(utilisateur.getRole().name()));
             LOGGER.debug("User role : {1}", utilisateur.getRole().name());
-            return new UsernamePasswordAuthenticationToken(identifiant, password, grantedAuths);
+            return new UPAWithSessionDataToken(identifiant, password, grantedAuths);
         }
         LOGGER.debug("Password don't match");
         return null;

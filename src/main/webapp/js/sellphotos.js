@@ -42,6 +42,7 @@ myApp.run([ '$rootScope', function($rootScope, $httpProvider) {
 myApp.service('Auth', function() {
 	var user = window.user;
 	var userData = '';
+	var userCommandes = '';
 	return {
 		getUser : function() {
 			return user;
@@ -57,6 +58,12 @@ myApp.service('Auth', function() {
 		},
 		setUserData : function(newUserData) {
 			userData = newUserData;
+		},
+		getUserCommandes : function() {
+			return userCommandes;
+		},
+		setUserCommandes : function(newUserCommandes) {
+			userCommandes = newUserCommandes;
 		}
 	};
 });

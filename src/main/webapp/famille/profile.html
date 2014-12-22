@@ -1,67 +1,42 @@
-<div class="col-md-12 panel panel-default" ng-controller="FamilleCtrl" ng-init="init()">
+<div class="col-md-12 panel panel-default" ng-controller="FamilleCtrl" >
 
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3 class="panel-title">Information générales</h3>
-		</div>
-		<div class="panel-body">
-			<div class="col-md-3">Etablissement</div>
-			<div class="col-md-9">{{nomEcole}}</div>
-
-			<div class="col-md-12">
-
-			<div ng-repeat="eleve in eleves">
-				<div class="col-md-3 panel panel-default">
-					<div class="col-md-3">Eleve</div>
-					<div class="col-md-9">{{eleve.nomEleve}}</div>
-					<div class="col-md-3">Classe</div>
-					<div class="col-md-9">{{eleve.nomClasse}}</div>
-				</div>
+	<div class="col-md-6 panel panel-default">
+		
+		<div ng-repeat="eleve in eleves">
+			<div class="col-md-3 panel panel-default">
+				
+				<div class="col-md-12">{{eleve.nomEleve}}</div>
+				<div class="col-md-12"><img class="img-responsive" ng-src="/data/{{eleve.cheminAccesImageEleve}}.jpg" /></div>
+				<div class="col-md-12">{{eleve.nomClasse}}</div>
+				<div class="col-md-12"><img class="img-responsive" ng-src="/data/{{eleve.cheminAccesImageGroupe}}.jpg" /></div>
 			</div>
 		</div>
-	</div>
-
-	<div class="panel panel-default" ng-repeat="eleve in eleves">
-		<div class="panel-heading">
-			<h3 class="panel-title">Eleve : {{eleve.nomEleve}}   Classe:{{eleve.nomClasse}}</h3>
-		</div>
-		<div class="panel-body">
-			<div ng-repeat="eleve in eleves">
-				<div class="col-md-3"><img class="img-responsive" ng-src="/data/{{eleve.cheminAccesImageEleve}}.jpg" /></div>
-				<div class="col-md-3"><img class="img-responsive" ng-src="/data/{{eleve.cheminAccesImageGroupe}}.jpg" /></div>
-			</div>
-			<div class="col-md-3">Image fraterie</div>
-		</div>
+		
 	</div>
 
 
-	<div class="panel panel-default">
+
+	<div class="col-md-6 panel panel-default">
 		<div class="panel-heading">
 			<h3 class="panel-title">Commandes</h3>
-			<div class="col-md-12">
-				<button type="button" class="col-md-2 col-md-offset-5 btn btn-default">Commander</button>
-			</div>
+			
 		</div>
 
-		<div class="panel-body" ng-controller="FamilleCommandesCtrl">
-
+		<div class="col-md-12 panel-default" ng-controller="FamilleCommandesCtrl" ng-init="getCommandesList()">
+			<div class="col-md-5"></div>
+			<div class="col-md-3">
+				<!-- openCommande('{{commandes[0].identifiant}}') -->
+				<a ui-sref="commander" class="btn btn-block btn-info">Commander</a>
+				
+			</div>
+			<div class="col-md-5"></div>
 			
-
-			<accordion close-others="oneAtATime"> 
-				<accordion-group heading="Commande en cours" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled"> 
-				 
-					<div class="table-responsive" >
-					  <table class="table">
-					  	<tr><th>Identifiant</th><th>Date de la commande</th><th>Montant</th></tr>
-					    <tr ng-repeat="commande in commandes"><td>{{commande.identifiant}}</td><td>{{commande.dateCommande}}</td><td>{{commande.montant}}</td></tr>
-					  </table>
-					</div>
-				</accordion-group> 
-				<accordion-group heading="Commande validÃ©es, en attente de paiement"> TODO en attente paiement </accordion-group> 
-				<accordion-group heading="Commande en attente de validation du reponsable de l'Ã©cole"> TODO en attente validation </accordion-group>
-				<accordion-group heading="Commande en cours de livraison"> TODO En cours de livraison </accordion-group> 
-				<accordion-group heading="Commande livrÃ©es"> TODO livrÃ©es </accordion-group>
-			</accordion>
+			<div class="table-responsive col-md-12" >
+			  <table class="table">
+			  	<tr><th>Identifiant</th><th>Date de la commande</th><th>Montant</th></tr>
+			    <tr ng-repeat="commande in commandes"><td>{{commande.identifiant}}</td><td>{{commande.dateCommande}}</td><td>{{commande.montant}}</td></tr>
+			  </table>
+			</div>
 
 		</div>
 

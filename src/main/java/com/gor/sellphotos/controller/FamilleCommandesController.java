@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,8 @@ import com.gor.sellphotos.repository.EleveRepository;
 import com.gor.sellphotos.repository.FamilleRepository;
 import com.gor.sellphotos.repository.ModeleEtTarifRepository;
 import com.gor.sellphotos.repository.ProduitRepository;
+import com.gor.sellphotos.security.SecuritySessionData;
+import com.gor.sellphotos.security.UPAWithSessionDataToken;
 import com.gor.sellphotos.utils.DateUtils;
 
 /**
@@ -65,16 +68,20 @@ public class FamilleCommandesController extends AbstractRestHandler {
     @Autowired
     private ProduitRepository produitRepository;
 
-    @RequestMapping("/ws/famille/{identifiant}/commande/getList")
+    @RequestMapping("/ws/famille/commande/getList")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public List<CommandeFamilleSyntheseDTO> getCommandesFamille(@PathVariable("identifiant") String identifiantEleve) {
+    public List<CommandeFamilleSyntheseDTO> getCommandesFamille(Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+
         LOGGER.debug("loading commandes famille {}", identifiantEleve);
+
         List<CommandeFamilleSyntheseDTO> commandesDTO = new ArrayList<CommandeFamilleSyntheseDTO>();
 
         List<CommandeFamille> commandes = commandeFamilleRepository.findCmdDeTouteLaFamilleByIdEleve(identifiantEleve);
-
         for (CommandeFamille commandeFamille : commandes) {
 
             CommandeFamilleSyntheseDTO cmd = new CommandeFamilleSyntheseDTO();
@@ -97,8 +104,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public CommandeFamilleDTO createCommandeFamille(@RequestParam("identifiantEcole") String identifiantEcole,
-                    @RequestParam("identifiantEleve") String identifiantEleve) {
+    public CommandeFamilleDTO createCommandeFamille(Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
         LOGGER.debug("creation de la commande {}", identifiantEcole);
 
         CommandeFamilleDTO commandeFamille = new CommandeFamilleDTO();
@@ -116,7 +127,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         // Préaparation des commandes possibles par élèves
 
-        ModeleEtTarif modele = modeleEtTarifRepository.findByNumeroEcole(identifiantEcole);
+        ModeleEtTarif modele = modeleEtTarifRepository.findByIdEcole(identifiantEcole);
 
         List<Produit> listeDesProduitsDuModele = null;
 
@@ -164,12 +175,16 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
     }
 
-    @RequestMapping("/famille/commande/get")
+    @RequestMapping("/ws/famille/commande/get/{identifiantCommande}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public CommandeFamilleDTO getCommandeFamille(@RequestParam("identifiantCommande") String identifiantCommande,
-                    @RequestParam("identifiantEcole") String identifiantEcole) {
+    public CommandeFamilleDTO getCommandeFamille(@PathVariable("identifiantCommande") String identifiantCommande, Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
         LOGGER.debug("loading commande {}", identifiantCommande);
 
         CommandeFamilleDTO commandeFamilleDTO = new CommandeFamilleDTO();
@@ -195,7 +210,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
             List<CommandeProduitDTO> commandesProduit = new ArrayList<CommandeProduitDTO>();
 
-            ModeleEtTarif modele = modeleEtTarifRepository.findByNumeroEcole(identifiantEcole);
+            ModeleEtTarif modele = modeleEtTarifRepository.findByIdEcole(identifiantEcole);
 
             List<Produit> listeDesProduitsDuModele = null;
 
@@ -232,11 +247,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
                         // C'est le même produit on initialise avec les valeurs de la commande
                         cmdProd.setMontant(prodOfCommande.getMontant());
                         cmdProd.setQuantite(prodOfCommande.getQuantite());
-                        commandesProduit.add(cmdProd);
+
                         break;
                     }
 
                 }
+                commandesProduit.add(cmdProd);
 
             }
 
@@ -244,16 +260,23 @@ public class FamilleCommandesController extends AbstractRestHandler {
             commandeFamilleDTO.addCommandeEleve(commandeEleveDTO);
         }
 
+        LOGGER.debug("fin loading commande");
+
         return commandeFamilleDTO;
     }
 
-    @RequestMapping("/famille/commande/save")
+    @RequestMapping("/ws/famille/commande/save/{identifiantCommande}")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public CommandeFamilleDTO saveCommandeFamille(@RequestParam("identifiantCommande") String identifiantCommande,
-                    @RequestParam("identifiantEcole") String identifiantEcole,
-                    @RequestParam("commandesEleve") List<CommandeEleveDTO> commandesEleve) {
+    public CommandeFamilleDTO saveCommandeFamille(@PathVariable("identifiantCommande") String identifiantCommande,
+                    Authentication authentication,
+                    List<CommandeEleveDTO> commandesEleve) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
         LOGGER.debug("saving commande {}", identifiantCommande);
 
         CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
@@ -277,7 +300,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
             cmd.setFamille(cmdFamille.getFamille());
             cmd.setCommandeFamille(cmdFamille);
 
-            ModeleEtTarif modele = modeleEtTarifRepository.findByNumeroEcole(identifiantEcole);
+            ModeleEtTarif modele = modeleEtTarifRepository.findByIdEcole(identifiantEcole);
             List<Produit> listeDesProduitsDuModele = null;
 
             if (Produit.TypeProduit.PRINCIPALE.name().compareTo(cmdDTO.getTypeCommande()) == 0) {
@@ -321,7 +344,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         commandeFamilleRepository.save(cmdFamille);
 
-        return getCommandeFamille(identifiantCommande, identifiantEcole);
+        return getCommandeFamille(identifiantCommande, authentication);
 
     }
 
@@ -329,9 +352,10 @@ public class FamilleCommandesController extends AbstractRestHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public List<CommandeFamilleSyntheseDTO> deleteCommandeFamille(@RequestParam("identifiantCommande") String identifiantCommande,
-                    @RequestParam("identifiantEleve") String identifiantEleve) {
+    public List<CommandeFamilleSyntheseDTO> deleteCommandeFamille(@RequestParam("identifiantCommande") String identifiantCommande, Authentication authentication) {
         LOGGER.debug("deleting commande {}", identifiantCommande);
+
+        // TODO: Check if commande appartient bien à l'utilisateur OK
 
         CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
         for (CommandeEleve cmd : cmdFamille.getCommandesEleve()) {
@@ -343,6 +367,6 @@ public class FamilleCommandesController extends AbstractRestHandler {
         commandeFamilleRepository.delete(cmdFamille);
 
         LOGGER.debug(" end deleting commande {}", cmdFamille);
-        return getCommandesFamille(identifiantEleve);
+        return getCommandesFamille(authentication);
     }
 }
