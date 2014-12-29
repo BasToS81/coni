@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -175,22 +176,38 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
     }
 
-    @RequestMapping("/ws/famille/commande/get/{identifiantCommande}")
+    @RequestMapping("/ws/famille/commande/loadOrCreate")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @Transactional
-    public CommandeFamilleDTO getCommandeFamille(@PathVariable("identifiantCommande") String identifiantCommande, Authentication authentication) {
+    public CommandeFamilleDTO getOrCreateCommande(Authentication authentication) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();
         Long identifiantEcole = sessionData.getIdentifiantEcole();
 
-        LOGGER.debug("loading commande {}", identifiantCommande);
-
-        CommandeFamilleDTO commandeFamilleDTO = new CommandeFamilleDTO();
+        LOGGER.debug("loading commande for update ");
 
         /* TODO : S'assurer que c'est bien la commande de l'élève */
-        CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
+
+        // récupérer la commande modifiable.
+        Famille fam = familleRepository.findByIdentifiantUtilisateur(identifiantEleve);
+        CommandeFamille cmdFamille = fam.getCommandeEnCours();
+
+        if (cmdFamille == null) {
+            // Pas de commande pour cette famille en cours.
+            // création de celle ci
+            return createCommandeFamille(authentication);
+        }
+        else {
+            LOGGER.debug("commande famille : {}", cmdFamille.getIdentifiant());
+            // récupération de la commnade existante
+            return getCommandeFamille(identifiantEcole, cmdFamille);
+        }
+
+    }
+
+    private CommandeFamilleDTO getCommandeFamille(Long identifiantEcole, CommandeFamille cmdFamille) {
+        CommandeFamilleDTO commandeFamilleDTO = new CommandeFamilleDTO();
 
         commandeFamilleDTO.setDateCommande(cmdFamille.getDateCommande());
         commandeFamilleDTO.setDateLivraison(cmdFamille.getDateLivraison());
@@ -201,12 +218,24 @@ public class FamilleCommandesController extends AbstractRestHandler {
         commandeFamilleDTO.setMoyenPayement(cmdFamille.getMoyenPayement());
         commandeFamilleDTO.setStatut(cmdFamille.getStatut().name());
 
-        for (CommandeEleve cmd : cmdFamille.getCommandesEleve()) {
+        for (Eleve elev : cmdFamille.getFamille().getEleves()) {
+
+            CommandeEleve cmd = new CommandeEleve();
+            String typeCommande = Produit.TypeProduit.PRINCIPALE.name();
+            for (CommandeEleve cmdElev : cmdFamille.getCommandesEleve()) {
+                if (cmdElev.getEleve().getId() == elev.getId()) {
+                    cmd = cmdElev;
+                    typeCommande = cmd.getTypeCommande().name();
+                    break;
+                }
+            }
+
             CommandeEleveDTO commandeEleveDTO = new CommandeEleveDTO();
 
             commandeEleveDTO.setId(cmd.getId());
-            commandeEleveDTO.setIdentifiantEleve(cmd.getEleve().getIdentifiant());
+            commandeEleveDTO.setIdentifiantEleve(elev.getIdentifiant());
             commandeEleveDTO.setMontant(cmd.getMontant());
+            commandeEleveDTO.setTypeCommande(typeCommande);
 
             List<CommandeProduitDTO> commandesProduit = new ArrayList<CommandeProduitDTO>();
 
@@ -265,13 +294,51 @@ public class FamilleCommandesController extends AbstractRestHandler {
         return commandeFamilleDTO;
     }
 
-    @RequestMapping("/ws/famille/commande/save/{identifiantCommande}")
+    @RequestMapping("/ws/famille/commande/{identifiantCommande}/get/")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public CommandeFamilleDTO getCommandeFamille(@PathVariable("identifiantCommande") String identifiantCommande, Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        LOGGER.debug("loading commande {}", identifiantCommande);
+
+        /* TODO : S'assurer que c'est bien la commande de l'élève */
+        CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
+
+        return getCommandeFamille(identifiantEcole, cmdFamille);
+    }
+
+    @RequestMapping("/ws/famille/commande/save/")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public CommandeFamilleDTO saveCommandeFamille(
+                    Authentication authentication,
+                    @RequestBody CommandeFamilleDTO commandeFamille) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        LOGGER.debug("saving commande en cours : ");
+
+        Famille fam = familleRepository.findByIdentifiantUtilisateur(identifiantEleve);
+        CommandeFamille cmdFamille = fam.getCommandeEnCours();
+
+        return saveCommande(authentication, commandeFamille.getCommandesEleve(), identifiantEcole, cmdFamille);
+    }
+
+    @RequestMapping("/ws/famille/commande/{identifiantCommande}/save/")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     public CommandeFamilleDTO saveCommandeFamille(@PathVariable("identifiantCommande") String identifiantCommande,
                     Authentication authentication,
-                    List<CommandeEleveDTO> commandesEleve) {
+                    ArrayList<CommandeEleveDTO> commandesEleve) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();
@@ -281,6 +348,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
 
+        return saveCommande(authentication, commandesEleve, identifiantEcole, cmdFamille);
+
+    }
+
+    private CommandeFamilleDTO saveCommande(Authentication authentication, List<CommandeEleveDTO> commandesEleve,
+                    Long identifiantEcole, CommandeFamille cmdFamille) {
         // Prise en compte des modifications des produits commandés
         // Suppression des anciens
         for (CommandeEleve cmd : cmdFamille.getCommandesEleve()) {
@@ -291,8 +364,16 @@ public class FamilleCommandesController extends AbstractRestHandler {
         }
 
         cmdFamille.setCommandesEleve(new ArrayList<CommandeEleve>());
+        cmdFamille.setMontant(0);
+        if (cmdFamille.getMoyenPayement() != null) {
+            cmdFamille.setMoyenPayement(cmdFamille.getMoyenPayement());
+        }
+
+        LOGGER.debug(" nb commandes {}", commandesEleve.size());
 
         for (CommandeEleveDTO cmdDTO : commandesEleve) {
+
+            LOGGER.debug(" -save : commande identifiant : {}", cmdDTO.getId());
 
             // création des nouvelles données
             CommandeEleve cmd = new CommandeEleve();
@@ -344,8 +425,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         commandeFamilleRepository.save(cmdFamille);
 
-        return getCommandeFamille(identifiantCommande, authentication);
-
+        return getCommandeFamille(cmdFamille.getIdentifiant(), authentication);
     }
 
     @RequestMapping("/famille/commande/del")

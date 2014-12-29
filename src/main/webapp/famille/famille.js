@@ -29,9 +29,22 @@ myApp.controller('FamilleCommandesCtrl', [ '$scope', '$http', 'Auth', '$statePar
 myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
 	$scope.commandeEnCours = '';
 	$scope.commandeEleves = '';
-	$scope.loadCommande = function() { 
+	$scope.loadOrCreateCommande = function() { 
 		
-		$http.post('/ws/famille/commande/get/00012' )
+		$http.post('/ws/famille/commande/loadOrCreate' )
+		.success(
+				function(data, status, headers, config) {
+					$scope.commandeEnCours = data;
+					$scope.commandesEleve = data.commandesEleve;
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de la commande";
+				});
+	};
+	$scope.saveCommandeEnCours = function() { 
+		
+		$http.post('/ws/famille/commande/save/',  $scope.commandeEnCours   )
 		.success(
 				function(data, status, headers, config) {
 					$scope.commandeEnCours = data;
@@ -43,18 +56,24 @@ myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', 'Auth', '$sta
 				});
 	};
 	
-	$scope.saveCommande = function() { 
+	
+	$scope.calcul = function( produit ) { 
 		
-		$http.post('/ws/famille/commande/save/00012', { commandesEleve : $scope.commandesEleve} )
-		.success(
-				function(data, status, headers, config) {
-					$scope.commandeEnCours = data;
-					$scope.commandesEleve = data.commandesEleve;
-				})
-		.error(
-				function(data, status, headers, config) {
-					$scope.errorMessage = "Erreur au chargement des données de la commande";
-				});
+		produit.montant = produit.quantite * produit.produit.prix_parent_ttc;
+	};
+	$scope.addQuantite = function( produit ) { 
+		
+		produit.quantite = produit.quantite + 1;
+		produit.montant = produit.quantite * produit.produit.prix_parent_ttc;
+	};
+	$scope.removeQuantite = function( produit ) { 
+		if(produit.quantite>0) {
+			produit.quantite = produit.quantite - 1;
+			produit.montant = produit.quantite * produit.produit.prix_parent_ttc;
+		} else {
+			produit.quantite = 0;
+			produit.montant = 0;
+		}
 	};
 }]);
 

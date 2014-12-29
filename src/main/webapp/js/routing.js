@@ -23,16 +23,51 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	.state('commander', {
 		url : '/famille/commande',
 		views : {
-			'content@' : {
-				
-				templateUrl : function ($stateParams){ return 'accueil.html'; }
-			},
 			'contentInterne@' : {
 				
-				templateUrl : function ($stateParams){ return '/famille/commande.html'; }
+				templateUrl : function ($stateParams){ return '/famille/commande/commande.html'; }
 			}
 		}
 	})
+	// Page Commande 
+	   
+	    .state('mode', {
+	    	url : '/famille/commande/mode',
+			views : {
+				'contentInterne@' : {
+					
+					templateUrl : function ($stateParams){ return '/famille/commande/mode.html'; }
+				}
+			}
+	    })
+	    .state('validation', {
+	    	url : '/famille/commande/validation',
+			views : {
+				'contentInterne@' : {
+					
+					templateUrl : function ($stateParams){ return '/famille/commande/validation.html'; }
+				}
+			}
+	    })
+	    .state('payement', {
+	        url: '/famille/commande/payement',
+	        views : {
+				'contentInterne@' : {
+					
+					templateUrl : function ($stateParams){ return '/famille/commande/payement.html'; }
+				}
+			}
+	    })
+	    .state('recapitulatif', {
+	        url: '/famille/commande/recapitulatif',
+	        views : {
+				'contentInterne@' : {
+					
+					templateUrl : function ($stateParams){ return '/famille/commande/recapitulatif.html'; }
+				}
+			}
+	    })
+
 	//Page Accueil après login
 	.state('generic', {
 		url : '/{type}',

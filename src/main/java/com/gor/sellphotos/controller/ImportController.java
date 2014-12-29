@@ -79,11 +79,13 @@ public class ImportController {
                     chargeConfigurationEcole(dossierEcole);
                 }
 
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             }
             resultatImport = "OK";
-        } else {
+        }
+        else {
             LOGGER.debug("dossier import non existant");
         }
 
@@ -131,7 +133,8 @@ public class ImportController {
                     responsableRepository.save(resp);
                     ecole.addResponsables(resp);
                     // sauvegarde du responsable
-                } else {
+                }
+                else {
                     LOGGER.error("Le responsable de l'école {} n'est pas correctement renseigné : {}", ecole.getNumeroEcole(), listResponsables[i]);
                 }
             }
@@ -207,7 +210,7 @@ public class ImportController {
         classeRepository.save(classe);
 
         int nbEleves = Integer.parseInt(classePropertie.getProperty("nbEleves"));
-        System.out.println("nbEleves = " + nbEleves);
+        LOGGER.debug("nbEleves = {}", nbEleves);
         for (int i = 1; i <= nbEleves; i++) {
             String identifiant = classePropertie.getProperty("eleve_" + i + ".identifiant");
             String identifiantFamille = classePropertie.getProperty("eleve_" + i + ".identifiantsFraterie");
@@ -218,7 +221,7 @@ public class ImportController {
             eleve.setNom(classePropertie.getProperty("eleve_" + i + ".nom"));
             eleve.setDateLimiteAcces(ecole.getDateLimiteAcces());
 
-            System.out.println("Ajout eleve " + identifiant);
+            LOGGER.debug("Ajout eleve ", identifiant);
 
             Famille famille = null;
             if (!StringUtils.isEmpty(identifiantFamille)) {
@@ -229,8 +232,9 @@ public class ImportController {
                 famille.setIdentifiantsFraterie(identifiantFamille);
                 famille.setEcole(ecole);
                 familleRepository.save(famille);
-            } else {
-                System.out.println("Famille found : " + famille);
+            }
+            else {
+                LOGGER.debug("Famille found : ", famille);
             }
 
             eleve.setFamille(famille);

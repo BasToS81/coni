@@ -72,6 +72,7 @@ public class CommandeEleve {
 
     public void addProduitCommande(CommandeProduit produitCommande) {
         this.produitsCommandes.add(produitCommande);
+        this.montant += produitCommande.getMontant();
     }
 
     /**

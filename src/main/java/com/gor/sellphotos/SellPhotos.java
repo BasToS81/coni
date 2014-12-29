@@ -22,6 +22,7 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource("classpath:spring-config.xml")
 @EnableAutoConfiguration()
 public class SellPhotos {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SellPhotos.class);
 
     public static void main(final String[] args) throws Exception {
@@ -32,9 +33,10 @@ public class SellPhotos {
     public Server initH2Server() {
         try {
             Server server = Server.createTcpServer().start();
-            System.out.println("URL: jdbc:h2:" + server.getURL() + "/mem:test");
+            LOGGER.debug("URL: jdbc:h2:{}/mem:test", server.getURL());
             return server;
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
         return null;

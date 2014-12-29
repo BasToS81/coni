@@ -1,0 +1,52 @@
+<div class="col-md-12 panel panel-default" ng-controller='FamilleCommandeEnCoursCtrl' ng-init="loadOrCreateCommande()">
+
+	<ul class="nav nav-tabs nav-justified">
+		<li role="presentation" class="disabled"><a href="#/famille/commande">Commande</a></li>
+		<li role="presentation" class="active" class="disabled"><a href="#/famille/commande">Mode de payement</a></li>
+		<li role="presentation" class="disabled"><a href="#/famille/commande">Validation</a></li>
+		<li role="presentation" class="disabled"><a href="#/famille/commande">Payement</a></li>
+		<li role="presentation" class="disabled"><a href="#/famille/commande">Récapitulatif</a></li>
+	</ul>
+
+	<div class="col-md-2"></div>
+	<div class="col-md-8 panel panel-default">
+		<h1> Mode de payement </h1>
+		
+		<div class="input-group">
+	      <span class="input-group-addon">
+	        <input type="radio" aria-label="..." ng-model="commandeEnCours.moyenPayement" name="moyenDePayement" id="moyen1" value="ESPECE">
+	      </span>
+	      <input type="text" class="form-control" aria-label="..." value="Espèce">
+	    </div><!-- /input-group -->
+	    <div class="input-group">
+	      <span class="input-group-addon">
+	        <input type="radio" aria-label="..." ng-model="commandeEnCours.moyenPayement" name="moyenDePayement" id="moyen2" value="CHEQUE">
+	      </span>
+	      <input type="text" class="form-control" aria-label="..." value="Chèque">
+	    </div><!-- /input-group -->
+	    <div class="input-group">
+	      <span class="input-group-addon">
+	        <input type="radio" aria-label="..." ng-model="commandeEnCours.moyenPayement" name="moyenDePayement" id="moyen3" value="INTERNET">
+	      </span>
+	      <input type="text" class="form-control" aria-label="..." value="Internet">
+	    </div><!-- /input-group -->
+		
+		
+		<div  class="col-md-12" >
+			<div class="col-md-2"> </div>
+			<div class="col-md-2">
+				<button class="btn btn-lg btn-warning btn-block" ui-sref="commander" ><span class="glyphicon glyphicon-circle-arrow-left"	></span>  &nbsp;&nbsp;Retour</button>
+			</div>
+			
+			<div class="col-md-3">
+				<button class="btn btn-lg btn-primary btn-block" ng-click="saveCommandeEnCours()">Enregistrer  &nbsp;&nbsp;<span class="glyphicon glyphicon-save"></span></button>
+			</div>
+			
+			<div class="col-md-2">
+			
+				<button class="btn btn-lg btn-success btn-block" ui-sref="validation" ng-click="saveCommandeEnCours()">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
+			</div>
+			<div class="col-md-3"> </div>
+		</div>
+	</div>
+</div>

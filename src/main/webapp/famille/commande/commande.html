@@ -1,0 +1,61 @@
+<div class="col-md-12 panel panel-default" ng-controller='FamilleCommandeEnCoursCtrl' ng-init="loadOrCreateCommande()">
+
+	<ul class="nav nav-tabs nav-justified">
+		<li role="presentation" class="active" class="disabled"><a href="#/famille/commande">Commande</a></li>
+		<li role="presentation" class="disabled"><a href="#/famille/commande">Moyen de payement</a></li>
+		<li role="presentation" class="disabled"><a href="#/famille/commande">Récapitulatif de commande</a></li>
+		<li role="presentation" class="disabled"><a href="#/famille/commande">Payement</a></li>
+		<li role="presentation" class="disabled"><a href="#/famille/commande">Synthèse</a></li>
+	</ul>
+
+	<div class="col-md-2"></div>
+	<div class="col-md-8 panel panel-default">
+
+		<h1> Commande </h1>
+		<!-- Affichage de la liste des produits disponible dans la commande pour chaque élève -->
+		<accordion close-others="false"> 
+			<accordion-group ng-repeat='commandeEleve in commandesEleve' heading="Eleve : {{commandeEleve.identifiantEleve}}" is-open="true" > 
+			 
+				<div class="col-md-12" ng-repeat="produit in commandeEleve.produitsCommandes">
+						
+						<div class="col-md-12 panel  panel-default">
+							<div class="col-md-1">{{produit.produit.identifiant}}</div>
+							<div class="col-md-4">{{produit.produit.designation}}</div>
+							<div class="col-md-2">{{produit.produit.prix_parent_ttc | number : 2 }} €</div>
+							<div class="col-md-1"><input ng-model="produit.quantite" class="form-control" ng-change="calcul(produit)"/></div>
+							<div class="col-md-2">
+								<div class="btn-group" role="group" aria-label="Ajouter ou retirer un élément">
+								  <button type="button" class="btn btn-default" ng-click="removeQuantite(produit)">-</button>
+								  <button type="button" class="btn btn-default" ng-click="addQuantite(produit)">+</button>
+								</div>
+							</div>
+							
+							<div class="col-md-2">{{produit.montant | number : 2 }} €</div>
+						</div>
+						
+					
+				</div>
+				<div  class="col-md-12" ></div>
+				
+			</accordion-group> 
+					
+		</accordion>
+		
+		<div  class="col-md-12" >
+			<div class="col-md-2"> </div>
+			<div class="col-md-2">
+				<button class="btn btn-lg btn-warning btn-block" ui-sref="generic({type : 'famille'})" ><span class="glyphicon glyphicon-circle-arrow-left"	></span>  &nbsp;&nbsp;Retour</button>
+			</div>
+			
+			<div class="col-md-3">
+				<button class="btn btn-lg btn-primary btn-block" ng-click="saveCommandeEnCours()">Enregistrer  &nbsp;&nbsp;<span class="glyphicon glyphicon-save"></span></button>
+			</div>
+			
+			<div class="col-md-2">
+			
+				<button class="btn btn-lg btn-success btn-block" ui-sref="mode" ng-click="saveCommandeEnCours()">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
+			</div>
+			<div class="col-md-3"> </div>
+		</div>
+	</div>
+</div>

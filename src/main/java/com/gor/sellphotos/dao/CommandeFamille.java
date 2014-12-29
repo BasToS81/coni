@@ -169,6 +169,7 @@ public class CommandeFamille {
 
     public void addCommandeEleve(CommandeEleve commandeEleve) {
         this.commandesEleve.add(commandeEleve);
+        this.montant += commandeEleve.getMontant();
     }
 
     /**

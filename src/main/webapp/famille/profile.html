@@ -25,16 +25,14 @@
 		<div class="col-md-12 panel-default" ng-controller="FamilleCommandesCtrl" ng-init="getCommandesList()">
 			<div class="col-md-5"></div>
 			<div class="col-md-3">
-				<!-- openCommande('{{commandes[0].identifiant}}') -->
 				<a ui-sref="commander" class="btn btn-block btn-info">Commander</a>
-				
 			</div>
 			<div class="col-md-5"></div>
 			
 			<div class="table-responsive col-md-12" >
 			  <table class="table">
 			  	<tr><th>Identifiant</th><th>Date de la commande</th><th>Montant</th></tr>
-			    <tr ng-repeat="commande in commandes"><td>{{commande.identifiant}}</td><td>{{commande.dateCommande}}</td><td>{{commande.montant}}</td></tr>
+			    <tr ng-repeat="commande in commandes"><td>{{commande.identifiant}}</td><td>{{commande.dateCommande}}</td><td>{{commande.montant | number : 2 }} €</td></tr>
 			  </table>
 			</div>
 
