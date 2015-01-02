@@ -2,18 +2,14 @@ package com.gor.sellphotos.dto;
 
 import java.util.List;
 
-
 public class ModeleEtTarifDTO {
-	
-	private Long id;
 
-	private EcoleDTO ecole;
-	
-	private List<ProduitDTO> modeleEtTarifPrincipal;
-	
-	private List<ProduitDTO> modeleEtTarifSupplementaire;
+    private Long id;
 
-    
+    private EcoleDTO ecole;
+
+    private List<ProduitDTO> produits;
+
     /**
      * @return the id
      */
@@ -21,7 +17,6 @@ public class ModeleEtTarifDTO {
         return id;
     }
 
-    
     /**
      * @param id the id to set
      */
@@ -29,7 +24,6 @@ public class ModeleEtTarifDTO {
         this.id = id;
     }
 
-    
     /**
      * @return the ecole
      */
@@ -37,7 +31,6 @@ public class ModeleEtTarifDTO {
         return ecole;
     }
 
-    
     /**
      * @param ecole the ecole to set
      */
@@ -45,37 +38,18 @@ public class ModeleEtTarifDTO {
         this.ecole = ecole;
     }
 
-    
     /**
      * @return the modeleEtTarifPrincipal
      */
-    public List<ProduitDTO> getModeleEtTarifPrincipal() {
-        return modeleEtTarifPrincipal;
+    public List<ProduitDTO> getProduits() {
+        return produits;
     }
 
-    
     /**
      * @param modeleEtTarifPrincipal the modeleEtTarifPrincipal to set
      */
-    public void setModeleEtTarifPrincipal(List<ProduitDTO> modeleEtTarifPrincipal) {
-        this.modeleEtTarifPrincipal = modeleEtTarifPrincipal;
+    public void setProduits(List<ProduitDTO> produits) {
+        this.produits = produits;
     }
-
-    
-    /**
-     * @return the modeleEtTarifSupplementaire
-     */
-    public List<ProduitDTO> getModeleEtTarifSupplementaire() {
-        return modeleEtTarifSupplementaire;
-    }
-
-    
-    /**
-     * @param modeleEtTarifSupplementaire the modeleEtTarifSupplementaire to set
-     */
-    public void setModeleEtTarifSupplementaire(List<ProduitDTO> modeleEtTarifSupplementaire) {
-        this.modeleEtTarifSupplementaire = modeleEtTarifSupplementaire;
-    }
-
 
 }

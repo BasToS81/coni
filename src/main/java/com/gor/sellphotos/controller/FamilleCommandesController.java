@@ -131,21 +131,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
         ModeleEtTarif modele = modeleEtTarifRepository.findByIdEcole(identifiantEcole);
 
         List<Produit> listeDesProduitsDuModele = null;
+        listeDesProduitsDuModele = produitRepository.findByModele(modele.getId());
 
         for (Eleve eleve : famille.getEleves()) {
             CommandeEleveDTO commandeEleveDTO = new CommandeEleveDTO();
 
             List<CommandeProduitDTO> commandesProduit = new ArrayList<CommandeProduitDTO>();
-
-            // Pour savoir si on prend les modeles et tarifs principal, on vérifie qu'il n'existe pas déjà une commande
-            if (commandeEleveRepository.countByIdEleve(eleve.getIdentifiant()) == 0) {
-                listeDesProduitsDuModele = produitRepository.findPrincipalByModele(modele.getId());
-                commandeEleveDTO.setTypeCommande(Produit.TypeProduit.PRINCIPALE.name());
-            }
-            else {
-                listeDesProduitsDuModele = produitRepository.findSupplementaireByModele(modele.getId());
-                commandeEleveDTO.setTypeCommande(Produit.TypeProduit.SUPPLEMENTAIRE.name());
-            }
 
             commandeEleveDTO.setIdentifiantEleve(eleve.getIdentifiant());
 
@@ -221,11 +212,10 @@ public class FamilleCommandesController extends AbstractRestHandler {
         for (Eleve elev : cmdFamille.getFamille().getEleves()) {
 
             CommandeEleve cmd = new CommandeEleve();
-            String typeCommande = Produit.TypeProduit.PRINCIPALE.name();
+
             for (CommandeEleve cmdElev : cmdFamille.getCommandesEleve()) {
                 if (cmdElev.getEleve().getId() == elev.getId()) {
                     cmd = cmdElev;
-                    typeCommande = cmd.getTypeCommande().name();
                     break;
                 }
             }
@@ -235,7 +225,6 @@ public class FamilleCommandesController extends AbstractRestHandler {
             commandeEleveDTO.setId(cmd.getId());
             commandeEleveDTO.setIdentifiantEleve(elev.getIdentifiant());
             commandeEleveDTO.setMontant(cmd.getMontant());
-            commandeEleveDTO.setTypeCommande(typeCommande);
 
             List<CommandeProduitDTO> commandesProduit = new ArrayList<CommandeProduitDTO>();
 
@@ -243,12 +232,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
             List<Produit> listeDesProduitsDuModele = null;
 
-            if (Produit.TypeProduit.PRINCIPALE.equals(cmd.getTypeCommande())) {
-                listeDesProduitsDuModele = produitRepository.findPrincipalByModele(modele.getId());
-            }
-            else {
-                listeDesProduitsDuModele = produitRepository.findSupplementaireByModele(modele.getId());
-            }
+            listeDesProduitsDuModele = produitRepository.findByModele(modele.getId());
 
             /* TODO : améliorer l'algorithme en copiant les produits commandés et en retirant ceux trouvés de la liste pour diminuer le nombre de recherche. */
 
@@ -327,9 +311,9 @@ public class FamilleCommandesController extends AbstractRestHandler {
         LOGGER.debug("saving commande en cours : ");
 
         Famille fam = familleRepository.findByIdentifiantUtilisateur(identifiantEleve);
-        CommandeFamille cmdFamille = fam.getCommandeEnCours();
+        CommandeFamille cmdFamilleEnBase = fam.getCommandeEnCours();
 
-        return saveCommande(authentication, commandeFamille.getCommandesEleve(), identifiantEcole, cmdFamille);
+        return saveCommande(authentication, commandeFamille, identifiantEcole, cmdFamilleEnBase);
     }
 
     @RequestMapping("/ws/famille/commande/{identifiantCommande}/save/")
@@ -338,7 +322,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
     @Transactional
     public CommandeFamilleDTO saveCommandeFamille(@PathVariable("identifiantCommande") String identifiantCommande,
                     Authentication authentication,
-                    ArrayList<CommandeEleveDTO> commandesEleve) {
+                    @RequestBody CommandeFamilleDTO commandeFamille) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();
@@ -346,27 +330,30 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("saving commande {}", identifiantCommande);
 
-        CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
+        CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
 
-        return saveCommande(authentication, commandesEleve, identifiantEcole, cmdFamille);
+        return saveCommande(authentication, commandeFamille, identifiantEcole, cmdFamilleEnBase);
 
     }
 
-    private CommandeFamilleDTO saveCommande(Authentication authentication, List<CommandeEleveDTO> commandesEleve,
-                    Long identifiantEcole, CommandeFamille cmdFamille) {
+    private CommandeFamilleDTO saveCommande(Authentication authentication, CommandeFamilleDTO nouvelleCommandeFamille,
+                    Long identifiantEcole, CommandeFamille cmdFamilleEnBase) {
+
+        List<CommandeEleveDTO> commandesEleve = nouvelleCommandeFamille.getCommandesEleve();
+
         // Prise en compte des modifications des produits commandés
         // Suppression des anciens
-        for (CommandeEleve cmd : cmdFamille.getCommandesEleve()) {
+        for (CommandeEleve cmd : cmdFamilleEnBase.getCommandesEleve()) {
             for (CommandeProduit cmdProd : cmd.getProduitsCommandes()) {
                 commandeProduitRepository.delete(cmdProd);
             }
             commandeEleveRepository.delete(cmd);
         }
 
-        cmdFamille.setCommandesEleve(new ArrayList<CommandeEleve>());
-        cmdFamille.setMontant(0);
-        if (cmdFamille.getMoyenPayement() != null) {
-            cmdFamille.setMoyenPayement(cmdFamille.getMoyenPayement());
+        cmdFamilleEnBase.setCommandesEleve(new ArrayList<CommandeEleve>());
+        cmdFamilleEnBase.setMontant(0);
+        if (nouvelleCommandeFamille.getMoyenPayement() != null) {
+            cmdFamilleEnBase.setMoyenPayement(nouvelleCommandeFamille.getMoyenPayement());
         }
 
         LOGGER.debug(" nb commandes {}", commandesEleve.size());
@@ -378,20 +365,11 @@ public class FamilleCommandesController extends AbstractRestHandler {
             // création des nouvelles données
             CommandeEleve cmd = new CommandeEleve();
             cmd.setEleve(eleveRepository.findByIdentifiant(cmdDTO.getIdentifiantEleve()));
-            cmd.setFamille(cmdFamille.getFamille());
-            cmd.setCommandeFamille(cmdFamille);
+            cmd.setFamille(cmdFamilleEnBase.getFamille());
+            cmd.setCommandeFamille(cmdFamilleEnBase);
 
             ModeleEtTarif modele = modeleEtTarifRepository.findByIdEcole(identifiantEcole);
-            List<Produit> listeDesProduitsDuModele = null;
-
-            if (Produit.TypeProduit.PRINCIPALE.name().compareTo(cmdDTO.getTypeCommande()) == 0) {
-                listeDesProduitsDuModele = produitRepository.findPrincipalByModele(modele.getId());
-                cmd.setTypeCommande(Produit.TypeProduit.PRINCIPALE);
-            }
-            else {
-                listeDesProduitsDuModele = produitRepository.findSupplementaireByModele(modele.getId());
-                cmd.setTypeCommande(Produit.TypeProduit.SUPPLEMENTAIRE);
-            }
+            List<Produit> listeDesProduitsDuModele = produitRepository.findByModele(modele.getId());
 
             /* TODO : améliorer l'algorithme en copiant les produits commandés et en retirant ceux trouvés de la liste pour diminuer le nombre de recherche. */
 
@@ -419,13 +397,13 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
             commandeEleveRepository.save(cmd);
 
-            cmdFamille.addCommandeEleve(cmd);
+            cmdFamilleEnBase.addCommandeEleve(cmd);
 
         }
 
-        commandeFamilleRepository.save(cmdFamille);
+        commandeFamilleRepository.save(cmdFamilleEnBase);
 
-        return getCommandeFamille(cmdFamille.getIdentifiant(), authentication);
+        return getCommandeFamille(cmdFamilleEnBase.getIdentifiant(), authentication);
     }
 
     @RequestMapping("/famille/commande/del")

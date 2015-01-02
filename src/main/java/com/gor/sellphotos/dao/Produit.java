@@ -2,19 +2,12 @@ package com.gor.sellphotos.dao;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Produit {
-
-    public enum TypeProduit {
-        PRINCIPALE,
-        SUPPLEMENTAIRE
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,9 +27,6 @@ public class Produit {
 
     @Basic
     private int ordre;
-
-    @Enumerated(EnumType.STRING)
-    private TypeProduit typeProduit;
 
     /**
      * @return the id
@@ -122,24 +112,9 @@ public class Produit {
         this.ordre = ordre;
     }
 
-    /**
-     * @return the typeProduit
-     */
-    public TypeProduit getTypeProduit() {
-        return typeProduit;
-    }
-
-    /**
-     * @param typeProduit the typeProduit to set
-     */
-    public void setTypeProduit(TypeProduit typeProduit) {
-        this.typeProduit = typeProduit;
-    }
-
     @Override
     public String toString() {
-        return "Produit [id=" + id + ", designation=" + designation + ", identifiant=" + identifiant + ", typeProduit=" + typeProduit + ", ordre=" + ordre
-                        + "]";
+        return "Produit [id=" + id + ", designation=" + designation + ", identifiant=" + identifiant + ", ordre=" + ordre + "]";
     }
 
 }

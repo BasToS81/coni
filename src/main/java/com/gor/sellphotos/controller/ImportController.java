@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -63,12 +64,15 @@ public class ImportController {
     @RequestMapping("/public/rest/import")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
+    @Transactional
     public ImportDTO importDonnees() {
         LOGGER.debug("import donnees");
         String resultatImport = "Non OK";
 
         /* TODO mettre ce chemin en configuration */
         File dossierImport = new File("./src/test/resources/import/");
+
+        resultatImport = "OK";
 
         if (dossierImport.exists()) {
             try {
@@ -82,11 +86,13 @@ public class ImportController {
             }
             catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
+                resultatImport = "KO";
             }
-            resultatImport = "OK";
         }
         else {
             LOGGER.debug("dossier import non existant");
+
+            resultatImport = "KO : dossier inexistant";
         }
 
         LOGGER.debug("fin d'import de données : {}", resultatImport);
@@ -148,35 +154,19 @@ public class ImportController {
 
         LOGGER.debug("Modele : {}", mt.getNomReference());
 
-        int nbProduitPrincipal = Integer.parseInt(ecolePropertie.getProperty("Modele.nbProduitPrincipal"));
-        LOGGER.debug("Ajout de {} produits à réaliser", nbProduitPrincipal);
-        for (int i = 1; i < nbProduitPrincipal + 1; i++) {
+        int nbProduits = Integer.parseInt(ecolePropertie.getProperty("Modele.nbProduits"));
+        LOGGER.debug("Ajout de {} produits à réaliser", nbProduits);
+        for (int i = 1; i < nbProduits + 1; i++) {
             Produit produit = new Produit();
-            produit.setIdentifiant(ecolePropertie.getProperty("Modele.principal_" + i + ".identifiant"));
-            produit.setDesignation(ecolePropertie.getProperty("Modele.principal_" + i + ".designation"));
-            LOGGER.debug(ecolePropertie.getProperty("Modele.principal_" + i + ".prix_parent_ttc"));
-            produit.setPrix_parent_ttc(Double.parseDouble(ecolePropertie.getProperty("Modele.principal_" + i + ".prix_parent_ttc")));
-            produit.setPrix_ecole_ttc(Double.parseDouble(ecolePropertie.getProperty("Modele.principal_" + i + ".prix_ecole_ttc")));
+            produit.setIdentifiant(ecolePropertie.getProperty("Modele.produit_" + i + ".identifiant"));
+            produit.setDesignation(ecolePropertie.getProperty("Modele.produit_" + i + ".designation"));
+            LOGGER.debug(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_parent_ttc"));
+            produit.setPrix_parent_ttc(Double.parseDouble(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_parent_ttc")));
+            produit.setPrix_ecole_ttc(Double.parseDouble(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_ecole_ttc")));
             produit.setOrdre(i);
-            produit.setTypeProduit(Produit.TypeProduit.PRINCIPALE);
             produitRepository.save(produit);
-            mt.addProduitPrincipal(produit);
+            mt.addProduit(produit);
             LOGGER.debug("Ajout produit principal : " + produit.getDesignation());
-        }
-
-        int nbProduitSupplementaire = Integer.parseInt(ecolePropertie.getProperty("Modele.nbProduitSupplementaire"));
-        for (int i = 1; i < nbProduitSupplementaire + 1; i++) {
-            Produit produit = new Produit();
-            produit.setIdentifiant(ecolePropertie.getProperty("Modele.supplementaire_" + i + ".identifiant"));
-            produit.setDesignation(ecolePropertie.getProperty("Modele.supplementaire_" + i + ".designation"));
-            produit.setPrix_parent_ttc(Double.parseDouble(ecolePropertie.getProperty("Modele.supplementaire_" + i + ".prix_parent_ttc")));
-            produit.setPrix_ecole_ttc(Double.parseDouble(ecolePropertie.getProperty("Modele.supplementaire_" + i + ".prix_ecole_ttc")));
-            produit.setOrdre(i);
-            produit.setTypeProduit(Produit.TypeProduit.SUPPLEMENTAIRE);
-            produitRepository.save(produit);
-            mt.addProduitSupplementaire(produit);
-            LOGGER.debug("Ajout produit supplementaire : " + produit.getDesignation());
-
         }
 
         modeleEtTarifRepository.save(mt);

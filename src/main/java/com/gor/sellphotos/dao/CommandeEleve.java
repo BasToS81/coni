@@ -30,9 +30,6 @@ public class CommandeEleve {
     @ManyToOne
     private Famille famille;
 
-    @Basic
-    private Produit.TypeProduit typeCommande;
-
     @ManyToOne
     private CommandeFamille commandeFamille;
 
@@ -115,20 +112,6 @@ public class CommandeEleve {
      */
     public void setFamille(Famille famille) {
         this.famille = famille;
-    }
-
-    /**
-     * @return the typeCommande
-     */
-    public Produit.TypeProduit getTypeCommande() {
-        return typeCommande;
-    }
-
-    /**
-     * @param typeCommande the typeCommande to set
-     */
-    public void setTypeCommande(Produit.TypeProduit typeCommande) {
-        this.typeCommande = typeCommande;
     }
 
     /**

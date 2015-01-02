@@ -4,8 +4,13 @@
 
 	<div class="col-md-12 panel panel-default" ng-controller="FamilleCtrl" ng-init="init()">
 	
-		<div class="site-heading">{{nomEcole}}</div>
-
+		<div class="col-md-2">{{nomEcole}}</div>
+		<div class="col-md-8"> </div>
+		<div class="col-md-2">
+			<form class="form-signin" role="form" ng-controller="LoginCtrl" action="#" ng-submit="logout()">
+				<button title="Se déconnecter" class="btn btn-primary" type="submit"><span class='glyphicon glyphicon-log-out'></span></button>
+			</form>
+		</div>
 	</div>
 
 </header>

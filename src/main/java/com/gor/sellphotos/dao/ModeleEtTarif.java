@@ -25,14 +25,10 @@ public class ModeleEtTarif {
     private Ecole ecole;
 
     @OneToMany
-    private List<Produit> modeleEtTarifPrincipal;
-
-    @OneToMany
-    private List<Produit> modeleEtTarifSupplementaire;
+    private List<Produit> produits;
 
     public ModeleEtTarif() {
-        modeleEtTarifPrincipal = new ArrayList<Produit>();
-        modeleEtTarifSupplementaire = new ArrayList<Produit>();
+        produits = new ArrayList<Produit>();
     }
 
     /**
@@ -78,51 +74,29 @@ public class ModeleEtTarif {
     }
 
     /**
-     * @return the modeleEtTarifPrincipal
+     * @return the produits
      */
-    public List<Produit> getModeleEtTarifPrincipal() {
-        return modeleEtTarifPrincipal;
+    public List<Produit> getProduits() {
+        return produits;
     }
 
     /**
-     * @param modeleEtTarifPrincipal the modeleEtTarifPrincipal to set
+     * @param produits the produits to set
      */
-    public void setModeleEtTarifPrincipal(List<Produit> modeleEtTarifPrincipal) {
-        this.modeleEtTarifPrincipal = modeleEtTarifPrincipal;
-    }
-
-    /**
-     * @param produit the produit to add
-     */
-    public void addProduitPrincipal(Produit produit) {
-        this.modeleEtTarifPrincipal.add(produit);
-    }
-
-    /**
-     * @return the modeleEtTarifSupplementaire
-     */
-    public List<Produit> getModeleEtTarifSupplementaire() {
-        return modeleEtTarifSupplementaire;
-    }
-
-    /**
-     * @param modeleEtTarifSupplementaire the modeleEtTarifSupplementaire to set
-     */
-    public void setModeleEtTarifSupplementaire(
-                    List<Produit> modeleEtTarifSupplementaire) {
+    public void setProduits(List<Produit> produits) {
+        this.produits = produits;
     }
 
     /**
      * @param produit the produit to add
      */
-    public void addProduitSupplementaire(Produit produit) {
-        this.modeleEtTarifSupplementaire.add(produit);
+    public void addProduit(Produit produit) {
+        this.produits.add(produit);
     }
 
     @Override
     public String toString() {
-        return "ModeleEtTarif [id=" + id + ", nbModeleEtTarifPrincipal=" + modeleEtTarifPrincipal.size() + ", nbModeleEtTarifSupplementaire="
-                        + modeleEtTarifSupplementaire.size() + "]";
+        return "ModeleEtTarif [id=" + id + ", nbProduits=" + produits.size() + "]";
     }
 
 }
