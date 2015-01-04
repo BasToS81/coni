@@ -25,7 +25,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 		views : {
 			'contentInterne@' : {
 				
-				templateUrl : function ($stateParams){ return '/famille/commande/commande.html'; }
+				templateUrl : '/famille/commande/commande.html' 
 			}
 		}
 	})
@@ -36,7 +36,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			views : {
 				'contentInterne@' : {
 					
-					templateUrl : function ($stateParams){ return '/famille/commande/mode.html'; }
+					templateUrl : '/famille/commande/mode.html' 
 				}
 			}
 	    })
@@ -44,8 +44,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	    	url : '/famille/commande/validation',
 			views : {
 				'contentInterne@' : {
-					
-					templateUrl : function ($stateParams){ return '/famille/commande/validation.html'; }
+					templateUrl : '/famille/commande/validation.html'
 				}
 			}
 	    })
@@ -54,7 +53,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	        views : {
 				'contentInterne@' : {
 					
-					templateUrl : function ($stateParams){ return '/famille/commande/payement.html'; }
+					templateUrl : '/famille/commande/payement.html' 
 				}
 			}
 	    })
@@ -63,7 +62,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	        views : {
 				'contentInterne@' : {
 					
-					templateUrl : function ($stateParams){ return '/famille/commande/recapitulatif.html'; }
+					templateUrl : '/famille/commande/recapitulatif.html' 
 				}
 			}
 	    })
@@ -95,6 +94,20 @@ var loadData = function($q, $http, $stateParams, $timeout, Auth) {
 		Auth.setUserData(data);
 		$timeout(deferred.resolve, 0);
 	});
+	return deferred.promise;
+};
+
+
+var getCommandeFamille = function($q, $http, $stateParams, $timeout, Auth) {
+
+	var deferred = $q.defer();
+
+	$http.get('/ws/famille/commande/' + $stateParams.idCommande + '/get/')
+	.success(function(data, status, headers, config) {
+		Auth.setUserCommandes(data);
+		$timeout(deferred.resolve, 0);
+	});
+	
 	return deferred.promise;
 };
 

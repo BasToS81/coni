@@ -16,30 +16,52 @@
 		<accordion close-others="false"> 
 			<accordion-group ng-repeat='commandeEleve in commandesEleve' heading="Eleve : {{commandeEleve.identifiantEleve}}" is-open="true" > 
 			 
-				<div class="col-md-12" ng-repeat="produit in commandeEleve.produitsCommandes">
-						
-						<div class="col-md-12 panel  panel-default">
-							<div class="col-md-1">{{produit.produit.identifiant}}</div>
-							<div class="col-md-4">{{produit.produit.designation}}</div>
-							<div class="col-md-2">{{produit.produit.prix_parent_ttc | number : 2 }} €</div>
-							<div class="col-md-1"><input ng-model="produit.quantite" class="form-control" ng-change="calcul(produit)"/></div>
-							<div class="col-md-2">
+			 
+			 	<div class="table-responsive">
+				 	<table class="table table-striped">
+					 	<thead>
+					 		<tr class="table-heading">
+								<th class="col-md-1">Identifiant</td>
+								<th class="col-md-5">Designation</td>
+								<th class="col-md-2">Prix unitaire TTC</td>
+								<th class="col-md-1">Quantité</td>
+								<th class="col-md-1">&nbsp;</td>
+								<th class="col-md-2">Montant</td>
+							</tr>
+						</thead>
+					<tr ng-repeat="produit in commandeEleve.produitsCommandes">
+							<td class="col-md-1">{{produit.produit.identifiant}}</td>
+							<td class="col-md-4">{{produit.produit.designation}}</td>
+							<td class="col-md-2">{{produit.produit.prix_parent_ttc | number : 2 }} €</td>
+							<td class="col-md-1">
+								<input ng-model="produit.quantite" class="form-control" ng-change="calcul(commandeEnCours,produit)"/>
+							</td>
+							<td class="col-md-1">
 								<div class="btn-group" role="group" aria-label="Ajouter ou retirer un élément">
-								  <button type="button" class="btn btn-default" ng-click="removeQuantite(produit)">-</button>
-								  <button type="button" class="btn btn-default" ng-click="addQuantite(produit)">+</button>
+								  <button type="button" class="btn btn-default" ng-click="removeQuantite(commandeEnCours,produit)">-</button>
+								  <button type="button" class="btn btn-default" ng-click="addQuantite(commandeEnCours,produit)">+</button>
 								</div>
-							</div>
+							</td>
+							<td class="col-md-1">{{produit.montant | number : 2 }} €</td>
+						</tr>
 							
-							<div class="col-md-2">{{produit.montant | number : 2 }} €</div>
-						</div>
 						
-					
+					</table>
 				</div>
+			 
+				
 				<div  class="col-md-12" ></div>
 				
 			</accordion-group> 
 					
 		</accordion>
+		
+		
+		<div  class="col-md-8" ></div>
+		<div  class="col-md-2" >Total :</div>
+		<div  class="col-md-2" >{{commandeEnCours.montant | number : 2 }} €</div>
+		
+		<div  class="col-md-12" >&nbsp;</div>
 		
 		<div  class="col-md-12" >
 			<div class="col-md-2"> </div>
@@ -48,12 +70,12 @@
 			</div>
 			
 			<div class="col-md-3">
-				<button class="btn btn-lg btn-primary btn-block" ng-click="saveCommandeEnCours()">Enregistrer  &nbsp;&nbsp;<span class="glyphicon glyphicon-save"></span></button>
+				<button class="btn btn-lg btn-primary btn-block" ng-click="saveProduitsCommandeEnCours()">Enregistrer  &nbsp;&nbsp;<span class="glyphicon glyphicon-save"></span></button>
 			</div>
 			
 			<div class="col-md-2">
 			
-				<button class="btn btn-lg btn-success btn-block" ui-sref="mode" ng-click="saveCommandeEnCours()">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
+				<button class="btn btn-lg btn-success btn-block" ui-sref="mode" ng-click="saveProduitsCommandeEnCours()">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
 			</div>
 			<div class="col-md-3"> </div>
 		</div>

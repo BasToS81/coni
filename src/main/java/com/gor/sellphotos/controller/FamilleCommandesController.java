@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.gor.sellphotos.dao.CommandeEleve;
 import com.gor.sellphotos.dao.CommandeFamille;
+import com.gor.sellphotos.dao.CommandeFamille.StatutCommandeFamille;
 import com.gor.sellphotos.dao.CommandeProduit;
 import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dao.Famille;
@@ -192,12 +193,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
         else {
             LOGGER.debug("commande famille : {}", cmdFamille.getIdentifiant());
             // récupération de la commnade existante
-            return getCommandeFamille(identifiantEcole, cmdFamille);
+            return getCommandeFamilleEtProduits(identifiantEcole, cmdFamille);
         }
 
     }
 
-    private CommandeFamilleDTO getCommandeFamille(Long identifiantEcole, CommandeFamille cmdFamille) {
+    private CommandeFamilleDTO getCommandeFamilleEtProduits(Long identifiantEcole, CommandeFamille cmdFamille) {
         CommandeFamilleDTO commandeFamilleDTO = new CommandeFamilleDTO();
 
         commandeFamilleDTO.setDateCommande(cmdFamille.getDateCommande());
@@ -278,11 +279,86 @@ public class FamilleCommandesController extends AbstractRestHandler {
         return commandeFamilleDTO;
     }
 
-    @RequestMapping("/ws/famille/commande/{identifiantCommande}/get/")
+    @RequestMapping("/ws/famille/commande/get")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public CommandeFamilleDTO getCommandeFamille(@PathVariable("identifiantCommande") String identifiantCommande, Authentication authentication) {
+    public CommandeFamilleDTO getCommandeFamille(Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        Famille fam = familleRepository.findByIdentifiantUtilisateur(identifiantEleve);
+        CommandeFamille cmdFamilleEnBase = fam.getCommandeEnCours();
+
+        String identifiantCommande = cmdFamilleEnBase.getIdentifiant();
+
+        LOGGER.debug("loading commande {}", identifiantCommande);
+
+        /* TODO : S'assurer que c'est bien la commande de l'élève */
+        CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
+
+        CommandeFamilleDTO commandeFamilleDTO = new CommandeFamilleDTO();
+
+        commandeFamilleDTO.setDateCommande(cmdFamille.getDateCommande());
+        commandeFamilleDTO.setDateLivraison(cmdFamille.getDateLivraison());
+        commandeFamilleDTO.setDateValidation(cmdFamille.getDateValidation());
+        commandeFamilleDTO.setId(cmdFamille.getId());
+        commandeFamilleDTO.setIdentifiant(cmdFamille.getIdentifiant());
+        commandeFamilleDTO.setMontant(cmdFamille.getMontant());
+        commandeFamilleDTO.setMoyenPayement(cmdFamille.getMoyenPayement());
+        commandeFamilleDTO.setStatut(cmdFamille.getStatut().name());
+
+        for (CommandeEleve cmd : cmdFamille.getCommandesEleve()) {
+
+            CommandeEleveDTO commandeEleveDTO = new CommandeEleveDTO();
+
+            commandeEleveDTO.setId(cmd.getId());
+            commandeEleveDTO.setIdentifiantEleve(cmd.getEleve().getIdentifiant());
+            commandeEleveDTO.setMontant(cmd.getMontant());
+
+            List<CommandeProduitDTO> commandesProduit = new ArrayList<CommandeProduitDTO>();
+
+            /* TODO : améliorer l'algorithme en copiant les produits commandés et en retirant ceux trouvés de la liste pour diminuer le nombre de recherche. */
+
+            for (CommandeProduit cmdProduitEnBase : cmd.getProduitsCommandes()) {
+
+                Produit produit = cmdProduitEnBase.getProduit();
+
+                CommandeProduitDTO cmdProd = new CommandeProduitDTO();
+                ProduitDTO prod = new ProduitDTO();
+
+                prod.setId(produit.getId());
+                prod.setIdentifiant(produit.getIdentifiant());
+                prod.setDesignation(produit.getDesignation());
+                prod.setOrdre(produit.getOrdre());
+                prod.setPrix_ecole_ttc(produit.getPrix_ecole_ttc());
+                prod.setPrix_parent_ttc(produit.getPrix_parent_ttc());
+                cmdProd.setProduit(prod);
+
+                cmdProd.setMontant(cmdProduitEnBase.getMontant());
+                cmdProd.setQuantite(cmdProduitEnBase.getQuantite());
+
+                commandesProduit.add(cmdProd);
+
+            }
+
+            commandeEleveDTO.setProduitsCommandes(commandesProduit);
+            commandeFamilleDTO.addCommandeEleve(commandeEleveDTO);
+        }
+
+        LOGGER.debug("fin loading commande");
+
+        return commandeFamilleDTO;
+
+    }
+
+    @RequestMapping("/ws/famille/commande/{identifiantCommande}/getEtProduits/")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public CommandeFamilleDTO getCommandeFamilleEtProduits(@PathVariable("identifiantCommande") String identifiantCommande, Authentication authentication) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();
@@ -293,10 +369,10 @@ public class FamilleCommandesController extends AbstractRestHandler {
         /* TODO : S'assurer que c'est bien la commande de l'élève */
         CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
 
-        return getCommandeFamille(identifiantEcole, cmdFamille);
+        return getCommandeFamilleEtProduits(identifiantEcole, cmdFamille);
     }
 
-    @RequestMapping("/ws/famille/commande/save/")
+    @RequestMapping("/ws/famille/commande/save/produits")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
@@ -316,7 +392,61 @@ public class FamilleCommandesController extends AbstractRestHandler {
         return saveCommande(authentication, commandeFamille, identifiantEcole, cmdFamilleEnBase);
     }
 
-    @RequestMapping("/ws/famille/commande/{identifiantCommande}/save/")
+    @RequestMapping("/ws/famille/commande/save/modepaiement")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public CommandeFamilleDTO saveCommandeFamilleModePaiement(
+                    Authentication authentication,
+                    @RequestBody CommandeFamilleDTO commandeFamille) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        LOGGER.debug("saving Mode Paiement commande en cours : ");
+
+        Famille fam = familleRepository.findByIdentifiantUtilisateur(identifiantEleve);
+        CommandeFamille cmdFamilleEnBase = fam.getCommandeEnCours();
+
+        if (commandeFamille.getMoyenPayement() != null) {
+            cmdFamilleEnBase.setMoyenPayement(commandeFamille.getMoyenPayement());
+        }
+
+        return getCommandeFamilleEtProduits(cmdFamilleEnBase.getIdentifiant(), authentication);
+    }
+
+    @RequestMapping("/ws/famille/commande/validate")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public CommandeFamilleDTO validateCommandeFamille(
+                    Authentication authentication,
+                    @RequestBody CommandeFamilleDTO commandeFamille) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        LOGGER.debug("validate commande en cours");
+
+        Famille fam = familleRepository.findByIdentifiantUtilisateur(identifiantEleve);
+        CommandeFamille cmdFamilleEnBase = fam.getCommandeEnCours();
+
+        cmdFamilleEnBase.setDateValidation(DateUtils.getCurrentDate());
+        if ("INTERNET".compareTo(cmdFamilleEnBase.getMoyenPayement()) != 0) {
+            cmdFamilleEnBase.setStatut(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE);
+        }
+        else {
+            cmdFamilleEnBase.setStatut(StatutCommandeFamille.EN_ATTENTE_PAYEMENT);
+        }
+
+        LOGGER.debug("fin validate commande en cours");
+
+        return null;
+    }
+
+    @RequestMapping("/ws/famille/commande/{identifiantCommande}/save")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
@@ -352,9 +482,6 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         cmdFamilleEnBase.setCommandesEleve(new ArrayList<CommandeEleve>());
         cmdFamilleEnBase.setMontant(0);
-        if (nouvelleCommandeFamille.getMoyenPayement() != null) {
-            cmdFamilleEnBase.setMoyenPayement(nouvelleCommandeFamille.getMoyenPayement());
-        }
 
         LOGGER.debug(" nb commandes {}", commandesEleve.size());
 
@@ -403,7 +530,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         commandeFamilleRepository.save(cmdFamilleEnBase);
 
-        return getCommandeFamille(cmdFamilleEnBase.getIdentifiant(), authentication);
+        return getCommandeFamilleEtProduits(cmdFamilleEnBase.getIdentifiant(), authentication);
     }
 
     @RequestMapping("/famille/commande/del")
