@@ -1,7 +1,6 @@
 package com.gor.sellphotos.dto;
 
 import java.util.Date;
-import java.util.List;
 
 
 public class EcoleDTO {
@@ -24,18 +23,6 @@ public class EcoleDTO {
 	private String villeEtablissement;
 
 	private String nomResponsablePrincipal;
-	
-	private List<ResponsableDTO> responsables;
-	
-	private List<ClasseDTO> classes;
-	
-	private ModeleEtTarifDTO modeleEtTarif;
-
-	private CommandeEcoleDTO commandeEnCours;
-	
-	private List<CommandeEcoleDTO> commandeEnLivraison;
-	
-	private List<CommandeEcoleDTO> commandeLivrees;
 	
 	private Date dateLimiteDesCommandesEleves;
 	
@@ -187,103 +174,6 @@ public class EcoleDTO {
         this.nomResponsablePrincipal = nomResponsablePrincipal;
     }
 
-    
-    /**
-     * @return the responsables
-     */
-    public List<ResponsableDTO> getResponsables() {
-        return responsables;
-    }
-
-    
-    /**
-     * @param responsables the responsables to set
-     */
-    public void setResponsables(List<ResponsableDTO> responsables) {
-        this.responsables = responsables;
-    }
-
-    
-    /**
-     * @return the classes
-     */
-    public List<ClasseDTO> getClasses() {
-        return classes;
-    }
-
-    
-    /**
-     * @param classes the classes to set
-     */
-    public void setClasses(List<ClasseDTO> classes) {
-        this.classes = classes;
-    }
-
-    
-    /**
-     * @return the modeleEtTarif
-     */
-    public ModeleEtTarifDTO getModeleEtTarif() {
-        return modeleEtTarif;
-    }
-
-    
-    /**
-     * @param modeleEtTarif the modeleEtTarif to set
-     */
-    public void setModeleEtTarif(ModeleEtTarifDTO modeleEtTarif) {
-        this.modeleEtTarif = modeleEtTarif;
-    }
-
-    
-    /**
-     * @return the commandeEnCours
-     */
-    public CommandeEcoleDTO getCommandeEnCours() {
-        return commandeEnCours;
-    }
-
-    
-    /**
-     * @param commandeEnCours the commandeEnCours to set
-     */
-    public void setCommandeEnCours(CommandeEcoleDTO commandeEnCours) {
-        this.commandeEnCours = commandeEnCours;
-    }
-
-    
-    /**
-     * @return the commandeEnLivraison
-     */
-    public List<CommandeEcoleDTO> getCommandeEnLivraison() {
-        return commandeEnLivraison;
-    }
-
-    
-    /**
-     * @param commandeEnLivraison the commandeEnLivraison to set
-     */
-    public void setCommandeEnLivraison(List<CommandeEcoleDTO> commandeEnLivraison) {
-        this.commandeEnLivraison = commandeEnLivraison;
-    }
-
-    
-    /**
-     * @return the commandeLivrees
-     */
-    public List<CommandeEcoleDTO> getCommandeLivrees() {
-        return commandeLivrees;
-    }
-
-    
-    /**
-     * @param commandeLivrees the commandeLivrees to set
-     */
-    public void setCommandeLivrees(List<CommandeEcoleDTO> commandeLivrees) {
-        this.commandeLivrees = commandeLivrees;
-    }
-
-    
     /**
      * @return the dateLimiteDesCommandesEleves
      */

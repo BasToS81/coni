@@ -91,6 +91,12 @@
 			<version>5.1.34</version>
 		</dependency>
 
+		<!-- Mapping Objet java -->
+		<dependency>
+			<groupId>ma.glasnost.orika</groupId>
+			<artifactId>orika-core</artifactId>
+			<version>1.4.5</version>
+		</dependency>
 
 		<!-- Guava -->
 		<dependency>
