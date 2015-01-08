@@ -1,43 +1,60 @@
-<div class="col-md-12 panel panel-default" ng-controller="FamilleCtrl" >
+<div class="col-md-12 panel" ng-controller="FamilleCtrl" >
 
-	<div class="col-md-6 panel panel-default">
+	<div class="col-md-6">
 		
-		<div ng-repeat="eleve in eleves">
-			<div class="col-md-3 panel panel-default">
-				
-				<div class="col-md-12">{{eleve.nomEleve}}</div>
-				<div class="col-md-12"><img class="img-responsive img-thumbnail" ng-src="/data/{{eleve.cheminAccesImageEleve}}.jpg" /></div>
-				<div class="col-md-12">{{eleve.nomClasse}}</div>
-				<div class="col-md-12"><img class="img-responsive img-thumbnail" ng-src="/data/{{eleve.cheminAccesImageGroupe}}.jpg" /></div>
+		<div class="col-md-4" ng-repeat="eleve in eleves">
+			<div class="panel panel-default" >
+				<div class="panel-heading">{{eleve.nomEleve}}</div>
+				<div class="panel-body">
+					<div class="col-md-12"><img class="img-responsive img-thumbnail" ng-src="/data/{{eleve.cheminAccesImageEleve}}.jpg" /></div>
+					<div class="col-md-12">&nbsp;</div>
+					<h3 class="text-center">{{eleve.nomClasse}}</h3>
+					<div class="col-md-12"><img class="img-responsive img-thumbnail" ng-src="/data/{{eleve.cheminAccesImageGroupe}}.jpg" /></div>
+				</div>
 			</div>
 		</div>
+		
+		
+			
 		
 	</div>
 
 
-
-	<div class="col-md-6 panel panel-default">
-		<div class="panel-heading">
-			<h3 class="panel-title">Commandes</h3>
-			
-		</div>
-
-		<div class="col-md-12 panel-default" ng-controller="FamilleCommandesCtrl" ng-init="getCommandesList()">
-			<div class="col-md-5"></div>
-			<div class="col-md-3">
-				<a ui-sref="commander" class="btn btn-block btn-info">Commander</a>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Commandes</h3>
+				
 			</div>
-			<div class="col-md-5"></div>
-			
-			<div class="table-responsive col-md-12" >
-			  <table class="table">
-			  	<tr><th>Identifiant</th><th>Date de la commande</th><th>Montant</th></tr>
-			    <tr ng-repeat="commande in commandes"><td>{{commande.identifiant}}</td><td>{{commande.dateCommande}}</td><td>{{commande.montant | number : 2 }} €</td></tr>
-			  </table>
+	
+			<div class="panel-body" ng-controller="FamilleCommandesCtrl" ng-init="getCommandesList()">
+				<!-- <div class="col-md-12">&nbsp;</div> -->
+				<div class="text-center">
+					<a ui-sref="commander" class="btn btn-info">Commander</a>
+				</div>
+				
+				<div class="table-responsive col-md-12" >
+				  <table class="table">
+				  	<thead>
+				  		<tr><th>Statut</th><th>Identifiant</th><th>Date de la commande</th><th>Montant</th><th>&nbsp;</th></tr>
+				  	</thead>
+				  	<tbody>
+					    <tr ng-repeat="commande in commandes">
+					    	<td>{{commande.statut}}</td>
+					    	<td>{{commande.identifiant}}</td>
+					    	<td>{{commande.dateCommande}}</td>
+					    	<td>{{commande.montant | number : 2 }} €</td>
+					    	<td>
+					    		<button class="btn btn-sm btn-success" ng-click="openCommande(commande.identifiant)" ng-show="commande.statut!='EN_COURS'"><span class="glyphicon glyphicon-eye-open "></span></button>
+					    		<button class="btn btn-sm btn-warning" ng-click="deleteCommande(commande.identifiant)" ng-show="commande.statut=='EN_COURS'"><span class="glyphicon glyphicon-remove"></span></button>
+					    	</td>
+				    	</tr>
+				  	</tbody>
+				  </table>
+				</div>
+	
 			</div>
-
 		</div>
-
 	</div>
 </div>
 

@@ -35,9 +35,10 @@ public interface CommandeFamilleRepository extends CrudRepository<CommandeFamill
     public final static String FIND_CMD_DE_TOUTE_LA_FAMILLE_BY_ID_ELEVE = "SELECT cf " +
                     "FROM CommandeFamille cf LEFT JOIN cf.famille f " +
                     "WHERE f IN (SELECT f2 FROM Eleve e2 LEFT JOIN e2.famille f2 " +
-                    "WHERE e2.identifiant = :idEleve)";
+                    "WHERE e2.identifiant = :idEleve) " +
+                    "ORDER BY cf.identifiant desc";
 
-    public CommandeFamille findByIdentifiant(String identifiant);
+    public CommandeFamille findByIdentifiant(Long identifiant);
 
     @Query(FIND_BY_ID_ELEVE)
     public List<CommandeFamille> findByIdentifiantEleve(@Param("idEleve") String identifiantEleve);
@@ -52,7 +53,7 @@ public interface CommandeFamilleRepository extends CrudRepository<CommandeFamill
     public List<CommandeFamille> findByIdCmdEcoleEtStatut(@Param("idCmdEcole") String idCmdEcole, @Param("statut") String statut);
 
     @Query(FIND_CMD_DE_TOUTE_LA_FAMILLE_BY_ID_ELEVE)
-    public List<CommandeFamille> findCmdDeTouteLaFamilleByIdEleve(@Param("idEleve") String identifiantEleve);
+    public List<CommandeFamille> findCmdDeTouteLaFamilleByIdEleveOrderByIdentifiantDesc(@Param("idEleve") String identifiantEleve);
 
     @Query(COUNT_BY_ID_ELEVE)
     public int countByIdEleve(@Param("idEleve") String identifiantEleve);

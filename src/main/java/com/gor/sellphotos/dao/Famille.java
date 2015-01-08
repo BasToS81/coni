@@ -2,6 +2,7 @@ package com.gor.sellphotos.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,10 +10,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.gor.sellphotos.dao.CommandeFamille.StatutCommandeFamille;
 
 @Entity
 public class Famille {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Famille.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,23 +33,12 @@ public class Famille {
     @ManyToOne
     private Ecole ecole;
 
-    @OneToOne(mappedBy = "famille")
-    private CommandeFamille commandeEnCours;
-
     @OneToMany(mappedBy = "famille")
-    private List<CommandeFamille> commandesEnAttenteValidationPayement;
-
-    @OneToMany(mappedBy = "famille")
-    private List<CommandeFamille> commandesEnAttenteValidationEcole;
-
-    @OneToMany(mappedBy = "famille")
-    private List<CommandeFamille> commandesEnLivraison;
-
-    @OneToMany(mappedBy = "famille")
-    private List<CommandeFamille> commandesLivrees;
+    private List<CommandeFamille> commandes;
 
     public Famille() {
         eleves = new ArrayList<Eleve>();
+        commandes = new ArrayList<CommandeFamille>();
     }
 
     /**
@@ -92,75 +88,66 @@ public class Famille {
     }
 
     /**
-     * @return the commandeEnCours
+     * @return the commandes
      */
-    public CommandeFamille getCommandeEnCours() {
-        return commandeEnCours;
+    public List<CommandeFamille> getCommandes() {
+        return commandes;
     }
 
     /**
-     * @param commandeEnCours the commandeEnCours to set
+     * @param commandes the commandes to set
      */
-    public void setCommandeEnCours(CommandeFamille commandeEnCours) {
-        this.commandeEnCours = commandeEnCours;
-        this.commandeEnCours.setStatut(CommandeFamille.StatutCommandeFamille.EN_COURS);
-        this.commandeEnCours.setFamille(this);
+    public void setCommandes(List<CommandeFamille> commandes) {
+        this.commandes = commandes;
+    }
+
+    /**
+     * @param commandes the commandes to add
+     */
+    public void addCommande(CommandeFamille commande) {
+        commande.setFamille(this);
+        this.commandes.add(commande);
+    }
+
+    /**
+     * @return the commandeEnCours
+     */
+    public CommandeFamille getCommandeEnCours() {
+        LOGGER.debug("Nb de commandes : {}", commandes.size());
+        List<CommandeFamille> listCommande = commandes.stream().filter(p -> p.getStatut().equals(StatutCommandeFamille.EN_COURS)).collect(Collectors.toList());
+        LOGGER.debug("Nb de commandes en cours : {}", listCommande.size());
+        if (listCommande.size() == 1) {
+            return listCommande.get(0);
+        }
+        return null;
     }
 
     /**
      * @return the commandesEnAttenteValidationPayement
      */
     public List<CommandeFamille> getCommandesEnAttenteValidationPayement() {
-        return commandesEnAttenteValidationPayement;
-    }
-
-    /**
-     * @param commandesEnAttenteValidationPayement the commandesEnAttenteValidationPayement to set
-     */
-    public void setCommandesEnAttenteValidationPayement(List<CommandeFamille> commandesEnAttenteValidationPayement) {
-        this.commandesEnAttenteValidationPayement = commandesEnAttenteValidationPayement;
+        return commandes.stream().filter(p -> p.getStatut() == StatutCommandeFamille.EN_ATTENTE_PAYEMENT).collect(Collectors.toList());
     }
 
     /**
      * @return the commandesEnAttenteValidationEcole
      */
     public List<CommandeFamille> getCommandesEnAttenteValidationEcole() {
-        return commandesEnAttenteValidationEcole;
-    }
-
-    /**
-     * @param commandesEnAttenteValidationEcole the commandesEnAttenteValidationEcole to set
-     */
-    public void setCommandesEnAttenteValidationEcole(List<CommandeFamille> commandesEnAttenteValidationEcole) {
-        this.commandesEnAttenteValidationEcole = commandesEnAttenteValidationEcole;
+        return commandes.stream().filter(p -> p.getStatut() == StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE).collect(Collectors.toList());
     }
 
     /**
      * @return the commandesEnLivraison
      */
     public List<CommandeFamille> getCommandesEnLivraison() {
-        return commandesEnLivraison;
-    }
-
-    /**
-     * @param commandesEnLivraison the commandesEnLivraison to set
-     */
-    public void setCommandesEnLivraison(List<CommandeFamille> commandesEnLivraison) {
-        this.commandesEnLivraison = commandesEnLivraison;
+        return commandes.stream().filter(p -> p.getStatut() == StatutCommandeFamille.EN_LIVRAISON).collect(Collectors.toList());
     }
 
     /**
      * @return the commandesLivrees
      */
     public List<CommandeFamille> getCommandesLivrees() {
-        return commandesLivrees;
-    }
-
-    /**
-     * @param commandesLivrees the commandesLivrees to set
-     */
-    public void setCommandesLivrees(List<CommandeFamille> commandesLivrees) {
-        this.commandesLivrees = commandesLivrees;
+        return commandes.stream().filter(p -> p.getStatut() == StatutCommandeFamille.LIVREE).collect(Collectors.toList());
     }
 
     public String getIdentifiantsFraterie() {
@@ -173,9 +160,7 @@ public class Famille {
 
     @Override
     public String toString() {
-        return "Famille [id=" + getId() + ", nbEleves=" + eleves + ", nbCommandeEnAttenteValidPayement=" + commandesEnAttenteValidationPayement
-                        + ", nbCommandeEnAttenteValidEcole=" + commandesEnAttenteValidationEcole + ", nbCommandeEnLivraison=" + commandesEnLivraison
-                        + ", nbCommandeLivrees=" + commandesLivrees + "]";
+        return "Famille [id=" + getId() + ", nbEleves=" + eleves + ", nbCommandes=" + commandes.size() + "]";
     }
 
 }

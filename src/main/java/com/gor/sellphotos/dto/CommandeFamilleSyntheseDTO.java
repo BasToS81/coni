@@ -1,11 +1,8 @@
 package com.gor.sellphotos.dto;
 
-
 public class CommandeFamilleSyntheseDTO {
 
-    private Long id;
-
-    private String identifiant;
+    private Long identifiant;
 
     private String dateCommande;
 
@@ -22,30 +19,16 @@ public class CommandeFamilleSyntheseDTO {
     private String typeCommande;
 
     /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    /**
      * @return the identifiant
      */
-    public String getIdentifiant() {
+    public Long getIdentifiant() {
         return identifiant;
     }
 
     /**
      * @param identifiant the identifiant to set
      */
-    public void setIdentifiant(String identifiant) {
+    public void setIdentifiant(Long identifiant) {
         this.identifiant = identifiant;
     }
 
@@ -149,7 +132,7 @@ public class CommandeFamilleSyntheseDTO {
 
     @Override
     public String toString() {
-        return "Utilisateur [id=" + id + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montant=" + montant + "]";
+        return "Utilisateur [identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montant=" + montant + "]";
     }
 
 }

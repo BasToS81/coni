@@ -66,13 +66,22 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 				}
 			}
 	    })
-
+	.state('visualiser', {
+    	url : '/famille/commande/{identifiant}',
+		views : {
+			'contentInterne@' :{
+				templateUrl : '/famille/commande/visualisation.html',
+				controller : 'FamilleCommandeVisualisationCtrl',
+				resolve : {	additionalData : loadCommandeFamille }
+			}	
+		}
+    })
 	//Page Accueil après login
 	.state('generic', {
 		url : '/{type}',
 		views : {
 			'content@' : {
-				templateUrl : function ($stateParams){  return 'accueil.html'; },
+				templateUrl : function ($stateParams){  return 'banniere.html'; },
 				controller : function ($stateParams){ return $stateParams.type + 'Ctrl'; },
 				resolve : {	additionalData : loadData }
 			},
@@ -98,11 +107,11 @@ var loadData = function($q, $http, $stateParams, $timeout, Auth) {
 };
 
 
-var getCommandeFamille = function($q, $http, $stateParams, $timeout, Auth) {
+var loadCommandeFamille = function($q, $http, $stateParams, $timeout, Auth) {
 
 	var deferred = $q.defer();
 
-	$http.get('/ws/famille/commande/' + $stateParams.idCommande + '/get/')
+	$http.get('/ws/famille/commande/get?identifiant=' + $stateParams.identifiant)
 	.success(function(data, status, headers, config) {
 		Auth.setUserCommandes(data);
 		$timeout(deferred.resolve, 0);

@@ -7,7 +7,7 @@ myApp.controller('FamilleCtrl', ['$scope', '$http', 'Auth', '$stateParams', func
 
 //http://plnkr.co/edit/z9RQKgNBTRbigyQs7OGW?p=preview
 
-myApp.controller('FamilleCommandesCtrl', [ '$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
+myApp.controller('FamilleCommandesCtrl', [ '$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.commandes = null;
 	$scope.getCommandesList = function() { 
 		$http.post('/ws/famille/commande/getList')
@@ -20,13 +20,31 @@ myApp.controller('FamilleCommandesCtrl', [ '$scope', '$http', 'Auth', '$statePar
 					$scope.errorMessage = "Erreur au chargement des données de l'école";
 				});
 	};
+	$scope.openCommande = function(identifiantCommande) { 
+	
+		$state.go('visualiser', { identifiant : identifiantCommande });
+	};
+	$scope.deleteCommande = function(identifiantCommande) { 
+		
+		$http.get(	
+				'/ws/famille/commande/del?identifiant=' + identifiantCommande
+			 )
+		.success(
+				function(data, status, headers, config) {
+					$scope.getCommandesList();
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de la commande";
+				});
+	};
 		
 }]);
 
 
 
 
-myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
+myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.commandeEnCours = '';
 	$scope.commandeEleves = '';
 	$scope.loadOrCreateCommande = function() { 
@@ -69,7 +87,18 @@ myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', 'Auth', '$sta
 					$scope.errorMessage = "Erreur au chargement des données de la commande";
 				});
 	};
-	
+	$scope.saveModePaiementCommandeEnCoursAndGo = function() { 
+		
+		$http.post('/ws/famille/commande/save/modepaiement',  $scope.commandeEnCours   )
+		.success(
+				function(data, status, headers, config) {
+					$state.go('validation');
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de la commande";
+				});
+	};
 	
 	$scope.calcul = function( commandeEncours, produit ) { 
 		var ancienMontant = produit.montant;
@@ -100,16 +129,29 @@ myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', 'Auth', '$sta
 ]);
 
 
-myApp.controller('FamilleCommandeEnCoursValidationCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
+myApp.controller('FamilleCommandeEnCoursValidationCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.commandeEnCours = '';
 	$scope.commandeEleves = '';
+	$scope.cheque=false;
+	$scope.espece=false;
+	$scope.internet=false;
+	
 	$scope.getCommande = function() { 
-		
-		$http.post('/ws/famille/commande/get' )
+		$http.get(	
+					'/ws/famille/commande/getEnCours'
+				 )
 		.success(
 				function(data, status, headers, config) {
 					$scope.commandeEnCours = data;
 					$scope.commandesEleve = data.commandesEleve;
+					
+					if($scope.commandeEnCours.moyenPayement=='ESPECE') {
+						$scope.espece=true;
+					} else if($scope.commandeEnCours.moyenPayement=='CHEQUE') {
+						$scope.cheque=true;
+					} else if($scope.commandeEnCours.moyenPayement=='INTERNET') {
+						$scope.internet=true;
+					}
 				})
 		.error(
 				function(data, status, headers, config) {
@@ -118,16 +160,28 @@ myApp.controller('FamilleCommandeEnCoursValidationCtrl', ['$scope', '$http', 'Au
 	};
 	$scope.validerCommandeEnCours = function() { 
 		
-		$http.post('/ws/famille/commande/validate' )
+		$http.post('/ws/famille/commande/validate',  $scope.commandeEnCours )
 		.success(
 				function(data, status, headers, config) {
 					$scope.commandeEnCours = data;
 					$scope.commandesEleve = data.commandesEleve;
+					$state.go('payement');
 				})
 		.error(
 				function(data, status, headers, config) {
 					$scope.errorMessage = "Erreur au chargement des données de la commande";
 				});
 	};
+}
+]);
+
+
+
+
+myApp.controller('FamilleCommandeVisualisationCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
+	$scope.commandeEnCours = Auth.getUserCommandes();
+	$scope.commandesEleve = $scope.commandeEnCours.commandesEleve;
+	
+	
 }
 ]);

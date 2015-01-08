@@ -1,17 +1,55 @@
 <div class="col-md-12 panel panel-default" ng-controller='FamilleCommandeEnCoursCtrl' ng-init="loadOrCreateCommande()">
 
-	<ul class="nav nav-tabs nav-justified">
-		<li role="presentation" class="active" class="disabled"><a href="#/famille/commande">Commande</a></li>
-		<li role="presentation" class="disabled"><a href="#/famille/commande">Moyen de payement</a></li>
-		<li role="presentation" class="disabled"><a href="#/famille/commande">Récapitulatif de commande</a></li>
-		<li role="presentation" class="disabled"><a href="#/famille/commande">Payement</a></li>
-		<li role="presentation" class="disabled"><a href="#/famille/commande">Synthèse</a></li>
-	</ul>
+
+	<div class="">
+		<div class="row bs-wizard" style="border-bottom:0;">
+		    <div class="col-xs-1">&nbsp;</div> 
+		    <div class="col-xs-2 bs-wizard-step complete">
+		      <div class="text-center bs-wizard-stepnum">Commande</div>
+		      <div class="progress"><div class="progress-bar"></div></div>
+		      <a href="#/famille/commande" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center">Choisissez la quantité des articles que vous souhaitez commander</div>
+		    </div>
+		    
+		    <div class="col-xs-2 bs-wizard-step disabled">
+		      <div class="text-center bs-wizard-stepnum">Moyen de payement</div>
+		      <div class="progress"><div class="progress-bar"></div></div>
+		      <a href="#" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center"></div>
+		    </div>
+		    
+		    <div class="col-xs-2 bs-wizard-step disabled">
+		      <div class="text-center bs-wizard-stepnum">Validation</div>
+		      <div class="progress"><div class="progress-bar"></div></div>
+		      <a href="#" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center"></div>
+		    </div>
+		    
+		    <div class="col-xs-2 bs-wizard-step disabled"><!-- active -->
+		      <div class="text-center bs-wizard-stepnum">Payement</div>
+		      <div class="progress"><div class="progress-bar"></div></div>
+		      <a href="#" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center"></div>
+		    </div>
+		    
+		    <div class="col-xs-2 bs-wizard-step disabled"><!-- active -->
+		      <div class="text-center bs-wizard-stepnum">Synthèse</div>
+		      <div class="progress"><div class="progress-bar"></div></div>
+		      <a href="#" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center"></div>
+		    </div>
+		    <div class="col-xs-1">&nbsp;</div>
+		</div>
+	</div>
+
+
+			
 
 	<div class="col-md-2"></div>
-	<div class="col-md-8 panel panel-default">
+	<div class="col-md-8">
 
 		<h1> Commande </h1>
+		<h4> Numéro de la commande : {{commandeEnCours.identifiant}}</h4>
 		<!-- Affichage de la liste des produits disponible dans la commande pour chaque élève -->
 		<accordion close-others="false"> 
 			<accordion-group ng-repeat='commandeEleve in commandesEleve' heading="Eleve : {{commandeEleve.identifiantEleve}}" is-open="true" > 
@@ -75,9 +113,10 @@
 			
 			<div class="col-md-2">
 			
-				<button class="btn btn-lg btn-success btn-block" ui-sref="mode" ng-click="saveProduitsCommandeEnCours()">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
+				<button class="btn btn-lg btn-success btn-block" ui-sref="mode" ng-click="saveProduitsCommandeEnCours()" ng-show="commandeEnCours.montant!=0">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
 			</div>
 			<div class="col-md-3"> </div>
 		</div>
+		<div  class="col-md-12" >&nbsp;</div>
 	</div>
 </div>

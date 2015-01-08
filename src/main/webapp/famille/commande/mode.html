@@ -1,21 +1,55 @@
 <div class="col-md-12 panel panel-default" ng-controller='FamilleCommandeEnCoursCtrl' ng-init="loadOrCreateCommande()">
 
-	<ul class="nav nav-tabs nav-justified">
-		<li role="presentation" class="disabled"><a href="#/famille/commande">Commande</a></li>
-		<li role="presentation" class="active" class="disabled"><a href="#/famille/commande">Mode de payement</a></li>
-		<li role="presentation" class="disabled"><a href="#/famille/commande">Validation</a></li>
-		<li role="presentation" class="disabled"><a href="#/famille/commande">Payement</a></li>
-		<li role="presentation" class="disabled"><a href="#/famille/commande">Récapitulatif</a></li>
-	</ul>
+	<div class="">
+		<div class="row bs-wizard" style="border-bottom:0;">
+		    <div class="col-xs-1">&nbsp;</div> 
+		    <div class="col-xs-2 bs-wizard-step complete">
+		      <div class="text-center bs-wizard-stepnum">Commande</div>
+		      <div class="progress"><div class="progress-bar"></div></div>
+		      <a href="#/famille/commande/mode" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center"></div>
+		    </div>
+		    
+		    <div class="col-xs-2 bs-wizard-step complete">
+		      <div class="text-center bs-wizard-stepnum">Moyen de payement</div>
+		      <div class="progress"><div class="progress-bar"></div></div>
+		      <a href="#/famille/commande/mode" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center">Choisissez votre moyen de payement</div>
+		    </div>
+		    
+		    <div class="col-xs-2 bs-wizard-step disabled">
+		      <div class="text-center bs-wizard-stepnum">Validation</div>
+		      <div class="progress"><div class="progress-bar"></div></div>
+		      <a href="#" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center"></div>
+		    </div>
+		    
+		    <div class="col-xs-2 bs-wizard-step disabled"><!-- active -->
+		      <div class="text-center bs-wizard-stepnum">Payement</div>
+		      <div class="progress"><div class="progress-bar"></div></div>
+		      <a href="#" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center"></div>
+		    </div>
+		    
+		    <div class="col-xs-2 bs-wizard-step disabled"><!-- active -->
+		      <div class="text-center bs-wizard-stepnum">Synthèse</div>
+		      <div class="progress"><div class="progress-bar"></div></div>
+		      <a href="#" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center"></div>
+		    </div>
+		    <div class="col-xs-1">&nbsp;</div>
+		</div>
+	</div>
 
 	<div class="col-md-2"></div>
-	<div class="col-md-8 panel panel-default">
+	<div class="col-md-8">
 		<h1> Mode de payement </h1>
+		<h4> Numéro de la commande : {{commandeEnCours.identifiant}}</h4>
 		
 		<div class="col-md-4">&nbsp;</div>
 		
 		<div class="panel panel-default">
-			<div class="panel-heading">Choisissez votre mode de paiement :</div>
+			<div class="panel-heading">Choisissez votre mode de payement :</div>
 			<div class="panel-body">
 				<div class="form-group">
 				  <div class="col-md-1">
@@ -51,9 +85,10 @@
 			</div>
 			
 			<div class="col-md-2">			
-				<button class="btn btn-lg btn-success btn-block" ui-sref="validation" ng-click="saveModePaiementCommandeEnCours()">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
+				<button class="btn btn-lg btn-success btn-block" ng-click="saveModePaiementCommandeEnCoursAndGo()" ng-show="commandeEnCours.moyenPayement!=null">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
 			</div>
 			<div class="col-md-3"> </div>
 		</div>
+		<div  class="col-md-12" >&nbsp;</div>
 	</div>
 </div>

@@ -6,36 +6,36 @@
 		    <div class="col-xs-2 bs-wizard-step complete">
 		      <div class="text-center bs-wizard-stepnum">Commande</div>
 		      <div class="progress"><div class="progress-bar"></div></div>
-		      <a href="#/famille/commande/validation" class="bs-wizard-dot"></a>
+		      <a href="#/famille/commande/recapitulatif" class="bs-wizard-dot"></a>
 		      <div class="bs-wizard-info text-center"></div>
 		    </div>
 		    
 		    <div class="col-xs-2 bs-wizard-step complete">
 		      <div class="text-center bs-wizard-stepnum">Moyen de payement</div>
 		      <div class="progress"><div class="progress-bar"></div></div>
-		      <a href="#/famille/commande/validation" class="bs-wizard-dot"></a>
+		      <a href="#/famille/commande/recapitulatif" class="bs-wizard-dot"></a>
 		      <div class="bs-wizard-info text-center"></div>
 		    </div>
 		    
 		    <div class="col-xs-2 bs-wizard-step complete">
 		      <div class="text-center bs-wizard-stepnum">Validation</div>
 		      <div class="progress"><div class="progress-bar"></div></div>
-		      <a href="#/famille/commande/validation" class="bs-wizard-dot"></a>
-		      <div class="bs-wizard-info text-center">Vérifier le contenu de votre commande et valider pour procéder au payement de celle-ci</div>
+		      <a href="#/famille/commande/recapitulatif" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center"></div>
 		    </div>
 		    
-		    <div class="col-xs-2 bs-wizard-step disabled"><!-- active -->
+		    <div class="col-xs-2 bs-wizard-step complete"><!-- active -->
 		      <div class="text-center bs-wizard-stepnum">Payement</div>
 		      <div class="progress"><div class="progress-bar"></div></div>
-		      <a href="#" class="bs-wizard-dot"></a>
+		      <a href="#/famille/commande/recapitulatif" class="bs-wizard-dot"></a>
 		      <div class="bs-wizard-info text-center"></div>
 		    </div>
 		    
-		    <div class="col-xs-2 bs-wizard-step disabled"><!-- active -->
+		    <div class="col-xs-2 bs-wizard-step complete"><!-- active -->
 		      <div class="text-center bs-wizard-stepnum">Synthèse</div>
 		      <div class="progress"><div class="progress-bar"></div></div>
-		      <a href="#" class="bs-wizard-dot"></a>
-		      <div class="bs-wizard-info text-center"></div>
+		      <a href="#/famille/commande/recapitulatif" class="bs-wizard-dot"></a>
+		      <div class="bs-wizard-info text-center">Voici le récapitulatif de votre commande</div>
 		    </div>
 		    <div class="col-xs-1">&nbsp;</div>
 		</div>
@@ -89,23 +89,10 @@
 			<div  class="col-md-12" >{{commandeEnCours.moyenPayement}}</div>
 			
 			<div  class="col-md-12" >&nbsp;</div>
+			
+			<button class="btn btn-lg btn-success" ui-sref="generic({type:'famille'})" >Terminer  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
 		</div>
-		<div  class="col-md-12" >
-			<div class="col-md-2"> </div>
-			<div class="col-md-2">
-				<button class="btn btn-lg btn-warning btn-block" ui-sref="mode" ><span class="glyphicon glyphicon-circle-arrow-left"	></span>  &nbsp;&nbsp;Retour</button>
-			</div>
-			
-			<div class="col-md-3">
-				
-			</div>
-			
-			<div class="col-md-2">
-			
-				<button class="btn btn-lg btn-success btn-block" ng-click="validerCommandeEnCours()">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
-			</div>
-			<div class="col-md-3"> </div>
-		</div>
-		<div  class="col-md-12" >&nbsp;</div>
+		
+			<div  class="col-md-12" >&nbsp;</div>
 	</div>
 </div>

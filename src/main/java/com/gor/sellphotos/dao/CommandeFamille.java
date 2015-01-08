@@ -30,10 +30,7 @@ public class CommandeFamille {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Basic
-    private String identifiant;
+    private Long identifiant;
 
     @Basic
     private Date dateCommande;
@@ -65,34 +62,20 @@ public class CommandeFamille {
     public CommandeFamille() {
         commandesEleve = new ArrayList<CommandeEleve>();
         dateCommande = DateUtils.getCurrentDate();
-
-    }
-
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
+        statut = StatutCommandeFamille.EN_COURS;
     }
 
     /**
      * @return the identifiant
      */
-    public String getIdentifiant() {
+    public Long getIdentifiant() {
         return identifiant;
     }
 
     /**
      * @param identifiant the identifiant to set
      */
-    public void setIdentifiant(String identifiant) {
+    public void setIdentifiant(Long identifiant) {
         this.identifiant = identifiant;
     }
 
@@ -230,7 +213,7 @@ public class CommandeFamille {
 
     @Override
     public String toString() {
-        return "Utilisateur [id=" + id + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montant=" + montant + "]";
+        return "Utilisateur [identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montant=" + montant + "]";
     }
 
 }

@@ -72,6 +72,8 @@ public class SecuritySessionData {
 
     private List<String> identifiantCommandes;
 
+    private Long identifiantCommmandeEnCours;
+
     /**
      * @return the identifiantUtilisateur
      */
@@ -130,6 +132,20 @@ public class SecuritySessionData {
 
     public void addEleve(String id, String idChiffreEleve, String idChiffreClasse) {
         eleves.add(new SecuritySessionEleveData(id, idChiffreEleve, idChiffreClasse));
+    }
+
+    /**
+     * @return the identifiantCommmandeEnCours
+     */
+    public Long getIdentifiantCommmandeEnCours() {
+        return identifiantCommmandeEnCours;
+    }
+
+    /**
+     * @param identifiantCommmandeEnCours the identifiantCommmandeEnCours to set
+     */
+    public void setIdentifiantCommmandeEnCours(Long identifiantCommmandeEnCours) {
+        this.identifiantCommmandeEnCours = identifiantCommmandeEnCours;
     }
 
 }
