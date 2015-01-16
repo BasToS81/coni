@@ -3,6 +3,7 @@ package com.gor.sellphotos.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.gor.sellphotos.dao.Classe;
+import com.gor.sellphotos.dao.CommandeEleve;
+import com.gor.sellphotos.dao.CommandeProduit;
 import com.gor.sellphotos.dao.Ecole;
 import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dao.Famille;
@@ -24,6 +27,7 @@ import com.gor.sellphotos.dao.ModeleEtTarif;
 import com.gor.sellphotos.dao.Produit;
 import com.gor.sellphotos.dao.Responsable;
 import com.gor.sellphotos.repository.ClasseRepository;
+import com.gor.sellphotos.repository.CommandeEleveRepository;
 import com.gor.sellphotos.repository.EcoleRepository;
 import com.gor.sellphotos.repository.EleveRepository;
 import com.gor.sellphotos.repository.FamilleRepository;
@@ -83,19 +87,20 @@ public class ImportController {
                     chargeConfigurationEcole(dossierEcole);
                 }
 
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
                 resultatImport = "KO";
             }
-        }
-        else {
+        } else {
             LOGGER.debug("dossier import non existant");
 
             resultatImport = "KO : dossier inexistant";
         }
 
         LOGGER.debug("fin d'import de données : {}", resultatImport);
+
+        generateEcole("SGL", 4, 10);
+
         return new ImportDTO(resultatImport);
     }
 
@@ -139,8 +144,7 @@ public class ImportController {
                     responsableRepository.save(resp);
                     ecole.addResponsables(resp);
                     // sauvegarde du responsable
-                }
-                else {
+                } else {
                     LOGGER.error("Le responsable de l'école {} n'est pas correctement renseigné : {}", ecole.getNumeroEcole(), listResponsables[i]);
                 }
             }
@@ -222,8 +226,7 @@ public class ImportController {
                 famille.setIdentifiantsFraterie(identifiantFamille);
                 famille.setEcole(ecole);
                 familleRepository.save(famille);
-            }
-            else {
+            } else {
                 LOGGER.debug("Famille found : ", famille);
             }
 
@@ -238,4 +241,94 @@ public class ImportController {
         classe.setEcole(ecole);
         classeRepository.save(classe);
     }
+
+    @Autowired
+    CommandeEleveRepository commandeEleveRepository;
+
+    protected Produit PRODUIT_PHOTO_INDIVID;
+
+    protected Produit PRODUIT_PHOTOS_GROUPE;
+
+    protected void initProduits() {
+        Produit produit = produitRepository.findByIdentifiant("PHOTO_INDIVID");
+        if (produit == null) {
+            produit = new Produit();
+            produit.setDesignation("Photo eleve");
+            produit.setIdentifiant("PHOTO_INDIVID");
+            produit.setPrix_ecole_ttc(10.0);
+            produit.setPrix_parent_ttc(20.0);
+            produit.setOrdre(1);
+            produitRepository.save(produit);
+        }
+        PRODUIT_PHOTO_INDIVID = produit;
+
+        produit = produitRepository.findByIdentifiant("PHOTO_GROUPE");
+        if (produit == null) {
+            produit = new Produit();
+            produit.setDesignation("Photo groupe");
+            produit.setIdentifiant("PHOTO_GROUPE");
+            produit.setPrix_ecole_ttc(5.0);
+            produit.setPrix_parent_ttc(15.0);
+            produit.setOrdre(1);
+            produitRepository.save(produit);
+        }
+        PRODUIT_PHOTOS_GROUPE = produit;
+
+    }
+
+    public Ecole generateEcole(String prefix, int nbClasse, int nbEleve) {
+
+        initProduits();
+
+        Ecole ecole = new Ecole();
+        ecoleRepository.save(ecole);
+
+        Responsable resp = new Responsable();
+        resp.setNom("aa");
+        resp.setIdentifiant("aa");
+        resp.setCodeAcces("aa");
+        resp.setEcole(ecole);
+        responsableRepository.save(resp);
+
+        ecole.addResponsables(resp);
+        ecoleRepository.save(ecole);
+
+        for (int i = 0; i < nbClasse; i++) {
+            Classe classe = new Classe();
+            classe.setNom("Classe" + "_" + prefix + "_" + i);
+            classe.setIdentifiantChiffre("C" + prefix + "_" + i);
+            classe.setEcole(ecole);
+            classeRepository.save(classe);
+
+            for (int j = 0; j < nbEleve; j++) {
+                Eleve eleve = new Eleve();
+                eleve.setNom("Eleve" + "_" + nbEleve + "_" + j);
+                eleve.setClasse(classe);
+                eleveRepository.save(eleve);
+
+                // Ajoute 1 commande tous les 2 élèves
+                // if (j % 2 == 0) {
+                CommandeEleve commande = new CommandeEleve();
+                commande.setEleve(eleve);
+                commande.setMontant(10.0);
+                CommandeProduit commandeProduit1 = new CommandeProduit();
+                commandeProduit1.setMontant(PRODUIT_PHOTO_INDIVID.getPrix_ecole_ttc());
+                commandeProduit1.setQuantite(1);
+                commandeProduit1.setProduit(PRODUIT_PHOTO_INDIVID);
+                commandeProduit1.setCommandeEleve(commande);
+
+                CommandeProduit commandeProduit2 = new CommandeProduit();
+                commandeProduit2.setMontant(PRODUIT_PHOTOS_GROUPE.getPrix_ecole_ttc());
+                commandeProduit2.setQuantite(1);
+                commandeProduit2.setProduit(PRODUIT_PHOTOS_GROUPE);
+                commandeProduit2.setCommandeEleve(commande);
+
+                commande.setProduitsCommandes(Arrays.asList(commandeProduit1, commandeProduit2));
+
+                commandeEleveRepository.save(commande);
+            }
+        }
+        return ecole;
+    }
+
 }

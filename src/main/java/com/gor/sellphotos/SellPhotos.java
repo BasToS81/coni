@@ -35,8 +35,7 @@ public class SellPhotos {
             Server server = Server.createTcpServer().start();
             LOGGER.debug("URL: jdbc:h2:{}/mem:test", server.getURL());
             return server;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
