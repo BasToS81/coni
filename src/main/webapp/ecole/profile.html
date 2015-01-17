@@ -15,9 +15,15 @@
   </div>
 
 
-  <div class="col-md-12 panel panel-default">
-            
-        <div class="col-md-12">Liste des classes :</div>
-  </div>
+
+  <div class="col-md-12 panel-default" ng-controller="EcoleSyntheseCtrl" ng-init="getSynthese()">
+	<div class="table-responsive col-md-12" >
+	  <table class="table">
+	  	<tr><th>Classe</th><th>Nombre d'élèves</th><th>Nombre de commandes</th><th>Total achat</th><th>Total vente</th></tr>
+	    <tr ng-repeat="classe in classes"><td><a ui-sref="classes({id: classe.identifiantChiffre, nom: classe.nomClasse})">{{classe.nomClasse}}</a></td><td>{{classe.nbEleves}}</td><td>{{classe.nbCommandes}}</td><td>{{classe.totalAchat}}</td><td>{{classe.totalVente}}</td></tr>
+	  </table>
+	</div>
+
+</div>
 
 </div>

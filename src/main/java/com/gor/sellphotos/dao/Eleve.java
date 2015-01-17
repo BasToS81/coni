@@ -1,10 +1,12 @@
 package com.gor.sellphotos.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Eleve extends Utilisateur {
@@ -17,6 +19,9 @@ public class Eleve extends Utilisateur {
 
     @ManyToOne
     private Classe classe;
+
+    @OneToMany(mappedBy = "eleve")
+    private List<CommandeEleve> commandes;
 
     @Basic
     private Date dateLimiteAcces;
@@ -93,6 +98,14 @@ public class Eleve extends Utilisateur {
     @Override
     public String toString() {
         return "Eleve [identifiantChiffre=" + identifiantChiffre + ", dateLimiteAcces=" + dateLimiteAcces + ", toString()=" + super.toString() + "]";
+    }
+
+    public List<CommandeEleve> getCommandes() {
+        return commandes;
+    }
+
+    public void setCommandes(List<CommandeEleve> commandes) {
+        this.commandes = commandes;
     }
 
 }

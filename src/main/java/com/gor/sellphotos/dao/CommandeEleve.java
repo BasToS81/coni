@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +19,7 @@ public class CommandeEleve {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "commandeEleve")
+    @OneToMany(mappedBy = "commandeEleve", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommandeProduit> produitsCommandes;
 
     @Basic
