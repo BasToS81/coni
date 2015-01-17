@@ -3,7 +3,7 @@
 
 <head>
 <meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="description" content="" />
 <meta name="author" content="" />
@@ -20,6 +20,7 @@
 <!-- Custom scripts -->
 <link href="css/signin.css" rel="stylesheet" />
 <link href="css/process.css" rel="stylesheet" />
+<link href="css/sellphotos.css" rel="stylesheet" />
 <script type="text/javascript" src="js/sellphotos.js"></script>
 <script type="text/javascript" src="js/login.js"></script>
 <script type="text/javascript" src="js/import.js"></script>
@@ -29,21 +30,15 @@
 
 </head>
 
-<body ng-controller="GlobalCtrl">
-
-	<div ui-view="content"></div>
-
-	<div ui-view="contentInterne"></div>
-
-
-
-	<div class="container">
-		<form class="form-signin" role="form" ng-controller="ImportController" action="#" ng-submit="getDonnees()">
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Importer</button>
-			<div class="form-error" ngShow="statusImport == ''">{{statusImport}}</div>
-		</form>
-	</div>
-
+	<body ng-controller="GlobalCtrl">
 	
-</body>
+		<div ui-view="content-header"></div>
+	
+		<div ui-view="content-body"></div>
+		
+		<div ui-view="content-footer"></div>
+		
+	
+	
+	</body>
 </html>

@@ -13,17 +13,35 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	$stateProvider.state('home', {
 		url : '/',
 		views : {
-			'content@' : {
+			'content-body@' : {
 				templateUrl : 'login.html',
 				controller : 'LoginCtrl'
 			}
 		}
 	})
+	//Page Accueil après login
+	.state('generic', {
+		url : '/{type}',
+		views : {
+			'content-header@' : {
+				templateUrl : 'header.html',
+				controller : function ($stateParams){ return $stateParams.type + 'Ctrl'; },
+				resolve : {	additionalData : loadData }
+			},
+			'content-body@' : {
+				templateUrl : function ($stateParams){ return '/' + $stateParams.type + '/profile.html'; },
+				
+			},
+			'content-footer@' : {
+				templateUrl : 'footer.html',
+			}
+		}
+	})
 	// Page famille
-	.state('commander', {
+	.state('generic.commander', {
 		url : '/famille/commande',
 		views : {
-			'contentInterne@' : {
+			'content-body@' : {
 				
 				templateUrl : '/famille/commande/commande.html' 
 			}
@@ -31,66 +49,51 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	})
 	// Page Commande 
 	   
-	    .state('mode', {
+	    .state('generic.mode', {
 	    	url : '/famille/commande/mode',
 			views : {
-				'contentInterne@' : {
+				'content-body@' : {
 					
 					templateUrl : '/famille/commande/mode.html' 
 				}
 			}
 	    })
-	    .state('validation', {
+	    .state('generic.validation', {
 	    	url : '/famille/commande/validation',
 			views : {
-				'contentInterne@' : {
+				'content-body@' : {
 					templateUrl : '/famille/commande/validation.html'
 				}
 			}
 	    })
-	    .state('payement', {
+	    .state('generic.payement', {
 	        url: '/famille/commande/payement',
 	        views : {
-				'contentInterne@' : {
+				'content-body@' : {
 					
 					templateUrl : '/famille/commande/payement.html' 
 				}
 			}
 	    })
-	    .state('recapitulatif', {
+	    .state('generic.recapitulatif', {
 	        url: '/famille/commande/recapitulatif',
 	        views : {
-				'contentInterne@' : {
+				'content-body@' : {
 					
 					templateUrl : '/famille/commande/recapitulatif.html' 
 				}
 			}
 	    })
-	.state('visualiser', {
+	.state('generic.visualiser', {
     	url : '/famille/commande/{identifiant}',
 		views : {
-			'contentInterne@' :{
+			'content-body@' :{
 				templateUrl : '/famille/commande/visualisation.html',
 				controller : 'FamilleCommandeVisualisationCtrl',
 				resolve : {	additionalData : loadCommandeFamille }
 			}	
 		}
-    })
-	//Page Accueil après login
-	.state('generic', {
-		url : '/{type}',
-		views : {
-			'content@' : {
-				templateUrl : function ($stateParams){  return 'banniere.html'; },
-				controller : function ($stateParams){ return $stateParams.type + 'Ctrl'; },
-				resolve : {	additionalData : loadData }
-			},
-			'contentInterne@' : {
-				templateUrl : function ($stateParams){ return '/' + $stateParams.type + '/profile.html'; },
-				
-			}
-		}
-	});
+    });
 });
 
 var loadData = function($q, $http, $stateParams, $timeout, Auth) {

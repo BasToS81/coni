@@ -1,4 +1,4 @@
-<div class="col-md-12 panel panel-default" ng-controller='FamilleCommandeEnCoursCtrl' ng-init="loadOrCreateCommande()">
+<div class="col-md-12 main-panel" ng-controller='FamilleCommandeEnCoursCtrl' ng-init="loadOrCreateCommande()">
 
 
 	<div class="">
@@ -113,7 +113,7 @@
 			
 			<div class="col-md-2">
 			
-				<button class="btn btn-lg btn-success btn-block" ui-sref="mode" ng-click="saveProduitsCommandeEnCours()" ng-show="commandeEnCours.montant!=0">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
+				<button class="btn btn-lg btn-success btn-block" ui-sref="generic.mode" ng-click="saveProduitsCommandeEnCours()" ng-show="commandeEnCours.montant!=0">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
 			</div>
 			<div class="col-md-3"> </div>
 		</div>

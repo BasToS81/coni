@@ -2,7 +2,7 @@
 	<div class="container">
 		<form class="form-signin" role="form" ng-controller="LoginCtrl" action="#" ng-submit="login()">
 			<h2 class="form-signin-heading">Bienvenue !</h2>
-			<input type="text" class="form-control" placeholder="Nom de l'élève" required autofocus ng-model="username" />
+			<input type="text" class="form-control" placeholder="Identifiant de l'utilisateur" required autofocus ng-model="username" />
 			<input type="password" class="form-control" placeholder="Mot de passe" ng-model="password">
 			<div class="form-error" ngShow="errorMessage == ''">{{errorMessage}}</div>
 			<button class="btn btn-lg btn-primary btn-block" type="submit">Entrer</button>

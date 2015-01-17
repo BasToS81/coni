@@ -22,21 +22,27 @@ myApp.controller('FamilleCommandesCtrl', [ '$scope', '$http', '$state', 'Auth', 
 	};
 	$scope.openCommande = function(identifiantCommande) { 
 	
-		$state.go('visualiser', { identifiant : identifiantCommande });
+		$state.go('generic.visualiser', { identifiant : identifiantCommande });
 	};
 	$scope.deleteCommande = function(identifiantCommande) { 
 		
-		$http.get(	
-				'/ws/famille/commande/del?identifiant=' + identifiantCommande
-			 )
-		.success(
-				function(data, status, headers, config) {
-					$scope.getCommandesList();
-				})
-		.error(
-				function(data, status, headers, config) {
-					$scope.errorMessage = "Erreur au chargement des données de la commande";
-				});
+		var answer = confirm("Etes vous sûr de vouloir supprimer cette commande ?");
+        if (answer) {
+        	
+
+    		$http.get('/ws/famille/commande/del?identifiant=' + identifiantCommande)
+		    		.success(
+		    				function(data, status, headers, config) {
+		    					$scope.getCommandesList();
+		    				})
+		    		.error(
+		    				function(data, status, headers, config) {
+		    					$scope.errorMessage = "Erreur au chargement des données de la commande";
+		    				});
+        	
+        }
+
+		
 	};
 		
 }]);
@@ -92,7 +98,7 @@ myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', '$state', 'Au
 		$http.post('/ws/famille/commande/save/modepaiement',  $scope.commandeEnCours   )
 		.success(
 				function(data, status, headers, config) {
-					$state.go('validation');
+					$state.go('generic.validation');
 				})
 		.error(
 				function(data, status, headers, config) {
@@ -165,7 +171,7 @@ myApp.controller('FamilleCommandeEnCoursValidationCtrl', ['$scope', '$http', '$s
 				function(data, status, headers, config) {
 					$scope.commandeEnCours = data;
 					$scope.commandesEleve = data.commandesEleve;
-					$state.go('payement');
+					$state.go('generic.payement');
 				})
 		.error(
 				function(data, status, headers, config) {

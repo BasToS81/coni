@@ -1,4 +1,4 @@
-<div class="col-md-12 panel" ng-controller="FamilleCtrl" >
+<div class="col-md-12 main-panel" ng-controller="FamilleCtrl" >
 
 	<div class="col-md-6">
 		
@@ -30,7 +30,7 @@
 			<div class="panel-body" ng-controller="FamilleCommandesCtrl" ng-init="getCommandesList()">
 				<!-- <div class="col-md-12">&nbsp;</div> -->
 				<div class="text-center">
-					<a ui-sref="commander" class="btn btn-info">Commander</a>
+					<a ui-sref="generic.commander" class="btn btn-info" title="Créer une nouvelle commande ou éditer la commande en cours de création">Commander</a>
 				</div>
 				
 				<div class="table-responsive col-md-12" >
@@ -45,8 +45,8 @@
 					    	<td>{{commande.dateCommande}}</td>
 					    	<td>{{commande.montant | number : 2 }} €</td>
 					    	<td>
-					    		<button class="btn btn-sm btn-success" ng-click="openCommande(commande.identifiant)" ng-show="commande.statut!='EN_COURS'"><span class="glyphicon glyphicon-eye-open "></span></button>
-					    		<button class="btn btn-sm btn-warning" ng-click="deleteCommande(commande.identifiant)" ng-show="commande.statut=='EN_COURS'"><span class="glyphicon glyphicon-remove"></span></button>
+					    		<button  title="Visualiser la commande" class="btn btn-sm btn-success" ng-click="openCommande(commande.identifiant)" ng-show="commande.statut!='EN_COURS'"><span class="glyphicon glyphicon-eye-open "></span></button>
+					    		<button  title="Supprimer la commande" class="btn btn-sm btn-warning" ng-click="deleteCommande(commande.identifiant)" ng-show="commande.statut=='EN_COURS'"><span class="glyphicon glyphicon-remove"></span></button>
 					    	</td>
 				    	</tr>
 				  	</tbody>
@@ -59,3 +59,4 @@
 </div>
 
 </div>
+

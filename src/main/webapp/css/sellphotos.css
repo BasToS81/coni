@@ -1,0 +1,10 @@
+.gradient {
+	background-image:	linear-gradient(#eee,white);
+
+}
+.gradient-reverse {
+	background-image:	linear-gradient(white,#eee);
+}
+.main-panel {
+  background-color: #fff;
+}

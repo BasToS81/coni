@@ -42,6 +42,7 @@ myApp.controller('LoginCtrl', [ '$scope', '$http', '$state', '$timeout', 'Auth',
 							else {
 								
 								$state.go('generic', {type:state});
+								
 							}
 						}
 						)

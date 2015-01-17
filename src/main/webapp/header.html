@@ -1,0 +1,32 @@
+
+<header class="intro-header" >
+
+
+	<!-- <div class="col-md-12" style="background-image: url('/data/ecole.jpg')" ng-controller="FamilleCtrl" ng-init="init()"> -->
+	<div class="col-md-12 gradient" ng-controller="FamilleCtrl" ng-init="init()">
+		<div class="col-md-10">
+			<h2>{{nomEcole}}</h2>
+		</div>
+		
+	
+			
+		<div class="col-md-1">
+			<div class="text-right">
+				<form class="form-signin" role="form" ng-controller="ImportController" action="#" ng-submit="getDonnees()">
+					<button class="btn btn-success" type="submit"><span class='glyphicon glyphicon-star'></button>
+				</form>
+			</div>
+		</div>
+		<div class="col-md-1">
+			<div class="text-right">
+				<form class="form-signin" role="form" ng-controller="LoginCtrl" action="#" ng-submit="logout()">
+					<button title="Se déconnecter" class="btn btn-primary" type="submit"><span class='glyphicon glyphicon-log-out'></span></button>
+				</form>
+			</div>
+		</div>
+		
+		<div class="form-error" ngShow="statusImport == ''">{{statusImport}}</div>
+		
+	</div>
+
+</header>
