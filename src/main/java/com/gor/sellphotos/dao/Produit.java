@@ -20,10 +20,10 @@ public class Produit {
     private String designation;
 
     @Basic
-    private double prix_parent_ttc;
+    private double prixParentHT;
 
     @Basic
-    private double prix_ecole_ttc;
+    private double prixEcoleHT;
 
     @Basic
     private int ordre;
@@ -71,34 +71,6 @@ public class Produit {
     }
 
     /**
-     * @return the prix_parent_ttc
-     */
-    public double getPrix_parent_ttc() {
-        return prix_parent_ttc;
-    }
-
-    /**
-     * @param prix_parent_ttc the prix_parent_ttc to set
-     */
-    public void setPrix_parent_ttc(double prix_parent_ttc) {
-        this.prix_parent_ttc = prix_parent_ttc;
-    }
-
-    /**
-     * @return the prix_ecole_ttc
-     */
-    public double getPrix_ecole_ttc() {
-        return prix_ecole_ttc;
-    }
-
-    /**
-     * @param prix_ecole_ttc the prix_ecole_ttc to set
-     */
-    public void setPrix_ecole_ttc(double prix_ecole_ttc) {
-        this.prix_ecole_ttc = prix_ecole_ttc;
-    }
-
-    /**
      * @return the order
      */
     public int getOrdre() {
@@ -112,9 +84,39 @@ public class Produit {
         this.ordre = ordre;
     }
 
+    /**
+     * @return the prixParentHT
+     */
+    public double getPrixParentHT() {
+        return prixParentHT;
+    }
+
+    /**
+     * @param prixParentHT the prixParentHT to set
+     */
+    public void setPrixParentHT(double prixParentHT) {
+        this.prixParentHT = prixParentHT;
+    }
+
+    /**
+     * @return the prixEcoleHT
+     */
+    public double getPrixEcoleHT() {
+        return prixEcoleHT;
+    }
+
+    /**
+     * @param prixEcoleHT the prixEcoleHT to set
+     */
+    public void setPrixEcoleHT(double prixEcoleHT) {
+        this.prixEcoleHT = prixEcoleHT;
+    }
+
     @Override
     public String toString() {
-        return "Produit [id=" + id + ", designation=" + designation + ", identifiant=" + identifiant + ", ordre=" + ordre + "]";
+        return "Produit [id=" + id + ", designation=" + designation + ", identifiant=" + identifiant + ", PrixParentHT=" + prixParentHT + ", PrixEcoleHT="
+                        + prixEcoleHT + ", ordre=" + ordre
+                        + "]";
     }
 
 }

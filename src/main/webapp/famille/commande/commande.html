@@ -52,7 +52,7 @@
 		<h4> Numéro de la commande : {{commandeEnCours.identifiant}}</h4>
 		<!-- Affichage de la liste des produits disponible dans la commande pour chaque élève -->
 		<accordion close-others="false"> 
-			<accordion-group ng-repeat='commandeEleve in commandesEleve' heading="Eleve : {{commandeEleve.identifiantEleve}}" is-open="true" > 
+			<accordion-group ng-repeat='commandeEleve in commandesEleve' heading="Eleve : {{commandeEleve.eleve.identifiant}}" is-open="true" > 
 			 
 			 
 			 	<div class="table-responsive">
@@ -70,7 +70,7 @@
 					<tr ng-repeat="produit in commandeEleve.produitsCommandes">
 							<td class="col-md-1">{{produit.produit.identifiant}}</td>
 							<td class="col-md-4">{{produit.produit.designation}}</td>
-							<td class="col-md-2">{{produit.produit.prix_parent_ttc | number : 2 }} €</td>
+							<td class="col-md-2">{{produit.produit.prixParentHT | ttcArrondi:this | number : 2 }} €</td>
 							<td class="col-md-1">
 								<input ng-model="produit.quantite" class="form-control" ng-change="calcul(commandeEnCours,produit)"/>
 							</td>
@@ -80,7 +80,7 @@
 								  <button type="button" class="btn btn-default" ng-click="addQuantite(commandeEnCours,produit)">+</button>
 								</div>
 							</td>
-							<td class="col-md-1">{{produit.montant | number : 2 }} €</td>
+							<td class="col-md-1">{{produit.montantParentHT | ttcArrondi:this | number : 2 }} €</td>
 						</tr>
 							
 						
@@ -97,7 +97,7 @@
 		
 		<div  class="col-md-8" ></div>
 		<div  class="col-md-2" >Total :</div>
-		<div  class="col-md-2" >{{commandeEnCours.montant | number : 2 }} €</div>
+		<div  class="col-md-2" >{{commandeEnCours.montantParentHT | ttcArrondi:this | number : 2 }} €</div>
 		
 		<div  class="col-md-12" >&nbsp;</div>
 		

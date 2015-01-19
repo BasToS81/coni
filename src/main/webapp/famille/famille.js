@@ -49,10 +49,18 @@ myApp.controller('FamilleCommandesCtrl', [ '$scope', '$http', '$state', 'Auth', 
 
 
 
+myApp.filter('ttcArrondi',  function() {
+	  return function(input, scope) {
+	    return input * (1 + (scope.tva/100));
+	  };
+	});
+
+
 
 myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.commandeEnCours = '';
 	$scope.commandeEleves = '';
+	$scope.tva = 0;
 	$scope.loadOrCreateCommande = function() { 
 		
 		$http.post('/ws/famille/commande/loadOrCreate' )
@@ -60,6 +68,7 @@ myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', '$state', 'Au
 				function(data, status, headers, config) {
 					$scope.commandeEnCours = data;
 					$scope.commandesEleve = data.commandesEleve;
+					$scope.tva=data.tva;
 				})
 		.error(
 				function(data, status, headers, config) {
@@ -105,31 +114,33 @@ myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', '$state', 'Au
 					$scope.errorMessage = "Erreur au chargement des données de la commande";
 				});
 	};
-	
+	$scope.calculMontantTTC = function( valeur ) { 
+		return valeur * $scope.tva;
+	};
 	$scope.calcul = function( commandeEncours, produit ) { 
-		var ancienMontant = produit.montant;
-		produit.montant = produit.quantite * produit.produit.prix_parent_ttc;
-		var diffMontant = produit.montant - ancienMontant;
-		commandeEnCours.montant += diffMontant;
+		var ancienMontant = produit.montantParentHT;
+		produit.montantParentHT = produit.quantite * produit.produit.prixParentHT;
+		var diffMontant = produit.montantParentHT - ancienMontant;
+		commandeEnCours.montantParentHT += diffMontant;
 	};
 	$scope.addQuantite = function(commandeEnCours, produit ) { 
-		var ancienMontant = produit.montant;
+		var ancienMontant = produit.montantParentHT;
 		produit.quantite = produit.quantite + 1;
-		produit.montant = produit.quantite * produit.produit.prix_parent_ttc;
-		var diffMontant = produit.montant - ancienMontant;
-		commandeEnCours.montant += diffMontant;
+		produit.montantParentHT = produit.quantite * produit.produit.prixParentHT;
+		var diffMontant = produit.montantParentHT - ancienMontant;
+		commandeEnCours.montantParentHT += diffMontant;
 	};
 	$scope.removeQuantite = function(commandeEnCours, produit ) { 
-		var ancienMontant = produit.montant;
+		var ancienMontant = produit.montantParentHT;
 		if(produit.quantite>0) {
 			produit.quantite = produit.quantite - 1;
-			produit.montant = produit.quantite * produit.produit.prix_parent_ttc;
+			produit.montantParentHT = produit.quantite * produit.produit.prixParentHT;
 		} else {
 			produit.quantite = 0;
-			produit.montant = 0;
+			produit.montantParentHT = 0;
 		}
-		var diffMontant = produit.montant - ancienMontant;
-		commandeEnCours.montant += diffMontant;
+		var diffMontant = produit.montantParentHT - ancienMontant;
+		commandeEnCours.montantParentHT += diffMontant;
 	};
 }
 ]);
@@ -141,6 +152,8 @@ myApp.controller('FamilleCommandeEnCoursValidationCtrl', ['$scope', '$http', '$s
 	$scope.cheque=false;
 	$scope.espece=false;
 	$scope.internet=false;
+
+	$scope.tva = 0;
 	
 	$scope.getCommande = function() { 
 		$http.get(	
@@ -150,6 +163,7 @@ myApp.controller('FamilleCommandeEnCoursValidationCtrl', ['$scope', '$http', '$s
 				function(data, status, headers, config) {
 					$scope.commandeEnCours = data;
 					$scope.commandesEleve = data.commandesEleve;
+					$scope.tva=data.tva;
 					
 					if($scope.commandeEnCours.moyenPayement=='ESPECE') {
 						$scope.espece=true;
@@ -187,7 +201,7 @@ myApp.controller('FamilleCommandeEnCoursValidationCtrl', ['$scope', '$http', '$s
 myApp.controller('FamilleCommandeVisualisationCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.commandeEnCours = Auth.getUserCommandes();
 	$scope.commandesEleve = $scope.commandeEnCours.commandesEleve;
-	
-	
+	$scope.tva=$scope.commandeEnCours.tva;
+
 }
 ]);

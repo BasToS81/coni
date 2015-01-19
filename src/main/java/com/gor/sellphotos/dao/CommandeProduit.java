@@ -9,27 +9,26 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class CommandeProduit {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
 
-	@ManyToOne
-	private CommandeEleve commandeEleve;
-	
-	@ManyToOne
-	private Produit produit;
-	
-	@Basic
-	private int quantite;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Basic
-	private double montant;
+    @ManyToOne
+    private CommandeEleve commandeEleve;
 
-	
-	
+    @ManyToOne
+    private Produit produit;
 
-	
+    @Basic
+    private int quantite;
+
+    @Basic
+    private double montantParentHT;
+
+    @Basic
+    private double montantEcoleHT;
+
     /**
      * @return the id
      */
@@ -37,10 +36,6 @@ public class CommandeProduit {
         return id;
     }
 
-
-
-
-    
     /**
      * @param id the id to set
      */
@@ -48,10 +43,6 @@ public class CommandeProduit {
         this.id = id;
     }
 
-
-
-
-    
     /**
      * @return the commandeEleve
      */
@@ -59,10 +50,6 @@ public class CommandeProduit {
         return commandeEleve;
     }
 
-
-
-
-    
     /**
      * @param commandeEleve the commandeEleve to set
      */
@@ -70,10 +57,6 @@ public class CommandeProduit {
         this.commandeEleve = commandeEleve;
     }
 
-
-
-
-    
     /**
      * @return the produit
      */
@@ -81,10 +64,6 @@ public class CommandeProduit {
         return produit;
     }
 
-
-
-
-    
     /**
      * @param produit the produit to set
      */
@@ -92,10 +71,6 @@ public class CommandeProduit {
         this.produit = produit;
     }
 
-
-
-
-    
     /**
      * @return the quantite
      */
@@ -103,10 +78,6 @@ public class CommandeProduit {
         return quantite;
     }
 
-
-
-
-    
     /**
      * @param quantite the quantite to set
      */
@@ -114,34 +85,37 @@ public class CommandeProduit {
         this.quantite = quantite;
     }
 
-
-
-
-    
     /**
-     * @return the montant
+     * @return the montantHT
      */
-    public double getMontant() {
-        return montant;
+    public double getMontantParentHT() {
+        return montantParentHT;
     }
 
-
-
-
-    
     /**
-     * @param montant the montant to set
+     * @param montantHT the montantHT to set
      */
-    public void setMontant(double montant) {
-        this.montant = montant;
+    public void setMontantParentHT(double montantParentHT) {
+        this.montantParentHT = montantParentHT;
     }
 
+    /**
+     * @return the montantHT
+     */
+    public double getMontantEcoleHT() {
+        return montantEcoleHT;
+    }
 
-
+    /**
+     * @param montantHT the montantHT to set
+     */
+    public void setMontantEcoleHT(double montantEcoleHT) {
+        this.montantEcoleHT = montantEcoleHT;
+    }
 
     @Override
-	public String toString() {
-		return "Utilisateur [id=" + id + ", quantite=" + quantite + ", montant=" + montant + "]";
-	}
-	
+    public String toString() {
+        return "Utilisateur [id=" + id + ", quantite=" + quantite + ", montantParentHT=" + montantParentHT + ", montantEcoleHT=" + montantEcoleHT + "]";
+    }
+
 }

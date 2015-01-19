@@ -9,7 +9,7 @@ myApp.controller('ImportController', ['$scope', '$http', function($scope, $http)
 	$scope.statusImport = '';
 	
 	$scope.getDonnees = function() {
-		var url = 'public/rest/import';	
+		var url = '/public/rest/import';	
 		
 		$http.get(url, {
 			timeout : 5000

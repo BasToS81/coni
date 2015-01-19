@@ -23,7 +23,10 @@ public class CommandeEleve {
     private List<CommandeProduit> produitsCommandes;
 
     @Basic
-    private double montant;
+    private double montantParentHT;
+
+    @Basic
+    private double montantEcoleHT;
 
     @ManyToOne
     private Eleve eleve;
@@ -70,21 +73,36 @@ public class CommandeEleve {
 
     public void addProduitCommande(CommandeProduit produitCommande) {
         this.produitsCommandes.add(produitCommande);
-        this.montant += produitCommande.getMontant();
+        this.montantParentHT += produitCommande.getMontantParentHT();
+        this.montantEcoleHT += produitCommande.getMontantEcoleHT();
     }
 
     /**
-     * @return the montant
+     * @return the montantTTC
      */
-    public double getMontant() {
-        return montant;
+    public double getMontantParentHT() {
+        return montantParentHT;
     }
 
     /**
-     * @param montant the montant to set
+     * @param montantTTC the montantTTC to set
      */
-    public void setMontant(double montant) {
-        this.montant = montant;
+    public void setMontantParentHT(double montantParentHT) {
+        this.montantParentHT = montantParentHT;
+    }
+
+    /**
+     * @return the montantHT
+     */
+    public double getMontantEcoleHT() {
+        return montantEcoleHT;
+    }
+
+    /**
+     * @param montantHT the montantHT to set
+     */
+    public void setMontantEcoleHT(double montantEcoleHT) {
+        this.montantEcoleHT = montantEcoleHT;
     }
 
     /**
@@ -131,7 +149,7 @@ public class CommandeEleve {
 
     @Override
     public String toString() {
-        return "Utilisateur [id=" + id + ", montant=" + montant + "]";
+        return "Utilisateur [id=" + id + ", montantParentHT=" + montantParentHT + ", montantEcoleHT=" + montantEcoleHT + "]";
     }
 
 }

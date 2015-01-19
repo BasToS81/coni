@@ -1,0 +1,78 @@
+<div class="col-md-12 main-panel" ng-controller='EcoleCommandesEleveCtrl' ng-init="loadCommandesClasses()">
+
+
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+		<h4> Classe : {{commandeEnCours.identifiant}}</h4>
+		<!-- Affichage de la liste des élèves de classe en ligne et des produits en colonne -->
+		<div class="table-responsive">
+		 	<table class="table table-striped">
+			 	<thead>
+			 		<tr class="table-heading">
+						<th class="col-md-1">Eleve</td>
+						<th ng-repeat="produit in listeDesProduits">
+							{{produit.designation}}
+						</th>
+						<th>Total prix achat</th>
+						<th>Total prix vente</th>
+						<th>Montant restant à payer</th>
+						<th>Etat</th>
+						<th>Commentaire</th>
+					</tr>
+					<tr class="table-heading">
+						<th class="col-md-1">&nbsp;</td>
+						<th ng-repeat="produit in listeDesProduits">
+							{{produit.prix_parent_ttc | number : 2 }} €
+						</th>
+						<th>&nbsp;</th>
+						<th>&nbsp;</th>
+						<th>&nbsp;</th>
+						<th>&nbsp;</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="syntheseCommandesEleve in syntheseCommandesElevesDeLaClasse">
+						<td class="col-md-1">{{syntheseCommandesEleve.eleve.identifiant}}</td>
+						<td ng-repeat=>
+							{{produitCommande in syntheseCommandesEleve.produitsCommandes.quantite}} 
+							<div class="btn-group" role="group" aria-label="Ajouter ou retirer un élément">
+							  <button type="button" class="btn btn-default" ng-click="removeQuantite(commandeEnCours,produit)">-</button>
+							  <button type="button" class="btn btn-default" ng-click="addQuantite(commandeEnCours,produit)">+</button>
+							</div>
+						</td>
+						<td>
+							{{
+						</td>
+					</tr>
+							
+				</tbody>
+			</table>
+		</div>
+		
+		
+		<div  class="col-md-8" ></div>
+		<div  class="col-md-2" >Total :</div>
+		<div  class="col-md-2" >{{commandeEnCours.montant | number : 2 }} €</div>
+		
+		<div  class="col-md-12" >&nbsp;</div>
+		
+		<div  class="col-md-12" >
+			<div class="col-md-2"> </div>
+			<div class="col-md-2">
+				<button class="btn btn-lg btn-warning btn-block" ui-sref="generic({type : 'famille'})" ><span class="glyphicon glyphicon-circle-arrow-left"	></span>  &nbsp;&nbsp;Retour</button>
+			</div>
+			
+			<div class="col-md-3">
+				<button class="btn btn-lg btn-primary btn-block" ng-click="saveProduitsCommandeEnCours()">Enregistrer  &nbsp;&nbsp;<span class="glyphicon glyphicon-save"></span></button>
+			</div>
+			
+			<div class="col-md-2">
+			
+				<button class="btn btn-lg btn-success btn-block" ui-sref="generic.mode" ng-click="saveProduitsCommandeEnCours()" ng-show="commandeEnCours.montant!=0">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
+			</div>
+			<div class="col-md-3"> </div>
+		</div>
+		<div  class="col-md-12" >&nbsp;</div>
+	</div>
+</div>

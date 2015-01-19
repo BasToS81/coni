@@ -1,10 +1,10 @@
-package com.gor.sellphotos.dto;
+package com.gor.sellphotos.dto.ecole;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CommandeFamilleDTO {
+public class CommandeFamilleDTOEcole {
 
     private Long identifiant;
 
@@ -16,16 +16,20 @@ public class CommandeFamilleDTO {
 
     private Date dateValidation;
 
-    private double montant;
+    private double montantParentHT;
+
+    private double montantEcoleHT;
 
     private Date dateLivraison;
 
     private String typeCommande;
 
-    private List<CommandeEleveDTO> commandesEleve;
+    private double tva;
 
-    public CommandeFamilleDTO() {
-        commandesEleve = new ArrayList<CommandeEleveDTO>();
+    private List<CommandeEleveDTOEcole> commandesEleve;
+
+    public CommandeFamilleDTOEcole() {
+        commandesEleve = new ArrayList<CommandeEleveDTOEcole>();
     }
 
     /**
@@ -99,17 +103,31 @@ public class CommandeFamilleDTO {
     }
 
     /**
-     * @return the montant
+     * @return the montantParentHT
      */
-    public double getMontant() {
-        return montant;
+    public double getMontantParentHT() {
+        return montantParentHT;
     }
 
     /**
-     * @param montant the montant to set
+     * @param montantParentHT the montantParentHT to set
      */
-    public void setMontant(double montant) {
-        this.montant = montant;
+    public void setMontantParentHT(double montantParentHT) {
+        this.montantParentHT = montantParentHT;
+    }
+
+    /**
+     * @return the montantEcoleHT
+     */
+    public double getMontantEcoleHT() {
+        return montantEcoleHT;
+    }
+
+    /**
+     * @param montantEcoleHT the montantEcoleHT to set
+     */
+    public void setMontantEcoleHT(double montantEcoleHT) {
+        this.montantEcoleHT = montantEcoleHT;
     }
 
     /**
@@ -143,27 +161,42 @@ public class CommandeFamilleDTO {
     /**
      * @return the commandesEleve
      */
-    public List<CommandeEleveDTO> getCommandesEleve() {
+    public List<CommandeEleveDTOEcole> getCommandesEleve() {
         return commandesEleve;
     }
 
     /**
      * @param commandesEleve the commandesEleve to set
      */
-    public void setCommandesEleve(List<CommandeEleveDTO> commandesEleve) {
+    public void setCommandesEleve(List<CommandeEleveDTOEcole> commandesEleve) {
         this.commandesEleve = commandesEleve;
     }
 
     /**
      * @param commandeEleve the commandeEleve to add
      */
-    public void addCommandeEleve(CommandeEleveDTO commandeEleve) {
+    public void addCommandeEleve(CommandeEleveDTOEcole commandeEleve) {
         this.commandesEleve.add(commandeEleve);
+    }
+
+    /**
+     * @return the tva
+     */
+    public double getTva() {
+        return tva;
+    }
+
+    /**
+     * @param tva the tva to set
+     */
+    public void setTva(double tva) {
+        this.tva = tva;
     }
 
     @Override
     public String toString() {
-        return "Utilisateur [identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montant=" + montant + "]";
+        return "Utilisateur [identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montantParentHT=" + montantParentHT
+                        + ", montantEcoleHT=" + montantEcoleHT + "]";
     }
 
 }

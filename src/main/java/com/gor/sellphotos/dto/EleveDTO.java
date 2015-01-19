@@ -4,6 +4,10 @@ import java.util.Date;
 
 public class EleveDTO {
 
+    private long id;
+
+    private String identifiant;
+
     private String identifiantChiffre;
 
     private String nomClasse;
@@ -15,6 +19,34 @@ public class EleveDTO {
     private String cheminAccesImageGroupe;
 
     private Date dateLimiteAcces;
+
+    /**
+     * @return the id
+     */
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the identifiant
+     */
+    public String getIdentifiant() {
+        return identifiant;
+    }
+
+    /**
+     * @param identifiant the identifiant to set
+     */
+    public void setIdentifiant(String identifiant) {
+        this.identifiant = identifiant;
+    }
 
     /**
      * @return the identifiantChiffre

@@ -3,6 +3,8 @@ package com.gor.sellphotos.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.gor.sellphotos.dto.eleve.CommandeEleveDTOEleve;
+
 
 public class CommandeEcoleDTO {
 	
@@ -19,7 +21,7 @@ public class CommandeEcoleDTO {
 	
 	private Date dateValidation;
 	
-	private List<CommandeEleveDTO> commandesEleves;
+	private List<CommandeEleveDTOEleve> commandesEleves;
 	
 	private Date dateLivraison;
 
@@ -123,7 +125,7 @@ public class CommandeEcoleDTO {
     /**
      * @return the commandesEleves
      */
-    public List<CommandeEleveDTO> getCommandesEleves() {
+    public List<CommandeEleveDTOEleve> getCommandesEleves() {
         return commandesEleves;
     }
 
@@ -131,7 +133,7 @@ public class CommandeEcoleDTO {
     /**
      * @param commandesEleves the commandesEleves to set
      */
-    public void setCommandesEleves(List<CommandeEleveDTO> commandesEleves) {
+    public void setCommandesEleves(List<CommandeEleveDTOEleve> commandesEleves) {
         this.commandesEleves = commandesEleves;
     }
 

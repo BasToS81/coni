@@ -1,16 +1,20 @@
-package com.gor.sellphotos.dto;
+package com.gor.sellphotos.dto.ecole;
 
 import java.util.List;
 
-public class CommandeEleveDTO {
+import com.gor.sellphotos.dto.EleveDTO;
+
+public class CommandeEleveDTOEcole {
 
     private Long id;
 
-    private List<CommandeProduitDTO> produitsCommandes;
+    private List<CommandeProduitDTOEcole> produitsCommandes;
 
-    private double montant;
+    private double montantParentHT;
 
-    private String identifiantEleve;
+    private double montantEcoleHT;
+
+    private EleveDTO eleve;
 
     private String typeCommande;
 
@@ -31,43 +35,57 @@ public class CommandeEleveDTO {
     /**
      * @return the produitsCommandes
      */
-    public List<CommandeProduitDTO> getProduitsCommandes() {
+    public List<CommandeProduitDTOEcole> getProduitsCommandes() {
         return produitsCommandes;
     }
 
     /**
      * @param produitsCommandes the produitsCommandes to set
      */
-    public void setProduitsCommandes(List<CommandeProduitDTO> produitsCommandes) {
+    public void setProduitsCommandes(List<CommandeProduitDTOEcole> produitsCommandes) {
         this.produitsCommandes = produitsCommandes;
     }
 
     /**
      * @return the montant
      */
-    public double getMontant() {
-        return montant;
+    public double getMontantParentHT() {
+        return montantParentHT;
     }
 
     /**
      * @param montant the montant to set
      */
-    public void setMontant(double montant) {
-        this.montant = montant;
+    public void setMontantParentHT(double montantParentHT) {
+        this.montantParentHT = montantParentHT;
+    }
+
+    /**
+     * @return the montantEcoleHT
+     */
+    public double getMontantEcoleHT() {
+        return montantEcoleHT;
+    }
+
+    /**
+     * @param montantEcoleHT the montantEcoleHT to set
+     */
+    public void setMontantEcoleHT(double montantEcoleHT) {
+        this.montantEcoleHT = montantEcoleHT;
     }
 
     /**
      * @return the identifiantEleve
      */
-    public String getIdentifiantEleve() {
-        return identifiantEleve;
+    public EleveDTO getEleve() {
+        return eleve;
     }
 
     /**
      * @param identifiantEleve the identifiantEleve to set
      */
-    public void setIdentifiantEleve(String identifiantEleve) {
-        this.identifiantEleve = identifiantEleve;
+    public void setEleve(EleveDTO eleve) {
+        this.eleve = eleve;
     }
 
     /**

@@ -1,24 +1,21 @@
 package com.gor.sellphotos.dto;
 
-
-
 public class ProduitDTO {
-	
-	private Long id;
 
-	private String identifiant;
-	
-	private String designation;
-	
-	private double prix_parent_ttc;
-	
-	private double prix_ecole_ttc;
-	
-	private int ordre;
-	
-	private String typeProduit;
+    private Long id;
 
-    
+    private String identifiant;
+
+    private String designation;
+
+    private double prixParentHT;
+
+    private double prixEcoleHT;
+
+    private int ordre;
+
+    private String typeProduit;
+
     /**
      * @return the id
      */
@@ -26,7 +23,6 @@ public class ProduitDTO {
         return id;
     }
 
-    
     /**
      * @param id the id to set
      */
@@ -34,7 +30,6 @@ public class ProduitDTO {
         this.id = id;
     }
 
-    
     /**
      * @return the identifiant
      */
@@ -42,7 +37,6 @@ public class ProduitDTO {
         return identifiant;
     }
 
-    
     /**
      * @param identifiant the identifiant to set
      */
@@ -50,7 +44,6 @@ public class ProduitDTO {
         this.identifiant = identifiant;
     }
 
-    
     /**
      * @return the designation
      */
@@ -58,7 +51,6 @@ public class ProduitDTO {
         return designation;
     }
 
-    
     /**
      * @param designation the designation to set
      */
@@ -66,39 +58,34 @@ public class ProduitDTO {
         this.designation = designation;
     }
 
-    
     /**
      * @return the prix_parent_ttc
      */
-    public double getPrix_parent_ttc() {
-        return prix_parent_ttc;
+    public double getPrixParentHT() {
+        return prixParentHT;
     }
 
-    
     /**
      * @param prix_parent_ttc the prix_parent_ttc to set
      */
-    public void setPrix_parent_ttc(double prix_parent_ttc) {
-        this.prix_parent_ttc = prix_parent_ttc;
+    public void setPrixParentHT(double prixParentHT) {
+        this.prixParentHT = prixParentHT;
     }
 
-    
     /**
      * @return the prix_ecole_ttc
      */
-    public double getPrix_ecole_ttc() {
-        return prix_ecole_ttc;
+    public double getPrixEcoleHT() {
+        return prixEcoleHT;
     }
 
-    
     /**
      * @param prix_ecole_ttc the prix_ecole_ttc to set
      */
-    public void setPrix_ecole_ttc(double prix_ecole_ttc) {
-        this.prix_ecole_ttc = prix_ecole_ttc;
+    public void setPrixEcoleHT(double prixEcoleHT) {
+        this.prixEcoleHT = prixEcoleHT;
     }
 
-    
     /**
      * @return the ordre
      */
@@ -106,7 +93,6 @@ public class ProduitDTO {
         return ordre;
     }
 
-    
     /**
      * @param ordre the ordre to set
      */
@@ -114,7 +100,6 @@ public class ProduitDTO {
         this.ordre = ordre;
     }
 
-    
     /**
      * @return the typeProduit
      */
@@ -122,7 +107,6 @@ public class ProduitDTO {
         return typeProduit;
     }
 
-    
     /**
      * @param typeProduit the typeProduit to set
      */
@@ -130,6 +114,4 @@ public class ProduitDTO {
         this.typeProduit = typeProduit;
     }
 
-	
-	
 }

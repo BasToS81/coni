@@ -54,7 +54,10 @@ public class CommandeFamille {
     private Famille famille;
 
     @Basic
-    private double montant;
+    private double montantParentHT;
+
+    @Basic
+    private double montantEcoleHT;
 
     @Basic
     private Date dateLivraison;
@@ -152,7 +155,8 @@ public class CommandeFamille {
 
     public void addCommandeEleve(CommandeEleve commandeEleve) {
         this.commandesEleve.add(commandeEleve);
-        this.montant += commandeEleve.getMontant();
+        this.montantParentHT += commandeEleve.getMontantParentHT();
+        this.montantEcoleHT += commandeEleve.getMontantEcoleHT();
     }
 
     /**
@@ -184,17 +188,31 @@ public class CommandeFamille {
     }
 
     /**
-     * @return the montant
+     * @return the montantHT
      */
-    public double getMontant() {
-        return montant;
+    public double getMontantParentHT() {
+        return montantParentHT;
     }
 
     /**
-     * @param montant the montant to set
+     * @param montantHT the montantHT to set
      */
-    public void setMontant(double montant) {
-        this.montant = montant;
+    public void setMontantParentHT(double montantParentHT) {
+        this.montantParentHT = montantParentHT;
+    }
+
+    /**
+     * @return the montantTTC
+     */
+    public double getMontantEcoleHT() {
+        return montantEcoleHT;
+    }
+
+    /**
+     * @param montantTTC the montantTTC to set
+     */
+    public void setMontantEcoleHT(double montantEcoleHT) {
+        this.montantEcoleHT = montantEcoleHT;
     }
 
     /**
@@ -213,7 +231,8 @@ public class CommandeFamille {
 
     @Override
     public String toString() {
-        return "Utilisateur [identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montant=" + montant + "]";
+        return "Utilisateur [identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montantParentHT=" + montantParentHT
+                        + ", montantEcoleHT=" + montantEcoleHT + "]";
     }
 
 }

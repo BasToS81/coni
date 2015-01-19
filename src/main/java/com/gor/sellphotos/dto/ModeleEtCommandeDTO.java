@@ -3,15 +3,17 @@ package com.gor.sellphotos.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gor.sellphotos.dto.eleve.CommandeProduitDTOEleve;
+
 public class ModeleEtCommandeDTO {
 
     private List<ProduitDTO> produits;
 
-    private List<CommandeProduitDTO> produitsCommandes;
+    private List<CommandeProduitDTOEleve> produitsCommandes;
 
     public ModeleEtCommandeDTO() {
         produits = new ArrayList<ProduitDTO>();
-        produitsCommandes = new ArrayList<CommandeProduitDTO>();
+        produitsCommandes = new ArrayList<CommandeProduitDTOEleve>();
     }
 
     /**
@@ -38,21 +40,21 @@ public class ModeleEtCommandeDTO {
     /**
      * @return the produitsCommandes
      */
-    public List<CommandeProduitDTO> getProduitsCommandes() {
+    public List<CommandeProduitDTOEleve> getProduitsCommandes() {
         return produitsCommandes;
     }
 
     /**
      * @param produitsCommandes the produitsCommandes to set
      */
-    public void setProduitsCommandes(List<CommandeProduitDTO> produitsCommandes) {
+    public void setProduitsCommandes(List<CommandeProduitDTOEleve> produitsCommandes) {
         this.produitsCommandes = produitsCommandes;
     }
 
     /**
      * @param produitCommande the produitCommande to add
      */
-    public void addProduitCommande(CommandeProduitDTO produitCommande) {
+    public void addProduitCommande(CommandeProduitDTOEleve produitCommande) {
         this.produitsCommandes.add(produitCommande);
     }
 

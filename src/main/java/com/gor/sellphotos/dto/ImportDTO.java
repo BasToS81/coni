@@ -1,4 +1,4 @@
-package com.gor.sellphotos.controller;
+package com.gor.sellphotos.dto;
 
 public class ImportDTO {
 

@@ -21,6 +21,9 @@ public class ModeleEtTarif {
     @Basic
     private String nomReference;
 
+    @Basic
+    private double tva;
+
     @OneToOne(mappedBy = "modeleEtTarif")
     private Ecole ecole;
 
@@ -92,6 +95,20 @@ public class ModeleEtTarif {
      */
     public void addProduit(Produit produit) {
         this.produits.add(produit);
+    }
+
+    /**
+     * @return the tva
+     */
+    public double getTva() {
+        return tva;
+    }
+
+    /**
+     * @param tva the tva to set
+     */
+    public void setTva(double tva) {
+        this.tva = tva;
     }
 
     @Override

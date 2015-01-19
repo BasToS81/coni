@@ -26,6 +26,8 @@ import com.gor.sellphotos.dao.Famille;
 import com.gor.sellphotos.dao.ModeleEtTarif;
 import com.gor.sellphotos.dao.Produit;
 import com.gor.sellphotos.dao.Responsable;
+import com.gor.sellphotos.dao.Tva;
+import com.gor.sellphotos.dto.ImportDTO;
 import com.gor.sellphotos.repository.ClasseRepository;
 import com.gor.sellphotos.repository.CommandeEleveRepository;
 import com.gor.sellphotos.repository.EcoleRepository;
@@ -34,6 +36,7 @@ import com.gor.sellphotos.repository.FamilleRepository;
 import com.gor.sellphotos.repository.ModeleEtTarifRepository;
 import com.gor.sellphotos.repository.ProduitRepository;
 import com.gor.sellphotos.repository.ResponsableRepository;
+import com.gor.sellphotos.repository.TvaRepository;
 import com.gor.sellphotos.utils.DateUtils;
 
 /**
@@ -65,6 +68,9 @@ public class ImportController {
     @Autowired
     private ClasseRepository classeRepository;
 
+    @Autowired
+    private TvaRepository tvaRepository;
+
     @RequestMapping("/public/rest/import")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -87,11 +93,13 @@ public class ImportController {
                     chargeConfigurationEcole(dossierEcole);
                 }
 
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
                 resultatImport = "KO";
             }
-        } else {
+        }
+        else {
             LOGGER.debug("dossier import non existant");
 
             resultatImport = "KO : dossier inexistant";
@@ -99,7 +107,12 @@ public class ImportController {
 
         LOGGER.debug("fin d'import de données : {}", resultatImport);
 
-        generateEcole("SGL", 4, 10);
+        // generateEcole("SGL", 4, 10);
+
+        Tva tva = new Tva();
+        tva.setTva(20.0);
+        tva.setDateDebutValidite(DateUtils.parseDate("01/01/2014"));
+        tvaRepository.save(tva);
 
         return new ImportDTO(resultatImport);
     }
@@ -144,7 +157,8 @@ public class ImportController {
                     responsableRepository.save(resp);
                     ecole.addResponsables(resp);
                     // sauvegarde du responsable
-                } else {
+                }
+                else {
                     LOGGER.error("Le responsable de l'école {} n'est pas correctement renseigné : {}", ecole.getNumeroEcole(), listResponsables[i]);
                 }
             }
@@ -164,9 +178,9 @@ public class ImportController {
             Produit produit = new Produit();
             produit.setIdentifiant(ecolePropertie.getProperty("Modele.produit_" + i + ".identifiant"));
             produit.setDesignation(ecolePropertie.getProperty("Modele.produit_" + i + ".designation"));
-            LOGGER.debug(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_parent_ttc"));
-            produit.setPrix_parent_ttc(Double.parseDouble(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_parent_ttc")));
-            produit.setPrix_ecole_ttc(Double.parseDouble(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_ecole_ttc")));
+            LOGGER.debug(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_parent_ht"));
+            produit.setPrixParentHT(Double.parseDouble(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_parent_ht")));
+            produit.setPrixEcoleHT(Double.parseDouble(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_ecole_ht")));
             produit.setOrdre(i);
             produitRepository.save(produit);
             mt.addProduit(produit);
@@ -226,7 +240,8 @@ public class ImportController {
                 famille.setIdentifiantsFraterie(identifiantFamille);
                 famille.setEcole(ecole);
                 familleRepository.save(famille);
-            } else {
+            }
+            else {
                 LOGGER.debug("Famille found : ", famille);
             }
 
@@ -255,8 +270,8 @@ public class ImportController {
             produit = new Produit();
             produit.setDesignation("Photo eleve");
             produit.setIdentifiant("PHOTO_INDIVID");
-            produit.setPrix_ecole_ttc(10.0);
-            produit.setPrix_parent_ttc(20.0);
+            produit.setPrixEcoleHT(10.0);
+            produit.setPrixParentHT(20.0);
             produit.setOrdre(1);
             produitRepository.save(produit);
         }
@@ -267,8 +282,8 @@ public class ImportController {
             produit = new Produit();
             produit.setDesignation("Photo groupe");
             produit.setIdentifiant("PHOTO_GROUPE");
-            produit.setPrix_ecole_ttc(5.0);
-            produit.setPrix_parent_ttc(15.0);
+            produit.setPrixEcoleHT(5.0);
+            produit.setPrixParentHT(15.0);
             produit.setOrdre(1);
             produitRepository.save(produit);
         }
@@ -310,15 +325,18 @@ public class ImportController {
                 // if (j % 2 == 0) {
                 CommandeEleve commande = new CommandeEleve();
                 commande.setEleve(eleve);
-                commande.setMontant(10.0);
+                commande.setMontantEcoleHT(10.0);
+                commande.setMontantParentHT(15.0);
                 CommandeProduit commandeProduit1 = new CommandeProduit();
-                commandeProduit1.setMontant(PRODUIT_PHOTO_INDIVID.getPrix_ecole_ttc());
+                commandeProduit1.setMontantEcoleHT(PRODUIT_PHOTO_INDIVID.getPrixEcoleHT());
+                commandeProduit1.setMontantParentHT(PRODUIT_PHOTO_INDIVID.getPrixParentHT());
                 commandeProduit1.setQuantite(1);
                 commandeProduit1.setProduit(PRODUIT_PHOTO_INDIVID);
                 commandeProduit1.setCommandeEleve(commande);
 
                 CommandeProduit commandeProduit2 = new CommandeProduit();
-                commandeProduit2.setMontant(PRODUIT_PHOTOS_GROUPE.getPrix_ecole_ttc());
+                commandeProduit2.setMontantEcoleHT(PRODUIT_PHOTOS_GROUPE.getPrixEcoleHT());
+                commandeProduit2.setMontantParentHT(PRODUIT_PHOTOS_GROUPE.getPrixParentHT());
                 commandeProduit2.setQuantite(1);
                 commandeProduit2.setProduit(PRODUIT_PHOTOS_GROUPE);
                 commandeProduit2.setCommandeEleve(commande);
