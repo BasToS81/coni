@@ -13,16 +13,15 @@
 						<th ng-repeat="produit in listeDesProduits">
 							{{produit.designation}}
 						</th>
-						<th>Total prix achat</th>
-						<th>Total prix vente</th>
-						<th>Montant restant à payer</th>
+						<th>Total prix vente TTC</th>
+						<th>Montant restant à payer TTC</th>
 						<th>Etat</th>
 						<th>Commentaire</th>
 					</tr>
 					<tr class="table-heading">
 						<th class="col-md-1">&nbsp;</td>
 						<th ng-repeat="produit in listeDesProduits">
-							{{produit.prix_parent_ttc | number : 2 }} €
+							{{produit.prixParentHT | toTTC:this | number : 2 }} €
 						</th>
 						<th>&nbsp;</th>
 						<th>&nbsp;</th>
@@ -34,15 +33,24 @@
 				<tbody>
 					<tr ng-repeat="syntheseCommandesEleve in syntheseCommandesElevesDeLaClasse">
 						<td class="col-md-1">{{syntheseCommandesEleve.eleve.identifiant}}</td>
-						<td ng-repeat=>
-							{{produitCommande in syntheseCommandesEleve.produitsCommandes.quantite}} 
+						<td ng-repeat="produitCommande in syntheseCommandesEleve.produitsCommandes">
+						 	{{produitCommande.quantite}}
 							<div class="btn-group" role="group" aria-label="Ajouter ou retirer un élément">
-							  <button type="button" class="btn btn-default" ng-click="removeQuantite(commandeEnCours,produit)">-</button>
-							  <button type="button" class="btn btn-default" ng-click="addQuantite(commandeEnCours,produit)">+</button>
+							  <button type="button" class="btn btn-default" ng-click="removeQuantite(syntheseCommandesEleve,produitCommande)">-</button>
+							  <button type="button" class="btn btn-default" ng-click="addQuantite(syntheseCommandesEleve,produitCommande)">+</button>
 							</div>
 						</td>
 						<td>
-							{{
+							{{syntheseCommandesEleve.montantParentHT}} €
+						</td>
+						<td>
+							{{syntheseCommandesEleve.montantResteAPayerParentHT}} €
+						</td>
+						<td>
+							{{syntheseCommandesEleve.statut}}
+						</td>
+						<td>
+							{{syntheseCommandesEleve.commentaire}}
 						</td>
 					</tr>
 							

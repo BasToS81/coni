@@ -14,8 +14,6 @@ public class CommandeFamilleSyntheseDTOEleve {
 
     private double montantParentHT;
 
-    private double montantEcoleHT;
-
     private String dateLivraison;
 
     private String typeCommande;
@@ -107,20 +105,6 @@ public class CommandeFamilleSyntheseDTOEleve {
     }
 
     /**
-     * @return the montantEcoleHT
-     */
-    public double getMontantEcoleHT() {
-        return montantEcoleHT;
-    }
-
-    /**
-     * @param montantEcoleHT the montantEcoleHT to set
-     */
-    public void setMontantEcoleHT(double montantEcoleHT) {
-        this.montantEcoleHT = montantEcoleHT;
-    }
-
-    /**
      * @return the dateLivraison
      */
     public String getDateLivraison() {
@@ -165,7 +149,7 @@ public class CommandeFamilleSyntheseDTOEleve {
     @Override
     public String toString() {
         return "Utilisateur [identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montantParentHT=" + montantParentHT
-                        + ", montantEcoleHT=" + montantEcoleHT + "]";
+                        + "]";
     }
 
 }

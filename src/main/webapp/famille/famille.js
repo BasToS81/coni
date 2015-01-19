@@ -49,7 +49,7 @@ myApp.controller('FamilleCommandesCtrl', [ '$scope', '$http', '$state', 'Auth', 
 
 
 
-myApp.filter('ttcArrondi',  function() {
+myApp.filter('toTTC',  function() {
 	  return function(input, scope) {
 	    return input * (1 + (scope.tva/100));
 	  };

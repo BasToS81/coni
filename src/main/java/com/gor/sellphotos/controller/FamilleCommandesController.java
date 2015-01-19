@@ -174,7 +174,6 @@ public class FamilleCommandesController extends AbstractRestHandler {
                 produitDTO = MapperUtils.convert(produit, ProduitDTO.class);
 
                 cmdProdDTO.setMontantParentHT(0);
-                cmdProdDTO.setMontantEcoleHT(0);
                 cmdProdDTO.setProduit(produitDTO);
                 cmdProdDTO.setQuantite(0);
 
@@ -284,7 +283,6 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
                 cmdProdDTO.setProduit(prodDTO);
                 cmdProdDTO.setMontantParentHT(0);
-                cmdProdDTO.setMontantEcoleHT(0);
                 cmdProdDTO.setQuantite(0);
 
                 // Pour récupérer le commandeProduit, il faut le trouver dans la commande
@@ -506,7 +504,6 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
                             CommandeProduit newCmdProd = new CommandeProduit();
                             newCmdProd.setMontantParentHT(cmdProdDTO.getMontantParentHT());
-                            newCmdProd.setMontantEcoleHT(cmdProdDTO.getMontantEcoleHT());
                             newCmdProd.setQuantite(cmdProdDTO.getQuantite());
                             newCmdProd.setProduit(produit);
                             newCmdProd.setCommandeEleve(cmd);

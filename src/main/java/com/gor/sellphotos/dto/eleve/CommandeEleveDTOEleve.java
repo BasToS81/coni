@@ -12,8 +12,6 @@ public class CommandeEleveDTOEleve {
 
     private double montantParentHT;
 
-    private double montantEcoleHT;
-
     private EleveDTO eleve;
 
     private String typeCommande;
@@ -58,20 +56,6 @@ public class CommandeEleveDTOEleve {
      */
     public void setMontantParentHT(double montantParentHT) {
         this.montantParentHT = montantParentHT;
-    }
-
-    /**
-     * @return the montantEcoleHT
-     */
-    public double getMontantEcoleHT() {
-        return montantEcoleHT;
-    }
-
-    /**
-     * @param montantEcoleHT the montantEcoleHT to set
-     */
-    public void setMontantEcoleHT(double montantEcoleHT) {
-        this.montantEcoleHT = montantEcoleHT;
     }
 
     /**
