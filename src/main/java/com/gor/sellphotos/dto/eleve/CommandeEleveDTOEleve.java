@@ -12,9 +12,9 @@ public class CommandeEleveDTOEleve {
 
     private double montantParentHT;
 
-    private EleveDTO eleve;
+    private double montantParentTTC;
 
-    private String typeCommande;
+    private EleveDTO eleve;
 
     /**
      * @return the id
@@ -73,17 +73,17 @@ public class CommandeEleveDTOEleve {
     }
 
     /**
-     * @return the typeCommande
+     * @return the montantParentTTC
      */
-    public String getTypeCommande() {
-        return typeCommande;
+    public double getMontantParentTTC() {
+        return montantParentTTC;
     }
 
     /**
-     * @param typeCommande the typeCommande to set
+     * @param montantParentTTC the montantParentTTC to set
      */
-    public void setTypeCommande(String typeCommande) {
-        this.typeCommande = typeCommande;
+    public void setMontantParentTTC(double montantParentTTC) {
+        this.montantParentTTC = montantParentTTC;
     }
 
 }

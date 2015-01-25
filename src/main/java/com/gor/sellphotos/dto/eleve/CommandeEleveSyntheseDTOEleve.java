@@ -1,6 +1,6 @@
 package com.gor.sellphotos.dto.eleve;
 
-public class CommandeFamilleSyntheseDTOEleve {
+public class CommandeEleveSyntheseDTOEleve {
 
     private Long identifiant;
 
@@ -14,9 +14,9 @@ public class CommandeFamilleSyntheseDTOEleve {
 
     private double montantParentHT;
 
-    private String dateLivraison;
+    private double montantParentTTC;
 
-    private String typeCommande;
+    private String dateLivraison;
 
     private double tva;
 
@@ -119,20 +119,6 @@ public class CommandeFamilleSyntheseDTOEleve {
     }
 
     /**
-     * @return the typeCommande
-     */
-    public String getTypeCommande() {
-        return typeCommande;
-    }
-
-    /**
-     * @param typeCommande the typeCommande to set
-     */
-    public void setTypeCommande(String typeCommande) {
-        this.typeCommande = typeCommande;
-    }
-
-    /**
      * @return the tva
      */
     public double getTva() {
@@ -144,6 +130,20 @@ public class CommandeFamilleSyntheseDTOEleve {
      */
     public void setTva(double tva) {
         this.tva = tva;
+    }
+
+    /**
+     * @return the montantParentTTC
+     */
+    public double getMontantParentTTC() {
+        return montantParentTTC;
+    }
+
+    /**
+     * @param montantParentTTC the montantParentTTC to set
+     */
+    public void setMontantParentTTC(double montantParentTTC) {
+        this.montantParentTTC = montantParentTTC;
     }
 
     @Override

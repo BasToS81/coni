@@ -28,6 +28,12 @@ public class CommandeEleve {
     @Basic
     private double montantEcoleHT;
 
+    @Basic
+    private double montantParentTTC;
+
+    @Basic
+    private double montantEcoleTTC;
+
     @ManyToOne
     private Eleve eleve;
 
@@ -75,6 +81,8 @@ public class CommandeEleve {
         this.produitsCommandes.add(produitCommande);
         this.montantParentHT += produitCommande.getMontantParentHT();
         this.montantEcoleHT += produitCommande.getMontantEcoleHT();
+        this.montantParentTTC += produitCommande.getMontantParentTTC();
+        this.montantEcoleTTC += produitCommande.getMontantEcoleTTC();
     }
 
     /**
@@ -145,6 +153,34 @@ public class CommandeEleve {
      */
     public void setCommandeFamille(CommandeFamille commandeFamille) {
         this.commandeFamille = commandeFamille;
+    }
+
+    /**
+     * @return the montantParentTTC
+     */
+    public double getMontantParentTTC() {
+        return montantParentTTC;
+    }
+
+    /**
+     * @param montantParentTTC the montantParentTTC to set
+     */
+    public void setMontantParentTTC(double montantParentTTC) {
+        this.montantParentTTC = montantParentTTC;
+    }
+
+    /**
+     * @return the montantEcoleTTC
+     */
+    public double getMontantEcoleTTC() {
+        return montantEcoleTTC;
+    }
+
+    /**
+     * @param montantEcoleTTC the montantEcoleTTC to set
+     */
+    public void setMontantEcoleTTC(double montantEcoleTTC) {
+        this.montantEcoleTTC = montantEcoleTTC;
     }
 
     @Override

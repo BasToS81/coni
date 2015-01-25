@@ -60,6 +60,12 @@ public class CommandeFamille {
     private double montantEcoleHT;
 
     @Basic
+    private double montantParentTTC;
+
+    @Basic
+    private double montantEcoleTTC;
+
+    @Basic
     private Date dateLivraison;
 
     public CommandeFamille() {
@@ -157,6 +163,8 @@ public class CommandeFamille {
         this.commandesEleve.add(commandeEleve);
         this.montantParentHT += commandeEleve.getMontantParentHT();
         this.montantEcoleHT += commandeEleve.getMontantEcoleHT();
+        this.montantParentTTC += commandeEleve.getMontantParentTTC();
+        this.montantEcoleTTC += commandeEleve.getMontantEcoleTTC();
     }
 
     /**
@@ -227,6 +235,34 @@ public class CommandeFamille {
      */
     public void setDateLivraison(Date dateLivraison) {
         this.dateLivraison = dateLivraison;
+    }
+
+    /**
+     * @return the montantParentTTC
+     */
+    public double getMontantParentTTC() {
+        return montantParentTTC;
+    }
+
+    /**
+     * @param montantParentTTC the montantParentTTC to set
+     */
+    public void setMontantParentTTC(double montantParentTTC) {
+        this.montantParentTTC = montantParentTTC;
+    }
+
+    /**
+     * @return the montantEcoleTTC
+     */
+    public double getMontantEcoleTTC() {
+        return montantEcoleTTC;
+    }
+
+    /**
+     * @param montantEcoleTTC the montantEcoleTTC to set
+     */
+    public void setMontantEcoleTTC(double montantEcoleTTC) {
+        this.montantEcoleTTC = montantEcoleTTC;
     }
 
     @Override

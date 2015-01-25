@@ -24,12 +24,11 @@ import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dao.Famille;
 import com.gor.sellphotos.dao.ModeleEtTarif;
 import com.gor.sellphotos.dao.Produit;
-import com.gor.sellphotos.dao.Tva;
 import com.gor.sellphotos.dto.EleveDTO;
 import com.gor.sellphotos.dto.ProduitDTO;
 import com.gor.sellphotos.dto.eleve.CommandeEleveDTOEleve;
+import com.gor.sellphotos.dto.eleve.CommandeEleveSyntheseDTOEleve;
 import com.gor.sellphotos.dto.eleve.CommandeFamilleDTOEleve;
-import com.gor.sellphotos.dto.eleve.CommandeFamilleSyntheseDTOEleve;
 import com.gor.sellphotos.dto.eleve.CommandeProduitDTOEleve;
 import com.gor.sellphotos.repository.CommandeEleveRepository;
 import com.gor.sellphotos.repository.CommandeFamilleRepository;
@@ -42,6 +41,7 @@ import com.gor.sellphotos.repository.TvaRepository;
 import com.gor.sellphotos.security.SecuritySessionData;
 import com.gor.sellphotos.security.UPAWithSessionDataToken;
 import com.gor.sellphotos.utils.DateUtils;
+import com.gor.sellphotos.utils.FinanceUtils;
 import com.gor.sellphotos.utils.MapperUtils;
 
 /**
@@ -80,34 +80,25 @@ public class FamilleCommandesController extends AbstractRestHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public List<CommandeFamilleSyntheseDTOEleve> getCommandesFamille(Authentication authentication) {
+    public List<CommandeEleveSyntheseDTOEleve> getCommandesFamille(Authentication authentication) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();
 
         LOGGER.debug("loading commandes famille {}", identifiantEleve);
 
-        List<CommandeFamilleSyntheseDTOEleve> commandesDTO = new ArrayList<CommandeFamilleSyntheseDTOEleve>();
+        List<CommandeEleveSyntheseDTOEleve> commandesDTO = new ArrayList<CommandeEleveSyntheseDTOEleve>();
 
         List<CommandeFamille> commandes = commandeFamilleRepository.findCmdDeTouteLaFamilleByIdEleveOrderByIdentifiantDesc(identifiantEleve);
         for (CommandeFamille commandeFamille : commandes) {
 
-            CommandeFamilleSyntheseDTOEleve cmdDTO = null;
+            CommandeEleveSyntheseDTOEleve cmdDTO = null;
 
-            cmdDTO = MapperUtils.convert(commandeFamille, CommandeFamilleSyntheseDTOEleve.class);
-            Tva tva = null;
-            if (commandeFamille.getDateValidation() != null) {
-                tva = tvaRepository.findByDateDeDemande(commandeFamille.getDateValidation(), commandeFamille.getDateValidation());
-            }
-            else {
-                tva = tvaRepository.findByDateCourante();
-            }
-            if (tva == null) {
-                cmdDTO.setTva(0);
-            }
-            else {
-                cmdDTO.setTva(tva.getTva());
-            }
+            cmdDTO = MapperUtils.convert(commandeFamille, CommandeEleveSyntheseDTOEleve.class);
+
+            double tva = FinanceUtils.getTVAValue(commandeFamille.getDateValidation(), tvaRepository);
+
+            cmdDTO.setTva(tva);
 
             commandesDTO.add(cmdDTO);
         }
@@ -130,13 +121,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         CommandeFamilleDTOEleve commandeFamilleDTO = new CommandeFamilleDTOEleve();
 
-        Tva tva = tvaRepository.findByDateCourante();
-        if (tva == null) {
-            commandeFamilleDTO.setTva(0);
-        }
-        else {
-            commandeFamilleDTO.setTva(tva.getTva());
-        }
+        double tva = FinanceUtils.getTVAValue(null, tvaRepository);
+        commandeFamilleDTO.setTva(tva);
 
         // Création de la Commande Famille
         CommandeFamille cmd = new CommandeFamille();
@@ -230,13 +216,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         commandeFamilleDTO = MapperUtils.convert(cmdFamille, CommandeFamilleDTOEleve.class);
 
-        Tva tva = tvaRepository.findByDateCourante();
-        if (tva == null) {
-            commandeFamilleDTO.setTva(0);
-        }
-        else {
-            commandeFamilleDTO.setTva(tva.getTva());
-        }
+        double tva = FinanceUtils.getTVAValue(null, tvaRepository);
+        commandeFamilleDTO.setTva(tva);
 
         for (Eleve elev : cmdFamille.getFamille().getEleves()) {
 
@@ -283,6 +264,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
                 cmdProdDTO.setProduit(prodDTO);
                 cmdProdDTO.setMontantParentHT(0);
+                cmdProdDTO.setMontantParentTTC(0);
                 cmdProdDTO.setQuantite(0);
 
                 // Pour récupérer le commandeProduit, il faut le trouver dans la commande
@@ -359,19 +341,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         commandeFamilleDTO = MapperUtils.convert(cmdFamille, CommandeFamilleDTOEleve.class);
 
-        Tva tva = null;
-        if (cmdFamille.getDateValidation() != null) {
-            tva = tvaRepository.findByDateDeDemande(cmdFamille.getDateValidation(), cmdFamille.getDateValidation());
-        }
-        else {
-            tva = tvaRepository.findByDateCourante();
-        }
-        if (tva == null) {
-            commandeFamilleDTO.setTva(0);
-        }
-        else {
-            commandeFamilleDTO.setTva(tva.getTva());
-        }
+        double tva = FinanceUtils.getTVAValue(cmdFamille.getDateValidation(), tvaRepository);
+        commandeFamilleDTO.setTva(tva);
 
         LOGGER.debug("fin loading commande");
 
@@ -473,6 +444,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
             }
         }
 
+        double tva = FinanceUtils.getTVAValue(nouvelleCommandeFamille.getDateValidation(), tvaRepository);
+
         cmdFamilleEnBase.setCommandesEleve(new ArrayList<CommandeEleve>());
         cmdFamilleEnBase.setMontantParentHT(0);
         cmdFamilleEnBase.setMontantEcoleHT(0);
@@ -503,7 +476,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
                         if (cmdProdDTO.getQuantite() != 0) {
 
                             CommandeProduit newCmdProd = new CommandeProduit();
-                            newCmdProd.setMontantParentHT(cmdProdDTO.getMontantParentHT());
+                            // Calcul à partir des données en base et non pas avec les pris fournis par la partie client (possibilité de modification par
+                            // l'utilisateur)
+                            newCmdProd.setMontantParentHT(produit.getPrixParentHT() * cmdProdDTO.getQuantite());
+                            newCmdProd.setMontantEcoleHT(produit.getPrixEcoleHT() * cmdProdDTO.getQuantite());
+                            newCmdProd.setMontantParentTTC(FinanceUtils.getTTCFromHT(newCmdProd.getMontantParentHT(), tva));
+                            newCmdProd.setMontantEcoleTTC(FinanceUtils.getTTCFromHT(newCmdProd.getMontantEcoleHT(), tva));
                             newCmdProd.setQuantite(cmdProdDTO.getQuantite());
                             newCmdProd.setProduit(produit);
                             newCmdProd.setCommandeEleve(cmd);
@@ -532,7 +510,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public List<CommandeFamilleSyntheseDTOEleve> deleteCommandeFamille(@RequestParam("identifiant") Long identifiantCommande, Authentication authentication) {
+    public List<CommandeEleveSyntheseDTOEleve> deleteCommandeFamille(@RequestParam("identifiant") Long identifiantCommande, Authentication authentication) {
         LOGGER.debug("deleting commande {}", identifiantCommande);
 
         // TODO: Check if commande appartient bien à l'utilisateur OK

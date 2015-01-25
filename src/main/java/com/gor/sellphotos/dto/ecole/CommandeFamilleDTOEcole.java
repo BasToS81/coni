@@ -26,10 +26,10 @@ public class CommandeFamilleDTOEcole {
 
     private double tva;
 
-    private List<CommandeEleveDTOEcole> commandesEleve;
+    private List<CommandeEleveSyntheseDTOEcole> commandesEleve;
 
     public CommandeFamilleDTOEcole() {
-        commandesEleve = new ArrayList<CommandeEleveDTOEcole>();
+        commandesEleve = new ArrayList<CommandeEleveSyntheseDTOEcole>();
     }
 
     /**
@@ -161,21 +161,21 @@ public class CommandeFamilleDTOEcole {
     /**
      * @return the commandesEleve
      */
-    public List<CommandeEleveDTOEcole> getCommandesEleve() {
+    public List<CommandeEleveSyntheseDTOEcole> getCommandesEleve() {
         return commandesEleve;
     }
 
     /**
      * @param commandesEleve the commandesEleve to set
      */
-    public void setCommandesEleve(List<CommandeEleveDTOEcole> commandesEleve) {
+    public void setCommandesEleve(List<CommandeEleveSyntheseDTOEcole> commandesEleve) {
         this.commandesEleve = commandesEleve;
     }
 
     /**
      * @param commandeEleve the commandeEleve to add
      */
-    public void addCommandeEleve(CommandeEleveDTOEcole commandeEleve) {
+    public void addCommandeEleve(CommandeEleveSyntheseDTOEcole commandeEleve) {
         this.commandesEleve.add(commandeEleve);
     }
 

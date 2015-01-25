@@ -18,9 +18,9 @@ public class CommandeFamilleDTOEleve {
 
     private double montantParentHT;
 
-    private Date dateLivraison;
+    private double montantParentTTC;
 
-    private String typeCommande;
+    private Date dateLivraison;
 
     private double tva;
 
@@ -129,20 +129,6 @@ public class CommandeFamilleDTOEleve {
     }
 
     /**
-     * @return the typeCommande
-     */
-    public String getTypeCommande() {
-        return typeCommande;
-    }
-
-    /**
-     * @param typeCommande the typeCommande to set
-     */
-    public void setTypeCommande(String typeCommande) {
-        this.typeCommande = typeCommande;
-    }
-
-    /**
      * @return the commandesEleve
      */
     public List<CommandeEleveDTOEleve> getCommandesEleve() {
@@ -175,6 +161,20 @@ public class CommandeFamilleDTOEleve {
      */
     public void setTva(double tva) {
         this.tva = tva;
+    }
+
+    /**
+     * @return the montantParentTTC
+     */
+    public double getMontantParentTTC() {
+        return montantParentTTC;
+    }
+
+    /**
+     * @param montantParentTTC the montantParentTTC to set
+     */
+    public void setMontantParentTTC(double montantParentTTC) {
+        this.montantParentTTC = montantParentTTC;
     }
 
     @Override

@@ -10,6 +10,8 @@ public class CommandeProduitDTOEleve {
 
     private double montantParentHT;
 
+    private double montantParentTTC;
+
     /**
      * @return the produit
      */
@@ -50,6 +52,20 @@ public class CommandeProduitDTOEleve {
      */
     public void setMontantParentHT(double montantParentHT) {
         this.montantParentHT = montantParentHT;
+    }
+
+    /**
+     * @return the montantParentTTC
+     */
+    public double getMontantParentTTC() {
+        return montantParentTTC;
+    }
+
+    /**
+     * @param montantParentTTC the montantParentTTC to set
+     */
+    public void setMontantParentTTC(double montantParentTTC) {
+        this.montantParentTTC = montantParentTTC;
     }
 
 }

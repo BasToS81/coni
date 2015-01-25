@@ -1,16 +1,16 @@
-<div class="col-md-12 main-panel" ng-controller='EcoleCommandesEleveCtrl' ng-init="loadCommandesClasses()">
+<div class="col-md-12 main-panel" ng-controller='EcoleClasseCommandeCtrl'>
 
 
 	<div class="col-md-2"></div>
 	<div class="col-md-8">
-		<h4> Classe : {{commandeEnCours.identifiant}}</h4>
+		<h4> Classe : {{classe.nom}}</h4>
 		<!-- Affichage de la liste des élèves de classe en ligne et des produits en colonne -->
 		<div class="table-responsive">
 		 	<table class="table table-striped">
 			 	<thead>
 			 		<tr class="table-heading">
 						<th class="col-md-1">Eleve</td>
-						<th ng-repeat="produit in listeDesProduits">
+						<th ng-repeat="produit in classe.modeleEtTarif.produits">
 							{{produit.designation}}
 						</th>
 						<th>Total prix vente TTC</th>
@@ -20,8 +20,8 @@
 					</tr>
 					<tr class="table-heading">
 						<th class="col-md-1">&nbsp;</td>
-						<th ng-repeat="produit in listeDesProduits">
-							{{produit.prixParentHT | toTTC:this | number : 2 }} €
+						<th ng-repeat="produit in classe.modeleEtTarif.produits">
+							{{produit.prixParentHT  | number : 2 }} €
 						</th>
 						<th>&nbsp;</th>
 						<th>&nbsp;</th>
@@ -31,26 +31,22 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="syntheseCommandesEleve in syntheseCommandesElevesDeLaClasse">
-						<td class="col-md-1">{{syntheseCommandesEleve.eleve.identifiant}}</td>
-						<td ng-repeat="produitCommande in syntheseCommandesEleve.produitsCommandes">
+					<tr ng-repeat="commandesEleve in commandesEleves">
+						<td class="col-md-1">{{commandesEleve.eleve.identifiant}}</td>
+						<td ng-repeat="produitCommande in commandesEleve.produitsCommandes">
 						 	{{produitCommande.quantite}}
-							<div class="btn-group" role="group" aria-label="Ajouter ou retirer un élément">
-							  <button type="button" class="btn btn-default" ng-click="removeQuantite(syntheseCommandesEleve,produitCommande)">-</button>
-							  <button type="button" class="btn btn-default" ng-click="addQuantite(syntheseCommandesEleve,produitCommande)">+</button>
-							</div>
 						</td>
 						<td>
-							{{syntheseCommandesEleve.montantParentHT}} €
+							{{commandesEleve.montantParentHT}} €
 						</td>
 						<td>
-							{{syntheseCommandesEleve.montantResteAPayerParentHT}} €
+							{{commandesEleve.montantResteAPayerParentHT}} €
 						</td>
 						<td>
-							{{syntheseCommandesEleve.statut}}
+							{{commandesEleve.statut}}
 						</td>
 						<td>
-							{{syntheseCommandesEleve.commentaire}}
+							{{commandesEleve.commentaire}}
 						</td>
 					</tr>
 							
@@ -59,26 +55,17 @@
 		</div>
 		
 		
-		<div  class="col-md-8" ></div>
-		<div  class="col-md-2" >Total :</div>
-		<div  class="col-md-2" >{{commandeEnCours.montant | number : 2 }} €</div>
-		
-		<div  class="col-md-12" >&nbsp;</div>
 		
 		<div  class="col-md-12" >
 			<div class="col-md-2"> </div>
 			<div class="col-md-2">
-				<button class="btn btn-lg btn-warning btn-block" ui-sref="generic({type : 'famille'})" ><span class="glyphicon glyphicon-circle-arrow-left"	></span>  &nbsp;&nbsp;Retour</button>
+				<button class="btn btn-lg btn-warning btn-block" ui-sref="generic({type : 'ecole'})" ><span class="glyphicon glyphicon-circle-arrow-left"	></span>  &nbsp;&nbsp;Retour</button>
 			</div>
 			
 			<div class="col-md-3">
-				<button class="btn btn-lg btn-primary btn-block" ng-click="saveProduitsCommandeEnCours()">Enregistrer  &nbsp;&nbsp;<span class="glyphicon glyphicon-save"></span></button>
+				<button class="btn btn-lg btn-primary btn-block" ng-click="saveModifications()">Enregistrer  &nbsp;&nbsp;<span class="glyphicon glyphicon-save"></span></button>
 			</div>
 			
-			<div class="col-md-2">
-			
-				<button class="btn btn-lg btn-success btn-block" ui-sref="generic.mode" ng-click="saveProduitsCommandeEnCours()" ng-show="commandeEnCours.montant!=0">Valider  &nbsp;&nbsp;<span class="glyphicon glyphicon-circle-arrow-right"></span></button>
-			</div>
 			<div class="col-md-3"> </div>
 		</div>
 		<div  class="col-md-12" >&nbsp;</div>

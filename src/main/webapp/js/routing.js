@@ -96,15 +96,27 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
     })
 
 
-	// Page ecole - liste des classes
-	.state('classes', {
-		url : '/ecole/classes/{id}?nom',
-		views : {
-			'contentInterne@' : {
-				templateUrl : '/ecole/classes/list.html',
+	// Page ecole 
+	    // - liste des classes
+		.state('generic.classes', {
+			url : '/ecole/classes/{id}?nom',
+			views : {
+				'content-body@' : {
+					templateUrl : '/ecole/classes/list.html',
+				}
 			}
-		}
-	});
+		})
+		// Commandes
+		.state('generic.classesCommandes', {
+			url : '/ecole/classes/{id}/commande',
+			views : {
+				'content-body@' : {
+					templateUrl : '/ecole/commande/commande.html',
+					controller : 'EcoleClasseCommandeCtrl',
+					resolve : {	additionalData : loadCommandeClasse }
+				}
+			}
+		});
 });
 
 var loadData = function($q, $http, $stateParams, $timeout, Auth) {
@@ -134,6 +146,19 @@ var loadCommandeFamille = function($q, $http, $stateParams, $timeout, Auth) {
 	return deferred.promise;
 };
 
+
+var loadCommandeClasse = function($q, $http, $stateParams, $timeout, Auth) {
+
+	var deferred = $q.defer();
+
+	$http.get('/ws/ecole/commande/classe/getList?idClasse=' + $stateParams.id)
+	.success(function(data, status, headers, config) {
+		Auth.setUserCommandes(data);
+		$timeout(deferred.resolve, 0);
+	});
+	
+	return deferred.promise;
+};
 
 var loadEcoleData = function($q, $timeout, $http, $location, $state, $stateParams, Auth) {
 

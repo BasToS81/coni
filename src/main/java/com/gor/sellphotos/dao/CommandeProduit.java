@@ -29,6 +29,12 @@ public class CommandeProduit {
     @Basic
     private double montantEcoleHT;
 
+    @Basic
+    private double montantParentTTC;
+
+    @Basic
+    private double montantEcoleTTC;
+
     /**
      * @return the id
      */
@@ -111,6 +117,34 @@ public class CommandeProduit {
      */
     public void setMontantEcoleHT(double montantEcoleHT) {
         this.montantEcoleHT = montantEcoleHT;
+    }
+
+    /**
+     * @return the montantParentTTC
+     */
+    public double getMontantParentTTC() {
+        return montantParentTTC;
+    }
+
+    /**
+     * @param montantParentTTC the montantParentTTC to set
+     */
+    public void setMontantParentTTC(double montantParentTTC) {
+        this.montantParentTTC = montantParentTTC;
+    }
+
+    /**
+     * @return the montantEcoleTTC
+     */
+    public double getMontantEcoleTTC() {
+        return montantEcoleTTC;
+    }
+
+    /**
+     * @param montantEcoleTTC the montantEcoleTTC to set
+     */
+    public void setMontantEcoleTTC(double montantEcoleTTC) {
+        this.montantEcoleTTC = montantEcoleTTC;
     }
 
     @Override

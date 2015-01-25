@@ -21,6 +21,12 @@ myApp.controller('EcoleSyntheseCtrl', [ '$scope', '$http', 'Auth', '$stateParams
 				});
 	};
 		
+	
+	$scope.openCommande = function(identifiantClasse) {
+		alert(idntifiantClasse);
+		$state.go('generic.classesCommandes', { id : identifiantClasse });
+	}
+	
 }]);
 
 myApp.controller('EcoleClasseCtrl', [ '$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
@@ -43,3 +49,12 @@ myApp.controller('EcoleClasseCtrl', [ '$scope', '$http', 'Auth', '$stateParams',
 
 
 
+myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
+	$scope.classe = Auth.getUserCommandes();
+	$scope.commandesEleves = $scope.classe.commandeEleveSynthese
+	$scope.tva=$scope.classe.tva;
+
+	
+	
+	
+}]);

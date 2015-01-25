@@ -68,7 +68,7 @@
 							<td class="col-md-5">{{produit.produit.designation}}</td>
 							<td class="col-md-2">{{produit.produit.prixParentHT | toTTC:this | number : 2 }} €</td>
 							<td class="col-md-1">{{produit.quantite}}</td>
-							<td class="col-md-2">{{produit.montantParentHT | toTTC:this | number : 2 }} €</td>
+							<td class="col-md-2">{{produit.montantParentTTC | number : 2 }} €</td>
 						</tr>
 							
 						
@@ -81,7 +81,7 @@
 		
 		<div class="text-center">
 			<h4>Total de la commande  : </h4>
-			<div  class="col-md-12" >{{commandeEnCours.montantParentHT | toTTC:this | number : 2 }} €</div>
+			<div  class="col-md-12" >{{commandeEnCours.montantParentTTC | number : 2 }} €</div>
 			<div  class="col-md-12" >&nbsp;</div>
 			
 			<h4>Mode de paiement : </h4>
