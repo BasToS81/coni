@@ -89,8 +89,9 @@ public class ImportController {
                 LOGGER.debug("dossier import existant");
 
                 // Pour chaque dossier trouvé
+                int i = 1;
                 for (File dossierEcole : dossierImport.listFiles()) {
-                    chargeConfigurationEcole(dossierEcole);
+                    chargeConfigurationEcole(dossierEcole, i++);
                 }
 
             }
@@ -117,7 +118,7 @@ public class ImportController {
         return new ImportDTO(resultatImport);
     }
 
-    private void chargeConfigurationEcole(File dossierEcole) throws Exception {
+    private void chargeConfigurationEcole(File dossierEcole, int index) throws Exception {
         LOGGER.debug("dossier ecole : " + dossierEcole.getName());
 
         // On charge la configuration de l'école
@@ -135,6 +136,9 @@ public class ImportController {
         ecole.setDateLimiteDesCommandesEleves(DateUtils.parseDate(ecolePropertie.getProperty("dateLimiteDesCommandesEleves")));
         ecole.setDateLimiteDesCommandesEcoles(DateUtils.parseDate(ecolePropertie.getProperty("dateLimiteDesCommandesEcoles")));
         ecole.setDateLimiteAcces(DateUtils.parseDate(ecolePropertie.getProperty("dateLimiteAcces")));
+
+        // TODO : genérer l'identifiant chiffé
+        ecole.setIdentifiant_chiffre("idChiffreEcole_" + index + ".jpg");
 
         ecoleRepository.save(ecole);
 
@@ -197,15 +201,16 @@ public class ImportController {
                 return name.toLowerCase().startsWith("classe_");
             }
         };
+        int i = 1;
         for (File dossierClasse : dossierEcole.listFiles(classeDossierFilter)) {
-            chargeConfigurationClasse(dossierClasse, ecole);
+            chargeConfigurationClasse(dossierClasse, ecole, i++);
         }
 
         ecoleRepository.save(ecole);
 
     }
 
-    private void chargeConfigurationClasse(File dossierClasse, Ecole ecole) throws Exception {
+    private void chargeConfigurationClasse(File dossierClasse, Ecole ecole, int index) throws Exception {
         LOGGER.debug("dossier classe : " + dossierClasse.getName());
 
         // On charge la configuration de l'école
@@ -214,6 +219,9 @@ public class ImportController {
 
         Classe classe = new Classe();
         classe.setNom(classePropertie.getProperty("nom"));
+
+        // TODO : générer l'identifiant chiffré
+        classe.setIdentifiantChiffre("idChiffreClasse_" + index + ".jpg");
 
         classeRepository.save(classe);
 
@@ -228,6 +236,9 @@ public class ImportController {
             eleve.setCodeAcces(classePropertie.getProperty("eleve_" + i + ".codeAcces"));
             eleve.setNom(classePropertie.getProperty("eleve_" + i + ".nom"));
             eleve.setDateLimiteAcces(ecole.getDateLimiteAcces());
+
+            // TODO générer l'identifiant chiffre
+            eleve.setIdentifiantChiffre("idChiffreEleve_" + i);
 
             LOGGER.debug("Ajout eleve ", identifiant);
 

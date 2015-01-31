@@ -35,8 +35,7 @@ public class Eleve extends Utilisateur {
      * @return the identifiant_chiffre
      */
     public String getIdentifiantChiffre() {
-        /* TODO : Mettre à jour l'identifiant chiffre */
-        return "idChiffreEleve_" + getId();
+        return identifiantChiffre;
     }
 
     /**
