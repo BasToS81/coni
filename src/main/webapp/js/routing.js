@@ -100,7 +100,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	.state('classes', {
 		url : '/ecole/classes/{id}?nom',
 		views : {
-			'contentInterne@' : {
+			'content-body@' : {
 				templateUrl : '/ecole/classes/list.html',
 			}
 		}
