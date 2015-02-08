@@ -16,8 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.gor.sellphotos.SellPhotos;
 import com.gor.sellphotos.controller.ImportController;
+import com.gor.sellphotos.dto.EleveSyntheseDTO;
 import com.gor.sellphotos.dto.ClasseSyntheseDTO;
-import com.gor.sellphotos.dto.EcoleSyntheseDTO;
 import com.gor.sellphotos.repository.ClasseRepository;
 import com.gor.sellphotos.repository.EcoleRepository;
 import com.gor.sellphotos.repository.EleveRepository;
@@ -59,9 +59,9 @@ public class EcoleControllerTest extends CommonTest {
 
         List<Object[]> results = ecoleRepository.findSynthese(ecole.getId());
 
-        List<EcoleSyntheseDTO> synthese = new ArrayList<EcoleSyntheseDTO>();
+        List<ClasseSyntheseDTO> synthese = new ArrayList<ClasseSyntheseDTO>();
         for (Object[] result : results) {
-            EcoleSyntheseDTO ecoleSyntheseDTO = new EcoleSyntheseDTO();
+            ClasseSyntheseDTO ecoleSyntheseDTO = new ClasseSyntheseDTO();
             ecoleSyntheseDTO.setNomClasse((String) result[0]);
             ecoleSyntheseDTO.setNbEleves((Long) result[1]);
             ecoleSyntheseDTO.setNbCommandes((Long) result[2]);
@@ -89,9 +89,9 @@ public class EcoleControllerTest extends CommonTest {
 
         List<Object[]> results = ecoleRepository.findClasse(ecole.getIdentifiantChiffre());
 
-        List<ClasseSyntheseDTO> synthese = new ArrayList<ClasseSyntheseDTO>();
+        List<EleveSyntheseDTO> synthese = new ArrayList<EleveSyntheseDTO>();
         for (Object[] result : results) {
-            ClasseSyntheseDTO classeSyntheseDTO = new ClasseSyntheseDTO();
+            EleveSyntheseDTO classeSyntheseDTO = new EleveSyntheseDTO();
             classeSyntheseDTO.setNomEleve((String) result[0]);
             classeSyntheseDTO.setNbCommandes((Long) result[1]);
             classeSyntheseDTO.setTotalVente((Double) result[2]);

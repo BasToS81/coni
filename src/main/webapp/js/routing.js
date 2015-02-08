@@ -25,12 +25,13 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 		views : {
 			'content-header@' : {
 				templateUrl : 'header.html',
-				controller : function ($stateParams){ return $stateParams.type + 'Ctrl'; },
-				resolve : {	additionalData : loadData }
+				controller : 'HeaderCtrl',
+				resolve : {	additionalData : loadEcoleData }
 			},
 			'content-body@' : {
 				templateUrl : function ($stateParams){ return '/' + $stateParams.type + '/profile.html'; },
-				
+				controller : function ($stateParams){ return $stateParams.type + 'Ctrl'; },
+				resolve : {	additionalData : loadData }
 			},
 			'content-footer@' : {
 				templateUrl : 'footer.html',
@@ -132,6 +133,18 @@ var loadData = function($q, $http, $stateParams, $timeout, Auth) {
 	return deferred.promise;
 };
 
+var loadEcoleData = function($q, $timeout, $http, $location, $state, $stateParams, Auth) {
+
+	var deferred = $q.defer();
+
+	// http://stackoverflow.com/questions/22209107/angularjs-ui-router-preload-http-data-before-app-loads
+	$http.get('/ws/ecole/loadData')
+	.success(function(data, status, headers, config) {
+		Auth.setUserEcoleData(data);
+		$timeout(deferred.resolve, 0);
+	});
+	return deferred.promise;
+};
 
 var loadCommandeFamille = function($q, $http, $stateParams, $timeout, Auth) {
 
@@ -160,14 +173,3 @@ var loadCommandeClasse = function($q, $http, $stateParams, $timeout, Auth) {
 	return deferred.promise;
 };
 
-var loadEcoleData = function($q, $timeout, $http, $location, $state, $stateParams, Auth) {
-
-	var deferred = $q.defer();
-
-	$http.get('/ws/ecole/loadData/' + $stateParams.identifiant)
-	.success(function(data, status, headers, config) {
-		Auth.setUserData(data);
-		$timeout(deferred.resolve, 0);
-	});
-	return deferred.promise;
-};

@@ -52,8 +52,7 @@ public class Classe {
      * @return the identifiant_chiffre
      */
     public String getIdentifiantChiffre() {
-        /* TODO : Mettre à jour l'identifiant chiffre */
-        return "idChiffreClasse_" + getId();
+        return identifiantChiffre;
     }
 
     /**

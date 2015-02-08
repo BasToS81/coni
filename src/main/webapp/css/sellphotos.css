@@ -8,3 +8,8 @@
 .main-panel {
   background-color: #fff;
 }
+
+.header-padding {
+	margin-top: 0px;
+	margin-bottom: 20px;
+}

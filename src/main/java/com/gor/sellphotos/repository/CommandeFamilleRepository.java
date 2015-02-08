@@ -38,6 +38,10 @@ public interface CommandeFamilleRepository extends CrudRepository<CommandeFamill
                     "WHERE e2.identifiant = :idEleve) " +
                     "ORDER BY cf.identifiant desc";
 
+    public final static String FIND_BY_ID_ECOLE_ET_STATUT_NON_PAYE = "SELECT cf " +
+                    "FROM CommandeFamille cf LEFT JOIN cf.famille f LEFT JOIN f.ecole e " +
+                    "WHERE e.id = :idEcole AND cf.statut in ('EN_ATTENTE_PAYEMENT', 'EN_COURS')";
+
     public CommandeFamille findByIdentifiant(Long identifiant);
 
     @Query(FIND_BY_ID_ELEVE)
@@ -57,5 +61,8 @@ public interface CommandeFamilleRepository extends CrudRepository<CommandeFamill
 
     @Query(COUNT_BY_ID_ELEVE)
     public int countByIdEleve(@Param("idEleve") String identifiantEleve);
+
+    @Query(FIND_BY_ID_ECOLE_ET_STATUT_NON_PAYE)
+    public List<CommandeFamille> findByIdEcoleEtStatutNonPaye(@Param("idEcole") Long idEcole);
 
 }

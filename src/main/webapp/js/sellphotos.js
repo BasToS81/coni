@@ -59,6 +59,7 @@ myApp.run([ '$rootScope', function($rootScope, $httpProvider) {
 myApp.service('Auth', function() {
 	var user = window.user;
 	var userData = '';
+	var userEcoleData = '';
 	var userCommandes = '';
 	return {
 		getUser : function() {
@@ -76,6 +77,12 @@ myApp.service('Auth', function() {
 		setUserData : function(newUserData) {
 			userData = newUserData;
 		},
+		getUserEcoleData : function() {
+			return userEcoleData;
+		},
+		setUserEcoleData : function(newUserEcoleData) {
+			userEcoleData = newUserEcoleData;
+		},
 		getUserCommandes : function() {
 			return userCommandes;
 		},
@@ -84,3 +91,33 @@ myApp.service('Auth', function() {
 		}
 	};
 });
+
+
+
+// COMMON function
+
+
+function IsInteger(input)
+{
+	if(IsNumeric(input)) {
+		return input.indexOf(".") == -1;
+	} else {
+		return false;
+	}
+}
+
+function IsNumeric(input)
+{
+    return (input - 0) == input && (''+input).trim().length > 0;
+}
+
+
+
+// COMMON Controler
+myApp.controller('HeaderCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
+
+	$scope.ecole=Auth.getUserEcoleData();
+}
+]);
+
+

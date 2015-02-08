@@ -1,14 +1,27 @@
 
-<header class="intro-header" >
+<header class="intro-header " >
 
 
-	<!-- <div class="col-md-12" style="background-image: url('/data/ecole.jpg')" ng-controller="FamilleCtrl" ng-init="init()"> -->
-	<div class="row gradient" ng-controller="FamilleCtrl" ng-init="init()">
-		<div class="col-xs-8 col-sm-9 col-md-10">
-			<h2>{{nomEcole}}</h2>
+	<div class="row gradient" ng-controller="HeaderCtrl">
+		<div class="col-md-12">
+			&nbsp;
 		</div>
-		
-	
+		<div class="col-xs-8 col-sm-9 col-md-10">
+			<h2 title="Adresse :
+{{ecole.adresseEtablissement}}
+{{ecole.codePostalEtablissement}} {{ecole.villeEtablissement}}
+Responsable des photographies dans l'école :
+{{ecole.nomResponsablePrincipal}}">{{ecole.nomEtablissement}}</h2>
+		</div>
+		<!-- 
+			<div class="col-md-12">Adresse : {{ecole.adresseEtablissement}}</div>
+			<div class="col-md-4">Code Potal :
+				{{ecole.codePostalEtablissement}}</div>
+			<div class="col-md-6">Ville : {{ecole.villeEtablissement}}</div>
+			<div class="col-md-12">Responsable des photographies dans
+				l'école : {{ecole.nomResponsablePrincipal}}</div>
+	 -->
+			
 			
 		<div class="col-xs-1 col-sm-1 col-md-1">
 			<div class="text-right">

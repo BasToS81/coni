@@ -1,8 +1,7 @@
 <div class="col-md-12 main-panel" ng-controller='EcoleClasseCommandeCtrl'>
 
 
-	<div class="col-md-2"></div>
-	<div class="col-md-8">
+	<div class="col-md-12">
 		<h4> Classe : {{classe.nom}}</h4>
 		<!-- Affichage de la liste des élèves de classe en ligne et des produits en colonne -->
 		<div class="table-responsive">
@@ -14,8 +13,8 @@
 							{{produit.designation}}
 						</th>
 						<th>Total prix vente TTC</th>
-						<th>Montant restant à payer TTC</th>
-						<th>Etat</th>
+						<th>Paiement effectué</th>
+						<th>Actions</th>
 						<th>Commentaire</th>
 					</tr>
 					<tr class="table-heading">
@@ -23,9 +22,8 @@
 						<th ng-repeat="produit in classe.modeleEtTarif.produits">
 							{{produit.prixParentHT  | number : 2 }} €
 						</th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
+						<th>{{classe.montantTotalParentHT  | number : 2 }} €</th>
+						<th class="text-center"><button class="btn btn-success btn-sm" ng-click="selectAllCheckbox()"><span class='glyphicon glyphicon-ok-circle'></button></th>
 						<th>&nbsp;</th>
 						<th>&nbsp;</th>
 					</tr>
@@ -34,16 +32,18 @@
 					<tr ng-repeat="commandesEleve in commandesEleves">
 						<td class="col-md-1">{{commandesEleve.eleve.identifiant}}</td>
 						<td ng-repeat="produitCommande in commandesEleve.produitsCommandes">
-						 	{{produitCommande.quantite}}
+						 	<input ng-model="produitCommande.quantite" class="form-control" ng-change="calcul(commandesEleve,produitCommande)"/>
 						</td>
 						<td>
-							{{commandesEleve.montantParentHT}} €
+							{{commandesEleve.montantTotalParentHT  | number : 2 }} €
 						</td>
 						<td>
-							{{commandesEleve.montantResteAPayerParentHT}} €
+							<div class="checkbox text-center">
+							   <input type="checkbox" ng-model="commandesEleve.paiementEffectue">
+							</div>
 						</td>
 						<td>
-							{{commandesEleve.statut}}
+							&nbsp;
 						</td>
 						<td>
 							{{commandesEleve.commentaire}}

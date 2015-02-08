@@ -11,14 +11,22 @@ import com.gor.sellphotos.dao.Ecole;
 public interface EcoleRepository extends CrudRepository<Ecole, Long> {
 
     // @formatter:off
-    public final static String FIND_BY_IDENTIFIANT_UTILISATEUR =
-                    "SELECT e "
+    public final static String FIND_BY_IDENTIFIANT_UTILISATEUR_RESPONSABLE =
+                    "SELECT e1 "
                                     + "FROM "
-                                    + " Ecole e, "
                                     + " Responsable r "
+                                    + " JOIN r.ecole e1 "
                                     + "WHERE "
-                                    + " r.identifiant = :idUtilisateur "
-                                    + " and r.ecole.id = e.id";
+                                    + " r.identifiant = :idUtilisateur ";
+
+    public final static String FIND_BY_IDENTIFIANT_UTILISATEUR_ELEVE =
+                    "SELECT e2 "
+                                    + "FROM "
+                                    + " Eleve el "
+                                    + " JOIN el.famille f "
+                                    + " JOIN f.ecole e2 "
+                                    + "WHERE "
+                                    + " el.identifiant = :idUtilisateur ";
 
     public final static String FIND_SYNTHESE =
                     "SELECT c.identifiantChiffre, c.nom as nomClasse, count(el.id) as nbEleves, count(ce.id) as nbCommandes, "
@@ -50,10 +58,27 @@ public interface EcoleRepository extends CrudRepository<Ecole, Long> {
                                     + "GROUP BY "
                                     + " el.nom";
 
+    public final static String FIND_ETAT_ACTIVATION_ACTIVE =
+                    "SELECT count(el) "
+                                    + "FROM Eleve el "
+                                    + " JOIN el.classe c "
+                                    + " JOIN c.ecole ec "
+                                    + " WHERE ec.id = :idEcole and el.dateLimiteAcces >= CURRENT_DATE";
+
+    public final static String FIND_ETAT_ACTIVATION_DESACTIVE =
+                    "SELECT count(el) "
+                                    + "FROM Eleve el "
+                                    + " JOIN el.classe c "
+                                    + " JOIN c.ecole ec "
+                                    + " WHERE ec.id = :idEcole and el.dateLimiteAcces < CURRENT_DATE";
+
     // @formatter:on
 
-    @Query(FIND_BY_IDENTIFIANT_UTILISATEUR)
-    public Ecole findByIdentifiantUtilisateur(@Param("idUtilisateur") String idUtilisateur);
+    @Query(FIND_BY_IDENTIFIANT_UTILISATEUR_RESPONSABLE)
+    public Ecole findByIdentifiantUtilisateurResponsable(@Param("idUtilisateur") String idUtilisateur);
+
+    @Query(FIND_BY_IDENTIFIANT_UTILISATEUR_ELEVE)
+    public Ecole findByIdentifiantUtilisateurEleve(@Param("idUtilisateur") String idUtilisateur);
 
     public Ecole findByNumeroEcole(String numeroEcole);
 
@@ -68,4 +93,12 @@ public interface EcoleRepository extends CrudRepository<Ecole, Long> {
 
     @Query(FIND_SYNTHESE_CLASSES)
     public List<Object[]> findClasse(String idChClasse);
+
+    @Query(FIND_ETAT_ACTIVATION_ACTIVE)
+    public int findEtatActivationActive(@Param("idEcole") Long idEcole);
+
+    @Query(FIND_ETAT_ACTIVATION_DESACTIVE)
+    public int findEtatActivationDesactive(@Param("idEcole") Long idEcole);
+
+    public Ecole findById(Long id);
 }

@@ -20,16 +20,18 @@ public class CommandeFamilleDTOEcole {
 
     private double montantEcoleHT;
 
+    private double montantParentTTC;
+
+    private double montantEcoleTTC;
+
     private Date dateLivraison;
 
     private String typeCommande;
 
-    private double tva;
-
-    private List<CommandeEleveSyntheseDTOEcole> commandesEleve;
+    private List<CommandeEleveDTOEcole> commandesEleve;
 
     public CommandeFamilleDTOEcole() {
-        commandesEleve = new ArrayList<CommandeEleveSyntheseDTOEcole>();
+        commandesEleve = new ArrayList<CommandeEleveDTOEcole>();
     }
 
     /**
@@ -161,36 +163,50 @@ public class CommandeFamilleDTOEcole {
     /**
      * @return the commandesEleve
      */
-    public List<CommandeEleveSyntheseDTOEcole> getCommandesEleve() {
+    public List<CommandeEleveDTOEcole> getCommandesEleve() {
         return commandesEleve;
     }
 
     /**
      * @param commandesEleve the commandesEleve to set
      */
-    public void setCommandesEleve(List<CommandeEleveSyntheseDTOEcole> commandesEleve) {
+    public void setCommandesEleve(List<CommandeEleveDTOEcole> commandesEleve) {
         this.commandesEleve = commandesEleve;
     }
 
     /**
      * @param commandeEleve the commandeEleve to add
      */
-    public void addCommandeEleve(CommandeEleveSyntheseDTOEcole commandeEleve) {
+    public void addCommandeEleve(CommandeEleveDTOEcole commandeEleve) {
         this.commandesEleve.add(commandeEleve);
     }
 
     /**
-     * @return the tva
+     * @return the montantParentTTC
      */
-    public double getTva() {
-        return tva;
+    public double getMontantParentTTC() {
+        return montantParentTTC;
     }
 
     /**
-     * @param tva the tva to set
+     * @param montantParentTTC the montantParentTTC to set
      */
-    public void setTva(double tva) {
-        this.tva = tva;
+    public void setMontantParentTTC(double montantParentTTC) {
+        this.montantParentTTC = montantParentTTC;
+    }
+
+    /**
+     * @return the montantEcoleTTC
+     */
+    public double getMontantEcoleTTC() {
+        return montantEcoleTTC;
+    }
+
+    /**
+     * @param montantEcoleTTC the montantEcoleTTC to set
+     */
+    public void setMontantEcoleTTC(double montantEcoleTTC) {
+        this.montantEcoleTTC = montantEcoleTTC;
     }
 
     @Override

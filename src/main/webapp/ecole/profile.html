@@ -1,36 +1,128 @@
-<div class="col-md-12 panel panel-default" ng-controller="EcoleCtrl" >
+<div class="col-md-12 main-panel">
 
-  <div class="col-md-12 panel panel-default">
-            
-        <div class="col-md-6">Etablissement :</div>
-        <div class="col-md-6">{{ecole.nomEtablissement}}</div>
-        <div class="col-md-6">Adresse :</div>
-        <div class="col-md-6">{{ecole.adresseEtablissement}}</div>
-        <div class="col-md-3">Code Potal :</div>
-        <div class="col-md-3">{{ecole.codePostalEtablissement}}</div>
-        <div class="col-md-3">Ville :</div>
-        <div class="col-md-3">{{ecole.villeEtablissement}}</div>
-        <div class="col-md-6">Responsable des photographies dans l'école :</div>
-        <div class="col-md-6">{{ecole.nomResponsablePrincipal}}</div>
-  </div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Commandes des élèves</h3>
 
-
-
-  <div class="col-md-12 panel-default" ng-controller="EcoleSyntheseCtrl" ng-init="getSynthese()">
-	<div class="table-responsive col-md-12" >
-	  <table class="table">
-	  	<tr><th>Classe</th><th>Nombre d'élèves</th><th>Nombre de commandes</th><th>Total achat</th><th>Total vente</th></tr>
-	    <tr ng-repeat="classe in classes">
-	    	<td>
-	    		<a ui-sref="generic.classesCommandes({id : classe.identifiantChiffre})">{{classe.nomClasse}}</a>
-	    	</td>
-	    	<td>{{classe.nbEleves}}</td>
-	    	<td>{{classe.nbCommandes}}</td>
-	    	<td>{{classe.totalAchat}}</td>
-	    	<td>{{classe.totalVente}}</td>
-	    </tr>
-	  </table>
+			</div>
+		
+	
+			<div class="panel-body" ng-controller="EcoleSyntheseCtrl">
+	
+				<!-- Affichage du bouton permettant de désactiver ou activer l'accès à tous les élèves  -->
+				<div class="text-center"  ng-init="getActivation()">
+	
+					<div ng-if="etatActivation==0">
+						Tous les élèves ont leur accès désactivé. </br>
+						<button class="btn btn-warning"  style="margin-top:7px"
+							title="Activer l'accès à tous les élèves de l'école">Cliquez ici pour réactiver tous les accés</button> 
+					</div>
+					<div ng-if="etatActivation==1">
+						Tous les élèves ont leur accès activé. </br>
+						<button class="btn btn-success"  style="margin-top:7px"
+							title="Désactiver l'accès à tous les élèves de l'école">Cliquez ici pour désactiver tous les accès</button>
+					</div>
+					<div ng-if="etatActivation==-1">
+						Certains élèves ont leur accès désactivés. </br>	
+						<button class="btn btn-info"  style="margin-top:7px"
+							title="Activer l'accès à tous les élèves de l'école">Cliquez ici pour réactiver tous les accés</button>
+					</div>
+				</div>
+	
+				<div class="col-md-12">&nbsp;</div>
+	
+				<div class="table-responsive col-md-12" ng-init="getCommandesNonPayees()">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Statut</th>
+								<th>Identifiant</th>
+								<th>Date de la commande</th>
+								<th>Montant</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="commande in commandes">
+								<td>{{commande.statut}}</td>
+								<td>{{commande.identifiant}}</td>
+								<td>{{commande.dateCommande}}</td>
+								<td>{{commande.montantParentTTC | number : 2 }} €</td>
+								<td>
+									<button title="Visualiser la commande"
+										class="btn btn-sm btn-success"
+										ng-click="openCommande(commande.identifiant)">
+										<span class="glyphicon glyphicon-check"></span>
+									</button>
+									<button title="Supprimer la commande"
+										class="btn btn-sm btn-warning"
+										ng-click="deleteCommande(commande.identifiant)">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>	
+		</div>
 	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Commandes au photographe</h3>
+
+			</div>
+
+			<div class="panel-body" ng-controller="EcoleCommandesCtrl"
+				ng-init="getCommandesList()">
+
+				<div class="text-center">
+					<a ui-sref="generic.commander" class="btn btn-info"
+						title="Créer une nouvelle commande ou éditer la commande en cours de création">Commander</a>
+				</div>
+
+				<div class="table-responsive col-md-12">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Statut</th>
+								<th>Identifiant</th>
+								<th>Date de la commande</th>
+								<th>Montant</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="commande in commandes">
+								<td>{{commande.statut}}</td>
+								<td>{{commande.identifiant}}</td>
+								<td>{{commande.dateCommande}}</td>
+								<td>{{commande.montantParentTTC | number : 2 }} €</td>
+								<td>
+									<button title="Visualiser la commande"
+										class="btn btn-sm btn-success"
+										ng-click="openCommande(commande.identifiant)"
+										ng-show="commande.statut!='EN_COURS'">
+										<span class="glyphicon glyphicon-eye-open "></span>
+									</button>
+									<button title="Supprimer la commande"
+										class="btn btn-sm btn-warning"
+										ng-click="deleteCommande(commande.identifiant)"
+										ng-show="commande.statut=='EN_COURS'">
+										<span class="glyphicon glyphicon-remove"></span>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 
 </div>
 

@@ -1,52 +1,26 @@
-package com.gor.sellphotos.dao;
+package com.gor.sellphotos.dto.ecole;
 
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import com.gor.sellphotos.dto.EcoleDTO;
 
-@Entity
-public class CommandeEcole {
+public class CommandeEcoleDTO {
 
-    public enum StatutCommandeEcole {
-        EN_COURS,
-        COMMANDEE,
-        EN_LIVRAISON,
-        LIVREE,
-        ABANDONNEE
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Basic
     private String identifiant;
 
-    @ManyToOne
-    private Ecole ecole;
+    private EcoleDTO ecole;
 
-    @Basic
     private Date dateCommande;
 
-    @Enumerated(EnumType.STRING)
-    private StatutCommandeEcole statut;
+    private String statut;
 
-    @Basic
     private Date dateValidation;
 
-    @OneToMany(mappedBy = "commandeEcole")
-    private List<CommandeFamille> commandesFamille;
+    private List<CommandeFamilleDTOEcole> commandesFamilles;
 
-    @Basic
     private Date dateLivraison;
 
     /**
@@ -80,14 +54,14 @@ public class CommandeEcole {
     /**
      * @return the ecole
      */
-    public Ecole getEcole() {
+    public EcoleDTO getEcole() {
         return ecole;
     }
 
     /**
      * @param ecole the ecole to set
      */
-    public void setEcole(Ecole ecole) {
+    public void setEcole(EcoleDTO ecole) {
         this.ecole = ecole;
     }
 
@@ -108,14 +82,14 @@ public class CommandeEcole {
     /**
      * @return the statut
      */
-    public StatutCommandeEcole getStatut() {
+    public String getStatut() {
         return statut;
     }
 
     /**
      * @param statut the statut to set
      */
-    public void setStatut(StatutCommandeEcole statut) {
+    public void setStatut(String statut) {
         this.statut = statut;
     }
 
@@ -136,15 +110,15 @@ public class CommandeEcole {
     /**
      * @return the commandesEleves
      */
-    public List<CommandeFamille> getCommandesFamille() {
-        return commandesFamille;
+    public List<CommandeFamilleDTOEcole> getCommandesFamilles() {
+        return commandesFamilles;
     }
 
     /**
      * @param commandesEleves the commandesEleves to set
      */
-    public void setCommandesFamille(List<CommandeFamille> commandesFamille) {
-        this.commandesFamille = commandesFamille;
+    public void setCommandesFamilles(List<CommandeFamilleDTOEcole> commandesFamilles) {
+        this.commandesFamilles = commandesFamilles;
     }
 
     /**
@@ -159,11 +133,6 @@ public class CommandeEcole {
      */
     public void setDateLivraison(Date dateLivraison) {
         this.dateLivraison = dateLivraison;
-    }
-
-    @Override
-    public String toString() {
-        return "Utilisateur [id=" + id + ", identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + "]";
     }
 
 }

@@ -117,11 +117,14 @@ myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', '$state', 'Au
 	$scope.calculMontantTTC = function( valeur ) { 
 		return valeur * $scope.tva;
 	};
-	$scope.calcul = function( commandeEncours, produit ) { 
-		var ancienMontant = produit.montantParentHT;
-		produit.montantParentHT = produit.quantite * produit.produit.prixParentHT;
-		var diffMontant = produit.montantParentHT - ancienMontant;
-		commandeEnCours.montantParentHT += diffMontant;
+	$scope.calcul = function( commandeEnCours, produit ) { 
+
+		if(IsInteger(produit.quantite)) {
+			var ancienMontant = produit.montantParentHT;
+			produit.montantParentHT = produit.quantite * produit.produit.prixParentHT;
+			var diffMontant = produit.montantParentHT - ancienMontant;
+			commandeEnCours.montantParentHT += diffMontant;
+		}
 	};
 	$scope.addQuantite = function(commandeEnCours, produit ) { 
 		var ancienMontant = produit.montantParentHT;

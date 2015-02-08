@@ -9,14 +9,20 @@ public class CommandeClasseSyntheseDTOEcole {
 
     private String nom;
 
-    private List<CommandeEleveSyntheseDTOEcole> commandeEleveSynthese;
+    private List<CommandeEleveDTOEcole> commandeEleve;
+
+    private double montantTotalParentHT;
+
+    private double montantTotalEcoleHT;
+
+    private double montantTotalParentTTC;
+
+    private double montantTotalEcoleTTC;
 
     private ModeleEtTarifDTO modeleEtTarif;
 
-    private double tva;
-
     public CommandeClasseSyntheseDTOEcole() {
-        commandeEleveSynthese = new ArrayList<CommandeEleveSyntheseDTOEcole>();
+        commandeEleve = new ArrayList<CommandeEleveDTOEcole>();
     }
 
     /**
@@ -36,15 +42,15 @@ public class CommandeClasseSyntheseDTOEcole {
     /**
      * @return the commandeEleveSyntheseDTO
      */
-    public List<CommandeEleveSyntheseDTOEcole> getCommandeEleveSynthese() {
-        return commandeEleveSynthese;
+    public List<CommandeEleveDTOEcole> getCommandeEleve() {
+        return commandeEleve;
     }
 
     /**
      * @param commandeEleveSyntheseDTO the commandeEleveSyntheseDTO to set
      */
-    public void setCommandeEleveSynthese(List<CommandeEleveSyntheseDTOEcole> commandeEleveSynthese) {
-        this.commandeEleveSynthese = commandeEleveSynthese;
+    public void setCommandeEleve(List<CommandeEleveDTOEcole> commandeEleve) {
+        this.commandeEleve = commandeEleve;
     }
 
     /**
@@ -64,22 +70,73 @@ public class CommandeClasseSyntheseDTOEcole {
     /**
      * @param commandeEleveSyntheseDTO the commandeEleveSyntheseDTO to set
      */
-    public void addCommandeEleveSynthese(CommandeEleveSyntheseDTOEcole commandeEleveSynthese) {
-        this.commandeEleveSynthese.add(commandeEleveSynthese);
+    public void addCommandeEleveSynthese(CommandeEleveDTOEcole commandeEleve) {
+        this.commandeEleve.add(commandeEleve);
+
+        this.montantTotalParentHT += commandeEleve.getMontantParentHT();
+
+        this.montantTotalEcoleHT += commandeEleve.getMontantEcoleHT();
+
+        this.montantTotalParentTTC += commandeEleve.getMontantParentTTC();
+
+        this.montantTotalEcoleTTC += commandeEleve.getMontantEcoleTTC();
+
     }
 
     /**
-     * @return the tva
+     * @return the montantTotalParentHT
      */
-    public double getTva() {
-        return tva;
+    public double getMontantTotalParentHT() {
+        return montantTotalParentHT;
     }
 
     /**
-     * @param tva the tva to set
+     * @param montantTotalParentHT the montantTotalParentHT to set
      */
-    public void setTva(double tva) {
-        this.tva = tva;
+    public void setMontantTotalParentHT(double montantTotalParentHT) {
+        this.montantTotalParentHT = montantTotalParentHT;
+    }
+
+    /**
+     * @return the montantTotalEcoleHT
+     */
+    public double getMontantTotalEcoleHT() {
+        return montantTotalEcoleHT;
+    }
+
+    /**
+     * @param montantTotalEcoleHT the montantTotalEcoleHT to set
+     */
+    public void setMontantTotalEcoleHT(double montantTotalEcoleHT) {
+        this.montantTotalEcoleHT = montantTotalEcoleHT;
+    }
+
+    /**
+     * @return the montantTotalParentTTC
+     */
+    public double getMontantTotalParentTTC() {
+        return montantTotalParentTTC;
+    }
+
+    /**
+     * @param montantTotalParentTTC the montantTotalParentTTC to set
+     */
+    public void setMontantTotalParentTTC(double montantTotalParentTTC) {
+        this.montantTotalParentTTC = montantTotalParentTTC;
+    }
+
+    /**
+     * @return the montantTotalEcoleTTC
+     */
+    public double getMontantTotalEcoleTTC() {
+        return montantTotalEcoleTTC;
+    }
+
+    /**
+     * @param montantTotalEcoleTTC the montantTotalEcoleTTC to set
+     */
+    public void setMontantTotalEcoleTTC(double montantTotalEcoleTTC) {
+        this.montantTotalEcoleTTC = montantTotalEcoleTTC;
     }
 
 }

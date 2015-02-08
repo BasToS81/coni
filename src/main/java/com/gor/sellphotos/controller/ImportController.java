@@ -201,7 +201,7 @@ public class ImportController {
                 return name.toLowerCase().startsWith("classe_");
             }
         };
-        int i = 1;
+        int i = 1 + index * 10;
         for (File dossierClasse : dossierEcole.listFiles(classeDossierFilter)) {
             chargeConfigurationClasse(dossierClasse, ecole, i++);
         }
@@ -221,7 +221,7 @@ public class ImportController {
         classe.setNom(classePropertie.getProperty("nom"));
 
         // TODO : générer l'identifiant chiffré
-        classe.setIdentifiantChiffre("idChiffreClasse_" + index + ".jpg");
+        classe.setIdentifiantChiffre("idChiffreClasse_" + index);
 
         classeRepository.save(classe);
 
@@ -238,7 +238,7 @@ public class ImportController {
             eleve.setDateLimiteAcces(ecole.getDateLimiteAcces());
 
             // TODO générer l'identifiant chiffre
-            eleve.setIdentifiantChiffre("idChiffreEleve_" + i);
+            eleve.setIdentifiantChiffre("idChiffreEleve_" + (i + index * 10));
 
             LOGGER.debug("Ajout eleve ", identifiant);
 

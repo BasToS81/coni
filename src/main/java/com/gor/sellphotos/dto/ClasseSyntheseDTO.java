@@ -2,7 +2,11 @@ package com.gor.sellphotos.dto;
 
 public class ClasseSyntheseDTO {
 
-    private String nomEleve;
+    private String identifiantChiffre;
+
+    private String nomClasse;
+
+    private Long nbEleves;
 
     private Long nbCommandes;
 
@@ -10,12 +14,20 @@ public class ClasseSyntheseDTO {
 
     private Double totalVente;
 
-    public String getNomEleve() {
-        return nomEleve;
+    public String getNomClasse() {
+        return nomClasse;
     }
 
-    public void setNomEleve(String nomEleve) {
-        this.nomEleve = nomEleve;
+    public void setNomClasse(String nomClasse) {
+        this.nomClasse = nomClasse;
+    }
+
+    public Long getNbEleves() {
+        return nbEleves;
+    }
+
+    public void setNbEleves(Long nbEleves) {
+        this.nbEleves = nbEleves;
     }
 
     public Long getNbCommandes() {
@@ -42,9 +54,18 @@ public class ClasseSyntheseDTO {
         this.totalVente = totalVente;
     }
 
+    public String getIdentifiantChiffre() {
+        return identifiantChiffre;
+    }
+
+    public void setIdentifiantChiffre(String identifiantChiffre) {
+        this.identifiantChiffre = identifiantChiffre;
+    }
+
     @Override
     public String toString() {
-        return "ClasseSyntheseDTO [nomEleve=" + nomEleve + ", nbCommandes=" + nbCommandes + ", totalAchat=" + totalAchat + ", totalVente=" + totalVente + "]";
+        return "EcoleSyntheseDTO [identifiantChiffre=" + identifiantChiffre + ", nomClasse=" + nomClasse + ", nbEleves=" + nbEleves + ", nbCommandes="
+                        + nbCommandes + ", totalAchat=" + totalAchat + ", totalVente=" + totalVente + "]";
     }
 
 }
