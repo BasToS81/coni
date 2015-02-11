@@ -98,6 +98,15 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 
 
 	// Page ecole 
+    	.state('generic.ecoleEleves', {
+			url : '/ecole/eleves/',
+			views : {
+				'content-body@' : {
+					templateUrl : '/ecole/ecole.html' 
+				}
+			}
+		})
+    
 	    // - liste des classes
 		.state('generic.classes', {
 			url : '/ecole/classes/{id}?nom',

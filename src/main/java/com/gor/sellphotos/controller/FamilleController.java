@@ -80,7 +80,7 @@ public class FamilleController extends AbstractRestHandler {
                 eleveDTO.setDateLimiteAcces(eleve.getDateLimiteAcces());
                 eleveDTO.setIdentifiantChiffre(eleve.getIdentifiantChiffre());
                 eleveDTO.setNomClasse(eleve.getClasse().getNom());
-                eleveDTO.setNomEleve(eleve.getNom());
+                eleveDTO.setNom(eleve.getNom());
                 elevesDTO.add(eleveDTO);
             }
             familleDTO.setEleves(elevesDTO);

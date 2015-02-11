@@ -1,12 +1,28 @@
-myApp.controller('EcoleCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
 
+
+myApp.controller('EcoleCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
 	$scope.ecole=Auth.getUserData();
+	$scope.eleves=null;
+	$scope.predicate='nom';
+	$scope.reverse=false;
+	$scope.montantTotal=0;
+	$scope.restantTotal=0;
 	
+	$scope.getSyntheseEleves = function() { 
+		$http.get('/ws/ecole/eleve/getSynthese')
+		.success(
+				function(data, status, headers, config) {
+					$scope.eleves = data;
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de l'école";
+				});
+	};
 }
-	
 ]);
 
-
+//Information des données de synthèse de l'école
 myApp.controller('EcoleSyntheseCtrl', [ '$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
 	$scope.commandes = null;
 	$scope.etatActivation = null;
@@ -57,7 +73,7 @@ myApp.controller('EcoleClasseCtrl', [ '$scope', '$http', 'Auth', '$stateParams',
 
 
 
-
+//Controller des commandes écoles au photographe
 myApp.controller('EcoleCommandesCtrl', [ '$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.commandes = null;
 	$scope.getCommandesList = function() { 
@@ -99,7 +115,7 @@ myApp.controller('EcoleCommandesCtrl', [ '$scope', '$http', '$state', 'Auth', '$
 
 
 
-
+// Controller des commandes des élèves par classe
 myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.classe = Auth.getUserCommandes();
 	$scope.commandesEleves = $scope.classe.commandeEleveSynthese

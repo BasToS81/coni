@@ -64,6 +64,23 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
                     "WHERE f IN (SELECT f2 FROM Eleve e2 LEFT JOIN e2.famille f2 " +
                     "WHERE e2.identifiant = :idEleve)";
 
+    public final static String COUNT_NB_COMMANDES_PAR_ELEVE_BY_ID_ECOLE = "SELECT ce.eleve.id, count(ce)  " +
+                    "FROM CommandeEleve ce  " +
+                    "LEFT JOIN ce.eleve.classe.ecole ec " +
+                    "WHERE ec.id = :idEcole GROUP BY ce.eleve ORDER BY ce.eleve.nom ASC";
+
+    public final static String SUM_MONTANT_TOTAL_PAR_ELEVE_BY_ID_ECOLE =
+                    "SELECT ce.eleve.id, sum(ce.montantParentHT), sum(ce.montantEcoleHT), sum(ce.montantParentTTC), sum(ce.montantEcoleTTC)  " +
+                                    "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf " +
+                                    "LEFT JOIN ce.eleve.classe.ecole ec " +
+                                    "WHERE ec.id = :idEcole GROUP BY ce.eleve ORDER BY ce.eleve.nom ASC";
+
+    public final static String SUM_MONTANT_RESTANT_A_PAYER_PAR_ELEVE_BY_ID_ECOLE =
+                    "SELECT ce.eleve.id, sum(ce.montantParentHT), sum(ce.montantEcoleHT), sum(ce.montantParentTTC), sum(ce.montantEcoleTTC)  " +
+                                    "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf " +
+                                    "LEFT JOIN ce.eleve.classe.ecole ec " +
+                                    "WHERE ec.id = :idEcole AND cf.statut in ('EN_ATTENTE_PAYEMENT') GROUP BY ce.eleve ORDER BY ce.eleve.nom ASC";
+
     @Query(FIND_SYNTHESE_BY_ID_CLASSE)
     public List<Object[]> findSyntheseByIdentifiantClasse(@Param("identifiantClasse") String identifiantClasse);
 
@@ -81,5 +98,14 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
 
     @Query(COUNT_BY_ID_ELEVE)
     public int countByIdEleve(@Param("idEleve") String identifiantEleve);
+
+    @Query(COUNT_NB_COMMANDES_PAR_ELEVE_BY_ID_ECOLE)
+    public List<Object[]> countNbCommandesParEleveByIDEcole(@Param("idEcole") Long idEcole);
+
+    @Query(SUM_MONTANT_TOTAL_PAR_ELEVE_BY_ID_ECOLE)
+    public List<Object[]> sumMontantTotalParEleveByIDEcole(@Param("idEcole") Long idEcole);
+
+    @Query(SUM_MONTANT_RESTANT_A_PAYER_PAR_ELEVE_BY_ID_ECOLE)
+    public List<Object[]> sumMontantRestantAPayerParEleveByIDEcole(@Param("idEcole") Long idEcole);
 
 }

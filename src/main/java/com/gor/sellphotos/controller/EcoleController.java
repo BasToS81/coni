@@ -1,5 +1,8 @@
 package com.gor.sellphotos.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -14,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.gor.sellphotos.dao.Ecole;
+import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dto.EcoleDTO;
+import com.gor.sellphotos.dto.EleveDTO;
 import com.gor.sellphotos.repository.CommandeEleveRepository;
 import com.gor.sellphotos.repository.EcoleRepository;
 import com.gor.sellphotos.repository.EleveRepository;
@@ -110,5 +115,67 @@ public class EcoleController extends AbstractRestHandler {
         }
 
         return resultat;
+    }
+
+    @RequestMapping("/ws/ecole/eleve/getSynthese")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public List<EleveDTO> getSyntheseEleve(Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+
+        LOGGER.debug("loading ecole");
+        Long idEcole = sessionData.getIdentifiantEcole();
+
+        List<EleveDTO> elevesDTO = new ArrayList<EleveDTO>();
+
+        // Vérification de l'état de l'activation des élèves
+        List<Eleve> eleves = eleveRepository.findByIdEcoleOrderByNom(idEcole);
+
+        List<Object[]> syntheseNbCommandesEleve = commandeEleveRepository.countNbCommandesParEleveByIDEcole(idEcole);
+        List<Object[]> syntheseMontantTotalCommandesEleve = commandeEleveRepository.sumMontantTotalParEleveByIDEcole(idEcole);
+        List<Object[]> syntheseMontantsAPayerCommandesEleve = commandeEleveRepository.sumMontantRestantAPayerParEleveByIDEcole(idEcole);
+
+        for (Eleve eleve : eleves) {
+
+            EleveDTO eleveDTO = MapperUtils.convert(eleve, EleveDTO.class);
+
+            eleveDTO.setNomClasse(eleve.getClasse().getNom());
+
+            for (int i = 0; i < syntheseNbCommandesEleve.size(); i++) {
+                // Parcours de la liste avec suppression des éléments de celle ci
+                if (eleve.getId() == syntheseNbCommandesEleve.get(i)[0]) {
+                    eleveDTO.setNbCommandes(((Long) syntheseNbCommandesEleve.get(i)[1]).intValue());
+                    syntheseNbCommandesEleve.remove(i);
+                    break;
+                }
+            }
+            for (int i = 0; i < syntheseMontantTotalCommandesEleve.size(); i++) {
+                // Parcours de la liste avec suppression des éléments de celle ci
+                if (eleve.getId() == syntheseMontantTotalCommandesEleve.get(i)[0]) {
+                    eleveDTO.setMontantTotalParentHT((double) syntheseMontantTotalCommandesEleve.get(i)[1]);
+                    eleveDTO.setMontantTotalEcoleHT((double) syntheseMontantTotalCommandesEleve.get(i)[2]);
+                    eleveDTO.setMontantTotalParentTTC((double) syntheseMontantTotalCommandesEleve.get(i)[3]);
+                    eleveDTO.setMontantTotalEcoleTTC((double) syntheseMontantTotalCommandesEleve.get(i)[4]);
+                    syntheseMontantTotalCommandesEleve.remove(i);
+                    break;
+                }
+            }
+            for (int i = 0; i < syntheseMontantsAPayerCommandesEleve.size(); i++) {
+                // Parcours de la liste avec suppression des éléments de celle ci
+                if (eleve.getId() == syntheseMontantsAPayerCommandesEleve.get(i)[0]) {
+                    eleveDTO.setMontantRestantAPayerParentHT((double) syntheseMontantsAPayerCommandesEleve.get(i)[1]);
+                    eleveDTO.setMontantRestantAPayerEcoleHT((double) syntheseMontantsAPayerCommandesEleve.get(i)[2]);
+                    eleveDTO.setMontantRestantAPayerParentTTC((double) syntheseMontantsAPayerCommandesEleve.get(i)[3]);
+                    eleveDTO.setMontantRestantAPayerEcoleTTC((double) syntheseMontantsAPayerCommandesEleve.get(i)[4]);
+                    syntheseMontantsAPayerCommandesEleve.remove(i);
+                    break;
+                }
+            }
+            elevesDTO.add(eleveDTO);
+        }
+
+        return elevesDTO;
     }
 }

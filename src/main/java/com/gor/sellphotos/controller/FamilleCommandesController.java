@@ -411,7 +411,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
         CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommandeEnCours);
 
         cmdFamilleEnBase.setDateValidation(DateUtils.getCurrentDate());
-        if ("INTERNET".compareTo(cmdFamilleEnBase.getMoyenPayement()) != 0) {
+        if ("INTERNET".compareTo(cmdFamilleEnBase.getMoyenPayement()) == 0) {
             cmdFamilleEnBase.setStatut(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE);
         }
         else {
