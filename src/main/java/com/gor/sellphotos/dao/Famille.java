@@ -2,7 +2,6 @@ package com.gor.sellphotos.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -114,7 +113,13 @@ public class Famille {
      */
     public CommandeFamille getCommandeEnCours() {
         LOGGER.debug("Nb de commandes : {}", commandes.size());
-        List<CommandeFamille> listCommande = commandes.stream().filter(p -> p.getStatut().equals(StatutCommandeFamille.EN_COURS)).collect(Collectors.toList());
+        List<CommandeFamille> listCommande = new ArrayList<CommandeFamille>();
+        for (CommandeFamille commande : commandes) {
+            if (commande.getStatut().equals(StatutCommandeFamille.EN_COURS)) {
+                listCommande.add(commande);
+            }
+        }
+
         LOGGER.debug("Nb de commandes en cours : {}", listCommande.size());
         if (listCommande.size() == 1) {
             return listCommande.get(0);
@@ -126,28 +131,54 @@ public class Famille {
      * @return the commandesEnAttenteValidationPayement
      */
     public List<CommandeFamille> getCommandesEnAttenteValidationPayement() {
-        return commandes.stream().filter(p -> p.getStatut() == StatutCommandeFamille.EN_ATTENTE_PAYEMENT).collect(Collectors.toList());
+        List<CommandeFamille> listCommande = new ArrayList<CommandeFamille>();
+        for (CommandeFamille commande : commandes) {
+            if (commande.getStatut().equals(StatutCommandeFamille.EN_ATTENTE_PAYEMENT)) {
+                listCommande.add(commande);
+            }
+        }
+        return listCommande;
     }
 
     /**
      * @return the commandesEnAttenteValidationEcole
      */
     public List<CommandeFamille> getCommandesEnAttenteValidationEcole() {
-        return commandes.stream().filter(p -> p.getStatut() == StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE).collect(Collectors.toList());
+        List<CommandeFamille> listCommande = new ArrayList<CommandeFamille>();
+        for (CommandeFamille commande : commandes) {
+            if (commande.getStatut().equals(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE)) {
+                listCommande.add(commande);
+            }
+        }
+        return listCommande;
+
     }
 
     /**
      * @return the commandesEnLivraison
      */
     public List<CommandeFamille> getCommandesEnLivraison() {
-        return commandes.stream().filter(p -> p.getStatut() == StatutCommandeFamille.EN_LIVRAISON).collect(Collectors.toList());
+        List<CommandeFamille> listCommande = new ArrayList<CommandeFamille>();
+        for (CommandeFamille commande : commandes) {
+            if (commande.getStatut().equals(StatutCommandeFamille.EN_LIVRAISON)) {
+                listCommande.add(commande);
+            }
+        }
+        return listCommande;
     }
 
     /**
      * @return the commandesLivrees
      */
     public List<CommandeFamille> getCommandesLivrees() {
-        return commandes.stream().filter(p -> p.getStatut() == StatutCommandeFamille.LIVREE).collect(Collectors.toList());
+
+        List<CommandeFamille> listCommande = new ArrayList<CommandeFamille>();
+        for (CommandeFamille commande : commandes) {
+            if (commande.getStatut().equals(StatutCommandeFamille.LIVREE)) {
+                listCommande.add(commande);
+            }
+        }
+        return listCommande;
     }
 
     public String getIdentifiantsFraterie() {
