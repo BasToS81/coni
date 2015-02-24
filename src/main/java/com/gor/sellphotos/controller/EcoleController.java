@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.gor.sellphotos.dao.Classe;
 import com.gor.sellphotos.dao.Ecole;
 import com.gor.sellphotos.dao.Eleve;
+import com.gor.sellphotos.dto.ClasseSyntheseDTO;
 import com.gor.sellphotos.dto.EcoleDTO;
+import com.gor.sellphotos.dto.EcoleSyntheseDTO;
 import com.gor.sellphotos.dto.EleveDTO;
+import com.gor.sellphotos.repository.ClasseRepository;
 import com.gor.sellphotos.repository.CommandeEleveRepository;
 import com.gor.sellphotos.repository.EcoleRepository;
 import com.gor.sellphotos.repository.EleveRepository;
@@ -43,25 +47,39 @@ public class EcoleController extends AbstractRestHandler {
     private EleveRepository eleveRepository;
 
     @Autowired
+    private ClasseRepository classeRepository;
+
+    @Autowired
     private CommandeEleveRepository commandeEleveRepository;
 
-    @RequestMapping("/ws/ecole/loadData")
+    @RequestMapping("/ws/ecole/loadDescription")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public EcoleDTO getEcole(Authentication authentication) {
+    public EcoleDTO getEcoleDescription(Authentication authentication) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
 
-        LOGGER.debug("loading ecole");
-        String identifiant = sessionData.getIdentifiantUtilisateur();
-        LOGGER.debug("Session identifiant= {}", identifiant);
+        LOGGER.debug("loading ecole description");
+
+        Long idEcole = sessionData.getIdentifiantEcole();
 
         EcoleDTO ecoleDTO = null;
-        Ecole ecole = ecoleRepository.findByIdentifiantUtilisateurResponsable(identifiant);
-        if (ecole == null) {
-            ecole = ecoleRepository.findByIdentifiantUtilisateurEleve(identifiant);
+        Ecole ecole = null;
+
+        if (idEcole == null) {
+            String identifiant = sessionData.getIdentifiantUtilisateur();
+            LOGGER.debug("Session identifiant= {}", identifiant);
+
+            ecole = ecoleRepository.findByIdentifiantUtilisateurResponsable(identifiant);
+            if (ecole == null) {
+                ecole = ecoleRepository.findByIdentifiantUtilisateurEleve(identifiant);
+            }
         }
+        else {
+            ecole = ecoleRepository.findById(idEcole);
+        }
+
         if (ecole != null) {
 
             LOGGER.debug("ecole {}", ecoleDTO);
@@ -115,6 +133,93 @@ public class EcoleController extends AbstractRestHandler {
         }
 
         return resultat;
+    }
+
+    @RequestMapping("/ws/ecole/loadData")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public EcoleSyntheseDTO getSynthese(Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+
+        LOGGER.debug("loading ecole");
+        Long idEcole = sessionData.getIdentifiantEcole();
+
+        if (idEcole == null) {
+            String identifiant = sessionData.getIdentifiantUtilisateur();
+            LOGGER.debug("Session identifiant= {}", identifiant);
+
+            EcoleDTO ecoleDTO = null;
+            Ecole ecole = ecoleRepository.findByIdentifiantUtilisateurResponsable(identifiant);
+            if (ecole == null) {
+                ecole = ecoleRepository.findByIdentifiantUtilisateurEleve(identifiant);
+            }
+            if (ecole != null) {
+
+                // Ajout des éléments de sécurité
+                sessionData.setIdentifiantEcole(ecole.getId());
+                sessionData.setIdentifiantChiffreEcole(ecole.getIdentifiantChiffre());
+
+                idEcole = ecole.getId();
+            }
+
+        }
+
+        EcoleSyntheseDTO ecoleSyntheseDTO = new EcoleSyntheseDTO();
+        ecoleSyntheseDTO.setEtatActivation(getActivation(authentication));
+
+        List<ClasseSyntheseDTO> classesSynthese = new ArrayList<ClasseSyntheseDTO>();
+
+        // Vérification de l'état de l'activation des élèves
+        List<Classe> classes = classeRepository.findByIdEcoleOrderByNom(idEcole);
+
+        List<Object[]> syntheseNbCommandesClasse = commandeEleveRepository.countNbCommandesParClasseByIDEcole(idEcole);
+        List<Object[]> syntheseMontantTotalCommandesClasse = commandeEleveRepository.sumMontantTotalParClasseByIDEcole(idEcole);
+        List<Object[]> syntheseMontantsAPayerCommandesClasse = commandeEleveRepository.sumMontantRestantAPayerParClasseByIDEcole(idEcole);
+
+        for (Classe classe : classes) {
+
+            ClasseSyntheseDTO classeSyntheseDTO = MapperUtils.convert(classe, ClasseSyntheseDTO.class);
+
+            classeSyntheseDTO.setNbEleves(classe.getEleves().size());
+
+            for (int i = 0; i < syntheseNbCommandesClasse.size(); i++) {
+                // Parcours de la liste avec suppression des éléments de celle ci
+                if (classe.getId() == syntheseNbCommandesClasse.get(i)[0]) {
+                    classeSyntheseDTO.setNbCommandes(((Long) syntheseNbCommandesClasse.get(i)[1]).intValue());
+                    syntheseNbCommandesClasse.remove(i);
+                    break;
+                }
+            }
+            for (int i = 0; i < syntheseMontantTotalCommandesClasse.size(); i++) {
+                // Parcours de la liste avec suppression des éléments de celle ci
+                if (classe.getId() == syntheseMontantTotalCommandesClasse.get(i)[0]) {
+                    classeSyntheseDTO.setMontantTotalParentHT((double) syntheseMontantTotalCommandesClasse.get(i)[1]);
+                    classeSyntheseDTO.setMontantTotalEcoleHT((double) syntheseMontantTotalCommandesClasse.get(i)[2]);
+                    classeSyntheseDTO.setMontantTotalParentTTC((double) syntheseMontantTotalCommandesClasse.get(i)[3]);
+                    classeSyntheseDTO.setMontantTotalEcoleTTC((double) syntheseMontantTotalCommandesClasse.get(i)[4]);
+                    syntheseMontantTotalCommandesClasse.remove(i);
+                    break;
+                }
+            }
+            for (int i = 0; i < syntheseMontantsAPayerCommandesClasse.size(); i++) {
+                // Parcours de la liste avec suppression des éléments de celle ci
+                if (classe.getId() == syntheseMontantsAPayerCommandesClasse.get(i)[0]) {
+                    classeSyntheseDTO.setMontantRestantAPayerParentHT((double) syntheseMontantsAPayerCommandesClasse.get(i)[1]);
+                    classeSyntheseDTO.setMontantRestantAPayerEcoleHT((double) syntheseMontantsAPayerCommandesClasse.get(i)[2]);
+                    classeSyntheseDTO.setMontantRestantAPayerParentTTC((double) syntheseMontantsAPayerCommandesClasse.get(i)[3]);
+                    classeSyntheseDTO.setMontantRestantAPayerEcoleTTC((double) syntheseMontantsAPayerCommandesClasse.get(i)[4]);
+                    syntheseMontantsAPayerCommandesClasse.remove(i);
+                    break;
+                }
+            }
+            classesSynthese.add(classeSyntheseDTO);
+        }
+
+        ecoleSyntheseDTO.setClasses(classesSynthese);
+
+        return ecoleSyntheseDTO;
     }
 
     @RequestMapping("/ws/ecole/eleve/getSynthese")

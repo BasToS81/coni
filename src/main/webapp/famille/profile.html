@@ -27,17 +27,20 @@
 			<div class="panel-body" ng-controller="FamilleCommandesCtrl" ng-init="getCommandesList()">
 				<!-- <div class="col-md-12">&nbsp;</div> -->
 				<div class="text-center">
-					<a ui-sref="generic.commander" class="btn btn-info" title="Créer une nouvelle commande ou éditer la commande en cours de création">Commander</a>
+					<a ui-sref="generic.commander" class="btn btn-info" ng-show="!panierEnCours"
+						title="Créer une nouvelle commande ou éditer la commande en cours de création">Commander</a>
+					<a ui-sref="generic.commander" class="btn btn-info" ng-show="panierEnCours"
+						title="Créer une nouvelle commande ou éditer la commande en cours de création">Editer le panier</a>
 				</div>
 				
 				<div class="table-responsive col-md-12" >
-				  <table class="table">
+				  <table class="table noBottomMargin">
 				  	<thead>
 				  		<tr><th>Statut</th><th>Identifiant</th><th>Date de la commande</th><th>Montant</th><th>&nbsp;</th></tr>
 				  	</thead>
 				  	<tbody>
 					    <tr ng-repeat="commande in commandes">
-					    	<td>{{commande.statut}}</td>
+					    	<td ng-init="definePanierEnCours(commande.statut)">{{commande.statut}}</td>
 					    	<td>{{commande.identifiant}}</td>
 					    	<td>{{commande.dateCommande}}</td>
 					    	<td>{{commande.montantParentTTC | number : 2 }} €</td>

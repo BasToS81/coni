@@ -235,6 +235,9 @@ public class ImportController {
             eleve.setIdentifiant(identifiant);
             eleve.setCodeAcces(classePropertie.getProperty("eleve_" + i + ".codeAcces"));
             eleve.setNom(classePropertie.getProperty("eleve_" + i + ".nom"));
+            if (eleve.getNom() == null || eleve.getNom().length() == 0) {
+                eleve.setNom(eleve.getIdentifiant());
+            }
             eleve.setDateLimiteAcces(ecole.getDateLimiteAcces());
 
             // TODO générer l'identifiant chiffre

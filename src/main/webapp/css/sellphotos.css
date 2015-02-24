@@ -1,9 +1,14 @@
-.gradient {
+.mygradient {
+	margin:0px;
+	
 	background-image:	linear-gradient(#eee,white);
+	
+	
 
 }
 .gradient-reverse {
 	background-image:	linear-gradient(white,#eee);
+	
 }
 .main-panel {
   background-color: #fff;
@@ -12,4 +17,8 @@
 .header-padding {
 	margin-top: 0px;
 	margin-bottom: 20px;
+}
+
+.noBottomMargin {
+	margin-bottom: 0px;
 }

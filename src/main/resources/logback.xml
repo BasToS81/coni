@@ -10,7 +10,7 @@
 		</encoder>
 	</appender>
 
-)	<logger name="com.gor" level="debug" additivity="false">
+	<logger name="com.gor" level="debug" additivity="false">
 		<appender-ref ref="out" />
 	</logger>
 	

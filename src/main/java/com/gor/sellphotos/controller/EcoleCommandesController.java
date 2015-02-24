@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.gor.sellphotos.dao.Classe;
 import com.gor.sellphotos.dao.CommandeEcole;
 import com.gor.sellphotos.dao.CommandeEcole.StatutCommandeEcole;
+import com.gor.sellphotos.dao.CommandeEleve;
 import com.gor.sellphotos.dao.CommandeFamille;
 import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dao.ModeleEtTarif;
@@ -215,8 +216,15 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
         if (commandesFamilles != null) {
             for (CommandeFamille cmdFamille : commandesFamilles) {
+
                 CommandeFamilleDTOEcole cmdFamilleDTO = MapperUtils.convert(cmdFamille, CommandeFamilleDTOEcole.class);
+
+                for (CommandeEleve cmdEleve : cmdFamille.getCommandesEleve()) {
+                    cmdFamilleDTO.addNomEleve(cmdEleve.getEleve().getNom());
+                }
+
                 commandesFamillesDTO.add(cmdFamilleDTO);
+
             }
         }
 

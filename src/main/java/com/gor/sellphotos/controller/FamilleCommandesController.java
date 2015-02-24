@@ -149,6 +149,10 @@ public class FamilleCommandesController extends AbstractRestHandler {
             List<CommandeProduitDTOEleve> commandesProduit = new ArrayList<CommandeProduitDTOEleve>();
 
             EleveDTO eleveDTO = MapperUtils.convert(eleve, EleveDTO.class);
+
+            eleveDTO.setCheminAccesImageEleve(famille.getEcole().getIdentifiantChiffre() + "/" + eleve.getClasse().getIdentifiantChiffre() + "/"
+                            + eleve.getIdentifiantChiffre());
+
             commandeEleveDTO.setEleve(eleveDTO);
 
             for (Produit produit : listeDesProduitsDuModele) {
@@ -242,8 +246,18 @@ public class FamilleCommandesController extends AbstractRestHandler {
                 }
             }
             // Si on a pas trouve de commande déjà présente dans la commande Famille alors on génère une nouvelle
-            if (!commandeEleveDTOTrouveDansCommandeFamille)
+            if (!commandeEleveDTOTrouveDansCommandeFamille) {
+
+                cmd.setEleve(elev);
+                cmd.setCommandeFamille(cmdFamille);
+
                 commandeEleveDTO = MapperUtils.convert(cmd, CommandeEleveDTOEleve.class);
+
+            }
+
+            commandeEleveDTO.getEleve().setCheminAccesImageEleve(
+                            elev.getClasse().getEcole().getIdentifiantChiffre() + "/" + elev.getClasse().getIdentifiantChiffre() + "/"
+                                            + elev.getIdentifiantChiffre());
 
             List<CommandeProduitDTOEleve> commandesProduitDTO = new ArrayList<CommandeProduitDTOEleve>();
 
@@ -344,6 +358,18 @@ public class FamilleCommandesController extends AbstractRestHandler {
         double tva = FinanceUtils.getTVAValue(cmdFamille.getDateValidation(), tvaRepository);
         commandeFamilleDTO.setTva(tva);
 
+        for (CommandeEleveDTOEleve cmdEleveDTO : commandeFamilleDTO.getCommandesEleve()) {
+            for (CommandeEleve cmdEleve : cmdFamille.getCommandesEleve()) {
+                if (cmdEleve.getId() == cmdEleveDTO.getId()) {
+                    Eleve eleve = cmdEleve.getEleve();
+                    cmdEleveDTO.getEleve().setCheminAccesImageEleve(
+                                    eleve.getClasse().getEcole().getIdentifiantChiffre() + "/" + eleve.getClasse().getIdentifiantChiffre() + "/"
+                                                    + eleve.getIdentifiantChiffre());
+                    break;
+                }
+            }
+        }
+
         LOGGER.debug("fin loading commande");
 
         return commandeFamilleDTO;
@@ -410,6 +436,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommandeEnCours);
 
+        // Sauvegarde du moyen de payement
+
+        if (commandeFamille.getMoyenPayement() != null) {
+            cmdFamilleEnBase.setMoyenPayement(commandeFamille.getMoyenPayement());
+        }
+
         cmdFamilleEnBase.setDateValidation(DateUtils.getCurrentDate());
         if ("INTERNET".compareTo(cmdFamilleEnBase.getMoyenPayement()) == 0) {
             cmdFamilleEnBase.setStatut(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE);
@@ -449,6 +481,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
         cmdFamilleEnBase.setCommandesEleve(new ArrayList<CommandeEleve>());
         cmdFamilleEnBase.setMontantParentHT(0);
         cmdFamilleEnBase.setMontantEcoleHT(0);
+        cmdFamilleEnBase.setMontantParentTTC(0);
+        cmdFamilleEnBase.setMontantEcoleTTC(0);
 
         LOGGER.debug(" nb commandes {}", commandesEleve.size());
 

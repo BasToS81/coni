@@ -2,16 +2,9 @@
 
 	<div class="">
 		<div class="row bs-wizard" style="border-bottom:0;">
-		    <div class="col-xs-1">&nbsp;</div> 
+		    <div class="col-xs-2">&nbsp;</div> 
 		    <div class="col-xs-2 bs-wizard-step complete">
 		      <div class="text-center bs-wizard-stepnum">Commande</div>
-		      <div class="progress"><div class="progress-bar"></div></div>
-		      <a href="#/famille/commande/recapitulatif" class="bs-wizard-dot"></a>
-		      <div class="bs-wizard-info text-center"></div>
-		    </div>
-		    
-		    <div class="col-xs-2 bs-wizard-step complete">
-		      <div class="text-center bs-wizard-stepnum">Moyen de payement</div>
 		      <div class="progress"><div class="progress-bar"></div></div>
 		      <a href="#/famille/commande/recapitulatif" class="bs-wizard-dot"></a>
 		      <div class="bs-wizard-info text-center"></div>
@@ -49,39 +42,43 @@
 		
 		<!-- Affichage de la liste des produits disponible dans la commande pour chaque élève -->
 		<accordion close-others="false"> 
-			<accordion-group ng-repeat='commandeEleve in commandesEleve' heading="Eleve : {{commandeEleve.identifiantEleve}}" is-open="true" > 
+			<accordion-group ng-repeat='commandeEleve in commandesEleve' heading="Eleve : {{commandeEleve.eleve.nom}}" is-open="true" > 
 			 
-			 	<div class="table-responsive">
-				 	<table class="table table-striped">
-					 	<thead>
-					 		<tr class="table-heading">
-								<th class="col-md-1">Identifiant</td>
-								<th class="col-md-5">Designation</td>
-								<th class="col-md-2">Prix unitaire TTC</td>
-								<th class="col-md-1">Quantité</td>
-								<th class="col-md-2">Montant</td>
-							</tr>
-						</thead>
-					
-						<tr ng-repeat="produit in commandeEleve.produitsCommandes">
-							<td class="col-md-1">{{produit.produit.identifiant}}</td>
-							<td class="col-md-5">{{produit.produit.designation}}</td>
-							<td class="col-md-2">{{produit.produit.prixParentHT | toTTC:this | number : 2 }} €</td>
-							<td class="col-md-1">{{produit.quantite}}</td>
-							<td class="col-md-2">{{produit.montantParentTTC | number : 2 }} €</td>
-						</tr>
-							
+			 	<div class="col-md-3">
+			 		<img class="img-responsive img-thumbnail" ng-src="/data/{{commandeEleve.eleve.cheminAccesImageEleve}}.jpg" />
+			 	</div>
+			 	<div class="col-md-9">
+				 	<div class="table-responsive">
+					 	<table class="table table-striped noBottomMargin">
+						 	<thead>
+						 		<tr class="table-heading">
+									<th class="col-md-1">Identifiant</td>
+									<th class="col-md-5">Designation</td>
+									<th class="col-md-2">Prix unitaire TTC</td>
+									<th class="col-md-1">Quantité</td>
+									<th class="col-md-2">Montant</td>
+								</tr>
+							</thead>
 						
-					</table>
+							<tr ng-repeat="produit in commandeEleve.produitsCommandes">
+								<td class="col-md-1">{{produit.produit.identifiant}}</td>
+								<td class="col-md-5">{{produit.produit.designation}}</td>
+								<td class="col-md-2">{{produit.produit.prixParentHT | toTTC:this | number : 2 }} €</td>
+								<td class="col-md-1">{{produit.quantite}}</td>
+								<td class="col-md-2">{{produit.montantParentTTC | number : 2 }} €</td>
+							</tr>
+								
+							
+						</table>
+					</div>
 				</div>
-				
 			</accordion-group> 
 					
 		</accordion>
 		
 		<div class="text-center">
 			<h4>Total de la commande  : </h4>
-			<div  class="col-md-12" >{{commandeEnCours.montantParentTTC | number : 2 }} €</div>
+			<div  class="col-md-12" ><h4>{{commandeEnCours.montantParentTTC | number : 2 }} €</h4></div>
 			<div  class="col-md-12" >&nbsp;</div>
 			
 			<h4>Mode de paiement : </h4>

@@ -28,10 +28,13 @@ public class CommandeFamilleDTOEcole {
 
     private String typeCommande;
 
+    private String nomEleves;
+
     private List<CommandeEleveDTOEcole> commandesEleve;
 
     public CommandeFamilleDTOEcole() {
         commandesEleve = new ArrayList<CommandeEleveDTOEcole>();
+        nomEleves = "";
     }
 
     /**
@@ -179,6 +182,7 @@ public class CommandeFamilleDTOEcole {
      */
     public void addCommandeEleve(CommandeEleveDTOEcole commandeEleve) {
         this.commandesEleve.add(commandeEleve);
+        addNomEleve(commandeEleve.getEleve().getNom());
     }
 
     /**
@@ -207,6 +211,31 @@ public class CommandeFamilleDTOEcole {
      */
     public void setMontantEcoleTTC(double montantEcoleTTC) {
         this.montantEcoleTTC = montantEcoleTTC;
+    }
+
+    /**
+     * @return the nomEleves
+     */
+    public String getNomEleves() {
+        return nomEleves;
+    }
+
+    /**
+     * @param nomEleves the nomEleves to set
+     */
+    public void setNomEleves(String nomEleves) {
+        this.nomEleves = nomEleves;
+    }
+
+    /**
+     * @param nomEleves the nomEleves to add
+     */
+    public void addNomEleve(String nomEleve) {
+        if (this.nomEleves.length() == 0) {
+            this.nomEleves = nomEleve;
+        }
+        else
+            this.nomEleves = this.nomEleves + "," + nomEleve;
     }
 
     @Override

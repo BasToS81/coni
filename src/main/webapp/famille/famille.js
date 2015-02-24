@@ -9,11 +9,20 @@ myApp.controller('FamilleCtrl', ['$scope', '$http', 'Auth', '$stateParams', func
 
 myApp.controller('FamilleCommandesCtrl', [ '$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.commandes = null;
+	$scope.panierEnCours = false;
+	
+	$scope.definePanierEnCours = function(statutCommande) {
+		$scope.panierEnCours = (statutCommande=='EN_COURS') || $scope.panierEnCours
+	}
+	
 	$scope.getCommandesList = function() { 
 		$http.post('/ws/famille/commande/getList')
 		.success(
 				function(data, status, headers, config) {
+
+					$scope.panierEnCours = false;
 					$scope.commandes = data;
+					
 				})
 		.error(
 				function(data, status, headers, config) {
@@ -83,6 +92,18 @@ myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', '$state', 'Au
 				function(data, status, headers, config) {
 					$scope.commandeEnCours = data;
 					$scope.commandesEleve = data.commandesEleve;
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de la commande";
+				});
+	};
+	$scope.saveProduitsCommandeEnCoursAndGo = function() { 
+		
+		$http.post('/ws/famille/commande/save/produits',  $scope.commandeEnCours   )
+		.success(
+				function(data, status, headers, config) {
+					$state.go('generic.validation');
 				})
 		.error(
 				function(data, status, headers, config) {

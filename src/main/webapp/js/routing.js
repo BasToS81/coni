@@ -26,7 +26,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			'content-header@' : {
 				templateUrl : 'header.html',
 				controller : 'HeaderCtrl',
-				resolve : {	additionalData : loadEcoleData }
+				resolve : {	additionalData : loadEcoleDescription }
 			},
 			'content-body@' : {
 				templateUrl : function ($stateParams){ return '/' + $stateParams.type + '/profile.html'; },
@@ -40,7 +40,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	})
 	// Page famille
 	.state('generic.commander', {
-		url : '/famille/commande',
+		url : '/commande',
 		views : {
 			'content-body@' : {
 				
@@ -51,7 +51,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 	// Page Commande 
 	   
 	    .state('generic.mode', {
-	    	url : '/famille/commande/mode',
+	    	url : '/commande/mode',
 			views : {
 				'content-body@' : {
 					
@@ -60,7 +60,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			}
 	    })
 	    .state('generic.validation', {
-	    	url : '/famille/commande/validation',
+	    	url : '/commande/validation',
 			views : {
 				'content-body@' : {
 					templateUrl : '/famille/commande/validation.html'
@@ -68,7 +68,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			}
 	    })
 	    .state('generic.payement', {
-	        url: '/famille/commande/payement',
+	        url: '/commande/payement',
 	        views : {
 				'content-body@' : {
 					
@@ -77,7 +77,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			}
 	    })
 	    .state('generic.recapitulatif', {
-	        url: '/famille/commande/recapitulatif',
+	        url: '/commande/recapitulatif',
 	        views : {
 				'content-body@' : {
 					
@@ -86,7 +86,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			}
 	    })
 	.state('generic.visualiser', {
-    	url : '/famille/commande/{identifiant}',
+    	url : '/commande/{identifiant}',
 		views : {
 			'content-body@' :{
 				templateUrl : '/famille/commande/visualisation.html',
@@ -98,27 +98,38 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 
 
 	// Page ecole 
-    	.state('generic.ecoleEleves', {
-			url : '/ecole/eleves/',
+    	.state('generic.ecole', {
+			url : '/liste',
 			views : {
 				'content-body@' : {
 					templateUrl : '/ecole/ecole.html' 
+				},
+				'content-ecole@generic.ecole' : {
+					templateUrl : '/ecole/classes/eleves.html',
 				}
 			}
 		})
-    
-	    // - liste des classes
-		.state('generic.classes', {
-			url : '/ecole/classes/{id}?nom',
-			views : {
-				'content-body@' : {
-					templateUrl : '/ecole/classes/list.html',
+			// - liste des classes
+			.state('generic.ecole.classe', {
+				url : '/classe/{id}',
+				views : {
+					'content-ecole@generic.ecole' : {
+						templateUrl : '/ecole/classes/classe.html',
+					}
 				}
-			}
-		})
+			})
+			// - liste des élèves
+			.state('generic.ecole.eleves', {
+				url : '/eleves',
+				views : {
+					'content-ecole@generic.ecole' : {
+						templateUrl : '/ecole/classes/eleves.html',
+					}
+				}
+			})
 		// Commandes
 		.state('generic.classesCommandes', {
-			url : '/ecole/classes/{id}/commande',
+			url : 'classes/{id}/commande',
 			views : {
 				'content-body@' : {
 					templateUrl : '/ecole/commande/commande.html',
@@ -142,12 +153,12 @@ var loadData = function($q, $http, $stateParams, $timeout, Auth) {
 	return deferred.promise;
 };
 
-var loadEcoleData = function($q, $timeout, $http, $location, $state, $stateParams, Auth) {
+var loadEcoleDescription = function($q, $timeout, $http, $location, $state, $stateParams, Auth) {
 
 	var deferred = $q.defer();
 
 	// http://stackoverflow.com/questions/22209107/angularjs-ui-router-preload-http-data-before-app-loads
-	$http.get('/ws/ecole/loadData')
+	$http.get('/ws/ecole/loadDescription')
 	.success(function(data, status, headers, config) {
 		Auth.setUserEcoleData(data);
 		$timeout(deferred.resolve, 0);

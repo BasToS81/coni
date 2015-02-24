@@ -1,64 +1,33 @@
-<div class="col-md-12 main-panel">
+<div class="col-md-12 main-panel" ng-controller="EcoleCtrl">
 
-	<!--  Onglet pour le tri par classe, alphabétique, famille -->
+	<!--  Onglet pour chaque classe et tous les élèves -->
 	
-	<!--  affichage des élèves + nombre de commandes + total de vente prix parent + montant restant à payer -->
-	<!--  possibilité d'édition du nom de l'élève, de désactiver l'accès, de définir comme payé, de changer le mot de passe de l'élève -->
-	<!-- possibilité de passer en mode Edition commande par classe -->
+	<nav class="navbar navbar-default">
+		
+		<div class="container-fluid">
+		
+			<!-- Brand and toggle get grouped for better mobile display -->
+    		<div class="navbar-header">
+		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#ecole-nav-bar">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		    </div>
+			<div class="collapse navbar-collapse" id="ecole-nav-bar">
+		  
+				<ul class="nav navbar-nav" >
+		        	<li  role="presentation" class="dropdown" ng-repeat="classe in ecole.classes">
+		        		<a ui-sref="generic.ecole.classe({id : classe.id})">{{classe.nom}}</a>
+		        	</li>
+		        	<li><a ui-sref="generic.ecole.eleves">Tous</a></li>		        	
+		        </ul>
+			</div>
+		</div>
+	</nav>
 	
-	<div class="table-responsive col-md-12" ng-controller="EcoleCtrl" ng-init="getSyntheseEleves()">
-		<table class="table">
-			<thead>
-				<tr>
-					<th>&nbsp;</th>
-					<th><a href="" ng-click="predicate = 'nom'; reverse=!reverse">Nom de l'élève</a></th>
-					<th><a href="" ng-click="predicate = 'nomClasse'; reverse=!reverse">Classe</a></th>
-					<th><a href="" ng-click="predicate = 'nbCommandes'; reverse=!reverse">Nombre de commandes de l'élève</a></th>
-					<th><a href="" ng-click="predicate = 'montantTotalParentTTC'; reverse=!reverse">Total des achat (TTC)</a></th>
-					<th><a href="" ng-click="predicate = 'montantRestantAPayerParentTTC'; reverse=!reverse">Montant restant à payer (TTC)</a></th>
-					<th>&nbsp;</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="eleve in eleves | orderBy:predicate:reverse">
-					<td>
-						<button title="Modifier les informations de l'élève (nom et mot de passe)"
-							class="btn btn-sm btn-success"
-							ng-click="miseAJourMotDePasse(eleve.identifiant)">
-							<span class="glyphicon glyphicon-check"></span>
-						</button>
-						<button title="Désactiver/Activer l'accès au site à l'élève"
-							class="btn btn-sm btn-warning"
-							ng-click="setDateActivation(eleve.identifiant)">
-							<span class="glyphicon glyphicon-remove"></span>
-						</button>
-					</td>
-					<td>{{eleve.nom}}</td>
-					<td>{{eleve.nomClasse}}</td>
-					<td>{{eleve.nbCommandes}}</td>
-					<td>{{eleve.montantTotalParentTTC | number : 2 }} €</td>
-					<td>{{eleve.montantRestantAPayerParentTTC | number : 2 }} €</td>
-					<td ng-init="$montantTotal = eleve.montantTotalParentTTC + $montantTotal; $restantTotal = eleve.montantRestantAPayerParentTTC + $restantTotal;">
-						<button title="Marquer comme payé"
-							class="btn btn-sm btn-warning"
-							ng-click="paiementEffectue(eleve.identifiant)">
-							<span class="glyphicon glyphicon-remove"></span>
-						</button>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>{{ montantTotal | number : 2 }} €</td>
-					<td>{{ restantTotal | number : 2 }} €</td>
-					<td>&nbsp;</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	
+	<div ui-view="content-ecole"></div>
+
 
 </div>

@@ -2,6 +2,12 @@
 
 myApp.controller('EcoleCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
 	$scope.ecole=Auth.getUserData();
+	
+}
+]);
+
+myApp.controller('EcoleSyntCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
+	$scope.ecole=Auth.getUserData();
 	$scope.eleves=null;
 	$scope.predicate='nom';
 	$scope.reverse=false;
@@ -19,37 +25,32 @@ myApp.controller('EcoleCtrl', ['$scope', '$http', 'Auth', '$stateParams', functi
 					$scope.errorMessage = "Erreur au chargement des données de l'école";
 				});
 	};
-}
-]);
-
-//Information des données de synthèse de l'école
-myApp.controller('EcoleSyntheseCtrl', [ '$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
-	$scope.commandes = null;
-	$scope.etatActivation = null;
-	$scope.getActivation = function() { 
-		$http.get('/ws/ecole/activation')
+	
+	$scope.getSyntheseClasses = function() { 
+		$http.get('/ws/ecole/classe/getSynthese')
 		.success(
 				function(data, status, headers, config) {
-					$scope.etatActivation = data;
+					$scope.eleves = data;
 				})
 		.error(
 				function(data, status, headers, config) {
 					$scope.errorMessage = "Erreur au chargement des données de l'école";
 				});
 	};
+	
+	
+	$scope.calculTotal = function(montant, restant) {
+		$scope.montantTotal=montant+$scope.montantTotal;
+		$scope.restantTotal=restant+$scope.restantTotal;
+	}
+}
+]);
+
+//Information des données de synthèse de l'école
+myApp.controller('EcoleSyntheseCtrl', [ '$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
+	$scope.commandes = null;
 		
 	
-	$scope.getCommandesNonPayees = function() {
-		$http.get('/ws/ecole/commande/getListNonPaye')
-		.success(
-				function(data, status, headers, config) {
-					$scope.commandes = data;
-				})
-		.error(
-				function(data, status, headers, config) {
-					$scope.errorMessage = "Erreur au chargement des données de l'école";
-				});
-	}
 	
 }]);
 
@@ -76,6 +77,20 @@ myApp.controller('EcoleClasseCtrl', [ '$scope', '$http', 'Auth', '$stateParams',
 //Controller des commandes écoles au photographe
 myApp.controller('EcoleCommandesCtrl', [ '$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.commandes = null;
+	$scope.commandesNonPayees = null;
+	
+	$scope.getCommandesNonPayees = function() {
+		$http.get('/ws/ecole/commande/getListNonPaye')
+		.success(
+				function(data, status, headers, config) {
+					$scope.commandesNonPayees = data;
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de l'école";
+				});
+	}
+	
 	$scope.getCommandesList = function() { 
 		$http.post('/ws/ecole/commande/getList')
 		.success(

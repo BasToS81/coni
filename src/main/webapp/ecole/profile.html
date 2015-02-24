@@ -1,87 +1,125 @@
 <div class="col-md-12 main-panel">
 
-	<div class="col-md-6">
+	<div class="col-md-6" ng-controller="EcoleCtrl">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">Commandes des élèves</h3>
-
 			</div>
-		
-	
-			<div class="panel-body" ng-controller="EcoleSyntheseCtrl">
-	
+
+
+			<div class="panel-body">
+
 				<!-- Affichage du bouton permettant de désactiver ou activer l'accès à tous les élèves  -->
-				<div class="text-center"  ng-init="getActivation()">
-	
-					<div ng-if="etatActivation==0">
+				<div class="text-center">
+
+					<div ng-if="ecole.etatActivation==0">
 						Tous les élèves ont leur accès désactivé. </br>
-						<button class="btn btn-warning"  style="margin-top:7px"
-							title="Activer l'accès à tous les élèves de l'école">Cliquez ici pour réactiver tous les accés</button> 
+						<button class="btn btn-warning" style="margin-top: 7px"
+							title="Activer l'accès à tous les élèves de l'école">Cliquez
+							ici pour réactiver tous les accés</button>
 					</div>
-					<div ng-if="etatActivation==1">
+					<div ng-if="ecole.etatActivation==1">
 						Tous les élèves ont leur accès activé. </br>
-						<button class="btn btn-success"  style="margin-top:7px"
-							title="Désactiver l'accès à tous les élèves de l'école">Cliquez ici pour désactiver tous les accès</button>
+						<button class="btn btn-success" style="margin-top: 7px"
+							title="Désactiver l'accès à tous les élèves de l'école">Cliquez
+							ici pour désactiver tous les accès</button>
 					</div>
-					<div ng-if="etatActivation==-1">
-						Certains élèves ont leur accès désactivé. </br>	
-						<button class="btn btn-info"  style="margin-top:7px"
-							title="Activer l'accès à tous les élèves de l'école">Cliquez ici pour réactiver tous les accés</button>
+					<div ng-if="ecole.etatActivation==-1">
+						Certains élèves ont leur accès désactivé. </br>
+						<button class="btn btn-info" style="margin-top: 7px"
+							title="Activer l'accès à tous les élèves de l'école">Cliquez
+							ici pour réactiver tous les accés</button>
 					</div>
 				</div>
-	
+
 				<div class="col-md-12">&nbsp;</div>
-				
-				
-				<a ui-sref="generic.ecoleEleves" class="btn btn-info" title="Visualiser les élèves de l'école">Visualiser les élèves</a>
-				
-	<!-- 
-				<div class="table-responsive col-md-12" ng-init="getCommandesNonPayees()">
-					<table class="table">
+
+				<div class="table-responsive col-md-12">
+					<table class="table noBottomMargin">
 						<thead>
 							<tr>
-								<th>Statut</th>
+								<th>&nbsp;</th>
+								<th>Classe</th>
+								<th>Nombre d'élèves</th>
+								<th>Nombre de commandes</th>
+								<th>Total des achat (TTC)</th>
+								<th>Montant restant à payer (TTC)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="classe in ecole.classes">
+								<td>
+									<a title="Visualiser la classe" class="btn btn-sm btn-success"
+										ui-sref="generic.ecole.classe({id : classe.id})">
+										<span class="glyphicon glyphicon-eye-open"></span>
+									</a>							
+								</td>
+								<td>{{classe.nom}}</td>
+								<td>{{classe.nbEleves}}</td>
+								<td>{{classe.nbCommandes}}</td>
+								<td>{{classe.montantTotalParentTTC | number : 2 }} €</td>
+								<td><div ng-show="classe.montantRestantAPayerParentTTC>0">{{classe.montantRestantAPayerParentTTC | number : 2 }} €</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<a ui-sref="generic.ecoleEleves" class="btn btn-info"
+					title="Visualiser les élèves de l'école">Visualiser les élèves</a>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6" ng-controller="EcoleCommandesCtrl">
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Commandes non payées</h3>
+			</div>
+
+			<div class="panel-body">
+
+				<div class="table-responsive col-md-12"	ng-init="getCommandesNonPayees()">
+					<table class="table noBottomMargin">
+						<thead>
+							<tr>
 								<th>Identifiant</th>
+								<th>Elève(s)</th>
 								<th>Date de la commande</th>
 								<th>Montant</th>
 								<th>&nbsp;</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="commande in commandes">
-								<td>{{commande.statut}}</td>
+							<tr ng-repeat="commande in commandesNonPayees">
 								<td>{{commande.identifiant}}</td>
+								<td>{{commande.nomEleves}}</td>
 								<td>{{commande.dateCommande}}</td>
 								<td>{{commande.montantParentTTC | number : 2 }} €</td>
 								<td>
-									<button title="Visualiser la commande"
-										class="btn btn-sm btn-success"
+									<button title="Visualiser la commande" class="btn btn-sm btn-success"
 										ng-click="openCommande(commande.identifiant)">
-										<span class="glyphicon glyphicon-check"></span>
+										<span class="glyphicon glyphicon-eye-open"></span>
 									</button>
-									<button title="Supprimer la commande"
-										class="btn btn-sm btn-warning"
+									<button title="Supprimer la commande" class="btn btn-sm btn-primary"
 										ng-click="deleteCommande(commande.identifiant)">
-										<span class="glyphicon glyphicon-remove"></span>
+										<span class="glyphicon glyphicon-check"></span>
 									</button>
 								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-				 -->
-			</div>	
+			</div>
 		</div>
-	</div>
-	<div class="col-md-6">
+
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">Commandes au photographe</h3>
 
 			</div>
 
-			<div class="panel-body" ng-controller="EcoleCommandesCtrl"
-				ng-init="getCommandesList()">
+			<div class="panel-body" ng-init="getCommandesList()">
 
 				<div class="text-center">
 					<a ui-sref="generic.commander" class="btn btn-info"
@@ -89,7 +127,7 @@
 				</div>
 
 				<div class="table-responsive col-md-12">
-					<table class="table">
+					<table class="table noBottomMargin">
 						<thead>
 							<tr>
 								<th>Statut</th>
@@ -131,4 +169,3 @@
 
 </div>
 
-</div>
