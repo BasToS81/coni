@@ -33,6 +33,7 @@ import com.gor.sellphotos.dto.ecole.CommandeEcoleDTO;
 import com.gor.sellphotos.dto.ecole.CommandeEleveDTOEcole;
 import com.gor.sellphotos.dto.ecole.CommandeFamilleDTOEcole;
 import com.gor.sellphotos.dto.ecole.CommandeProduitDTOEcole;
+import com.gor.sellphotos.dto.eleve.CommandeEleveSyntheseDTOEleve;
 import com.gor.sellphotos.repository.ClasseRepository;
 import com.gor.sellphotos.repository.CommandeEcoleRepository;
 import com.gor.sellphotos.repository.CommandeEleveRepository;
@@ -47,6 +48,7 @@ import com.gor.sellphotos.repository.TvaRepository;
 import com.gor.sellphotos.security.SecuritySessionData;
 import com.gor.sellphotos.security.UPAWithSessionDataToken;
 import com.gor.sellphotos.utils.DateUtils;
+import com.gor.sellphotos.utils.FinanceUtils;
 import com.gor.sellphotos.utils.MapperUtils;
 
 /**
@@ -347,5 +349,38 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("commandes eleve de classe {}", commandesClasseSyntheseDTO);
         return commandesClasseSyntheseDTO;
+    }
+
+    @RequestMapping("/ws/ecole/eleve/commande/getList")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public List<CommandeEleveSyntheseDTOEleve> getCommandesFamille(@RequestParam("identifiant") String identifiantEleve, Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        // TODO : vérifier que l'élève fait partie de l'école
+
+        LOGGER.debug("loading commandes eleves {}", identifiantEleve);
+
+        List<CommandeEleveSyntheseDTOEleve> commandesDTO = new ArrayList<CommandeEleveSyntheseDTOEleve>();
+
+        List<CommandeFamille> commandes = commandeFamilleRepository.findValidateByIdentifiantEleve(identifiantEleve);
+        for (CommandeFamille commandeFamille : commandes) {
+
+            CommandeEleveSyntheseDTOEleve cmdDTO = null;
+
+            cmdDTO = MapperUtils.convert(commandeFamille, CommandeEleveSyntheseDTOEleve.class);
+
+            double tva = FinanceUtils.getTVAValue(commandeFamille.getDateValidation(), tvaRepository);
+
+            cmdDTO.setTva(tva);
+
+            commandesDTO.add(cmdDTO);
+        }
+
+        LOGGER.debug("commande eleve {}", commandes);
+        return commandesDTO;
     }
 }

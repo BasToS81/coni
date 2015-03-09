@@ -2,6 +2,8 @@ package com.gor.sellphotos.dto;
 
 import java.util.Date;
 
+import com.gor.sellphotos.utils.DateUtils;
+
 public class EleveDTO {
 
     private long id;
@@ -18,7 +20,7 @@ public class EleveDTO {
 
     private String cheminAccesImageGroupe;
 
-    private Date dateLimiteAcces;
+    private String dateLimiteAcces;
 
     private int nbCommandes;
 
@@ -37,6 +39,12 @@ public class EleveDTO {
     private double montantRestantAPayerParentTTC;
 
     private double montantRestantAPayerParentHT;
+
+    private String newMotDePasse;
+
+    private String newNom;
+
+    private String newDateLimiteAcces;
 
     /**
      * @return the id
@@ -139,14 +147,21 @@ public class EleveDTO {
     /**
      * @return the dateLimiteAcces
      */
-    public Date getDateLimiteAcces() {
+    public String getDateLimiteAcces() {
         return dateLimiteAcces;
     }
 
     /**
      * @param dateLimiteAcces the dateLimiteAcces to set
      */
-    public void setDateLimiteAcces(Date dateLimiteAcces) {
+    public void setDateLimiteAccesFromDate(Date dateLimiteAcces) {
+        this.dateLimiteAcces = DateUtils.formatDate(dateLimiteAcces);
+    }
+
+    /**
+     * @param dateLimiteAcces the dateLimiteAcces to set
+     */
+    public void setDateLimiteAcces(String dateLimiteAcces) {
         this.dateLimiteAcces = dateLimiteAcces;
     }
 
@@ -274,6 +289,55 @@ public class EleveDTO {
      */
     public void setMontantRestantAPayerParentHT(double montantRestantAPayerParentHT) {
         this.montantRestantAPayerParentHT = montantRestantAPayerParentHT;
+    }
+
+    /**
+     * @return the newMotDePasse
+     */
+    public String getNewMotDePasse() {
+        return newMotDePasse;
+    }
+
+    /**
+     * @param newMotDePasse the newMotDePasse to set
+     */
+    public void setNewMotDePasse(String newMotDePasse) {
+        this.newMotDePasse = newMotDePasse;
+    }
+
+    /**
+     * @return the newNom
+     */
+    public String getNewNom() {
+        return newNom;
+    }
+
+    /**
+     * @param newNom the newNom to set
+     */
+    public void setNewNom(String newNom) {
+        this.newNom = newNom;
+    }
+
+    /**
+     * @return the newDateLimiteAcces
+     */
+    public String getNewDateLimiteAcces() {
+        return newDateLimiteAcces;
+    }
+
+    /**
+     * @param newDateLimiteAcces the newDateLimiteAcces to set
+     */
+    public void setNewDateLimiteAcces(String newDateLimiteAcces) {
+        this.newDateLimiteAcces = newDateLimiteAcces;
+    }
+
+    /**
+     * @param newDateLimiteAcces the newDateLimiteAcces to set
+     */
+    public void setNewDateLimiteAccesFromDate(Date newDateLimiteAcces) {
+        this.newDateLimiteAcces = DateUtils.formatDate(newDateLimiteAcces);
     }
 
     @Override

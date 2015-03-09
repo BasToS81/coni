@@ -1,0 +1,39 @@
+<div class="col-md-12 main-panel" ng-controller="EcoleEleveCommandesCtrl">
+
+	<!-- Page de présentation des commandes de l'élève -->
+	
+	<div class="col-md-6">
+		<!-- Liste des synthèses de commandes  -->
+		<div class="panel-body">
+			<div class="table-responsive col-md-12" >
+				 <table class="table noBottomMargin">
+				  	<thead>
+				  		<tr><th>Statut</th><th>Identifiant</th><th>Date de la commande</th><th>Montant</th><th>&nbsp;</th></tr>
+				  	</thead>
+				  	<tbody>
+					    <tr ng-repeat="commande in commandes">
+					    	<td ng-init="definePanierEnCours(commande.statut)">{{commande.statut}}</td>
+					    	<td>{{commande.identifiant}}</td>
+					    	<td>{{commande.dateCommande}}</td>
+					    	<td>{{commande.montantParentTTC | number : 2 }} €</td>
+					    	<td>
+					    		<button  title="Visualiser la commande" class="btn btn-sm btn-success" ng-click="openCommande(commande.identifiant)"><span class="glyphicon glyphicon-eye-open"></span></button>
+					    		<button  title="Valider le paiement" class="btn btn-sm btn-primary" ng-click="validerCommande(commande.identifiant)" ng-show="commande.statut=='EN_ATTENTE_PAIEMENT'"><span class="glyphicon glyphicon-ok"></span></button>
+					    	</td>
+				    	</tr>
+				  	</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-6">
+		<!-- Détail de la commande  -->
+		<div ui-view="content-ecole-eleve"></div>
+	</div>
+</div>
+
+	<div class="text-center">
+		<button class="btn btn-lg btn-warning" ng-click="retourArriere()" ><span class="glyphicon glyphicon-circle-arrow-left"	></span>  &nbsp;&nbsp;Retour</button>
+	</div>
+	

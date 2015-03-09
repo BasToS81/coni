@@ -140,7 +140,7 @@ myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', '$state', 'Au
 	};
 	$scope.calcul = function( commandeEnCours, produit ) { 
 
-		if(IsInteger(produit.quantite)) {
+		if(IsInteger(produit.quantite)&&produit.quantite>=0) {
 			var ancienMontant = produit.montantParentHT;
 			produit.montantParentHT = produit.quantite * produit.produit.prixParentHT;
 			var diffMontant = produit.montantParentHT - ancienMontant;

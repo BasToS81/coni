@@ -561,4 +561,5 @@ public class FamilleCommandesController extends AbstractRestHandler {
         LOGGER.debug(" end deleting commande {}", cmdFamille);
         return getCommandesFamille(authentication);
     }
+
 }

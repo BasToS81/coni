@@ -81,6 +81,30 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
                                     "LEFT JOIN ce.eleve.classe.ecole ec " +
                                     "WHERE ec.id = :idEcole AND cf.statut in ('EN_ATTENTE_PAYEMENT') GROUP BY ce.eleve ORDER BY ce.eleve.classe.nom ASC";
 
+    public final static String COUNT_NB_COMMANDES_PAR_ELEVE_BY_ID_ECOLE_AND_ID_CLASSE = "SELECT ce.eleve.id, count(ce)  " +
+                    "FROM CommandeEleve ce  " +
+                    "LEFT JOIN ce.eleve.classe c " +
+                    "LEFT JOIN c.ecole ec " +
+                    "WHERE ec.id = :idEcole AND c.id = :idClasse GROUP BY ce.eleve ORDER BY ce.eleve.nom ASC";
+
+    public final static String SUM_MONTANT_TOTAL_PAR_ELEVE_BY_ID_ECOLE_AND_ID_CLASSE =
+                    "SELECT ce.eleve.id, sum(ce.montantParentHT), sum(ce.montantEcoleHT), sum(ce.montantParentTTC), sum(ce.montantEcoleTTC)  " +
+                                    "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf " +
+                                    "LEFT JOIN ce.eleve.classe c " +
+                                    "LEFT JOIN c.ecole ec " +
+                                    "WHERE ec.id = :idEcole AND c.id = :idClasse GROUP BY ce.eleve ORDER BY ce.eleve.nom ASC";
+
+    public final static String SUM_MONTANT_RESTANT_A_PAYER_PAR_ELEVE_BY_ID_ECOLE_AND_ID_CLASSE =
+                    "SELECT ce.eleve.id, sum(ce.montantParentHT), sum(ce.montantEcoleHT), sum(ce.montantParentTTC), sum(ce.montantEcoleTTC)  "
+                                    +
+                                    "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf "
+                                    +
+                                    "LEFT JOIN ce.eleve.classe c "
+                                    +
+                                    "LEFT JOIN c.ecole ec "
+                                    +
+                                    "WHERE ec.id = :idEcole AND c.id = :idClasse AND cf.statut in ('EN_ATTENTE_PAYEMENT') GROUP BY ce.eleve ORDER BY ce.eleve.classe.nom ASC";
+
     public final static String COUNT_NB_COMMANDES_PAR_CLASSE_BY_ID_ECOLE = "SELECT ce.eleve.classe.id, count(ce)  " +
                     "FROM CommandeEleve ce  " +
                     "LEFT JOIN ce.eleve.classe.ecole ec " +
@@ -124,6 +148,15 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
 
     @Query(SUM_MONTANT_RESTANT_A_PAYER_PAR_ELEVE_BY_ID_ECOLE)
     public List<Object[]> sumMontantRestantAPayerParEleveByIDEcole(@Param("idEcole") Long idEcole);
+
+    @Query(COUNT_NB_COMMANDES_PAR_ELEVE_BY_ID_ECOLE_AND_ID_CLASSE)
+    public List<Object[]> countNbCommandesParEleveByIDEcoleAndIDClasse(@Param("idEcole") Long idEcole, @Param("idClasse") Long idClasse);
+
+    @Query(SUM_MONTANT_TOTAL_PAR_ELEVE_BY_ID_ECOLE_AND_ID_CLASSE)
+    public List<Object[]> sumMontantTotalParEleveByIDEcoleAndIDClasse(@Param("idEcole") Long idEcole, @Param("idClasse") Long idClasse);
+
+    @Query(SUM_MONTANT_RESTANT_A_PAYER_PAR_ELEVE_BY_ID_ECOLE_AND_ID_CLASSE)
+    public List<Object[]> sumMontantRestantAPayerParEleveByIDEcoleAndIDClasse(@Param("idEcole") Long idEcole, @Param("idClasse") Long idClasse);
 
     @Query(COUNT_NB_COMMANDES_PAR_CLASSE_BY_ID_ECOLE)
     public List<Object[]> countNbCommandesParClasseByIDEcole(@Param("idEcole") Long idEcole);

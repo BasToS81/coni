@@ -20,6 +20,11 @@ public interface CommandeFamilleRepository extends CrudRepository<CommandeFamill
                     "LEFT JOIN ce.eleve e " +
                     "WHERE e.identifiant = :idEleve";
 
+    public final static String FIND_VALIDATE_BY_ID_ELEVE = "SELECT cf " +
+                    "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf " +
+                    "LEFT JOIN ce.eleve e " +
+                    "WHERE e.identifiant = :idEleve and cf.statut != 'EN_COURS'";
+
     public final static String FIND_BY_ID_CMD_ECOLE = "SELECT cf " +
                     "FROM CommandeFamille cf LEFT JOIN cf.commandeEcole cecol " +
                     "WHERE cecol.identifiant = :idCmdEcole";
@@ -46,6 +51,9 @@ public interface CommandeFamilleRepository extends CrudRepository<CommandeFamill
 
     @Query(FIND_BY_ID_ELEVE)
     public List<CommandeFamille> findByIdentifiantEleve(@Param("idEleve") String identifiantEleve);
+
+    @Query(FIND_VALIDATE_BY_ID_ELEVE)
+    public List<CommandeFamille> findValidateByIdentifiantEleve(@Param("idEleve") String identifiantEleve);
 
     @Query(FIND_BY_ID_FAMILLE)
     public List<CommandeFamille> findByIdentifiantFamille(@Param("idFamille") String identifiantFamille);

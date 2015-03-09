@@ -29,6 +29,11 @@ public interface EleveRepository extends CrudRepository<Eleve, Long> {
                     "WHERE ec.id = :idEcole " +
                     "ORDER BY e.nom ASC";
 
+    public final static String FIND_BY_ID_ECOLE_AND_ID_CLASSE_ORDER_BY_NOM = "SELECT e " +
+                    "FROM Eleve e LEFT JOIN e.classe c LEFT JOIN c.ecole ec " +
+                    "WHERE ec.id = :idEcole and c.id = :idClasse " +
+                    "ORDER BY e.nom ASC";
+
     public final static String FIND_BY_ID_ECOLE_ORDER_BY_CLASSE = "SELECT e " +
                     "FROM Eleve e LEFT JOIN e.classe c LEFT JOIN c.ecole ec " +
                     "WHERE ec.id = :idEcole " +
@@ -52,4 +57,8 @@ public interface EleveRepository extends CrudRepository<Eleve, Long> {
 
     @Query(FIND_BY_ID_ECOLE_ORDER_BY_CLASSE)
     public List<Eleve> findByIdEcoleOrderByClasse(@Param("idEcole") Long idEcole);
+
+    @Query(FIND_BY_ID_ECOLE_AND_ID_CLASSE_ORDER_BY_NOM)
+    public List<Eleve> findByIdEcoleAndIdClasseOrderByNom(@Param("idEcole") Long idEcole, @Param("idClasse") Long idClasse);
+
 }

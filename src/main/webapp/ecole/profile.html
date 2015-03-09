@@ -3,7 +3,7 @@
 	<div class="col-md-6" ng-controller="EcoleCtrl">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">Commandes des élèves</h3>
+				<h3 class="panel-title">Synthèse par classe</h3>
 			</div>
 
 
@@ -38,19 +38,19 @@
 					<table class="table noBottomMargin">
 						<thead>
 							<tr>
-								<th>&nbsp;</th>
-								<th>Classe</th>
-								<th>Nombre d'élèves</th>
-								<th>Nombre de commandes</th>
-								<th>Total des achat (TTC)</th>
-								<th>Montant restant à payer (TTC)</th>
+								<th class='col-md-1'>&nbsp;</th>
+								<th class='col-md-3'>Classe</th>
+								<th class='col-md-1'>Nombre d'élèves</th>
+								<th class='col-md-1'>Nombre de commandes</th>
+								<th class='col-md-2'>Total des achat (TTC)</th>
+								<th class='col-md-2'>Montant restant à payer (TTC)</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="classe in ecole.classes">
 								<td>
 									<a title="Visualiser la classe" class="btn btn-sm btn-success"
-										ui-sref="generic.ecole.classe({id : classe.id})">
+										ng-click="visualiseClasse(classe.id)">
 										<span class="glyphicon glyphicon-eye-open"></span>
 									</a>							
 								</td>
@@ -58,14 +58,21 @@
 								<td>{{classe.nbEleves}}</td>
 								<td>{{classe.nbCommandes}}</td>
 								<td>{{classe.montantTotalParentTTC | number : 2 }} €</td>
-								<td><div ng-show="classe.montantRestantAPayerParentTTC>0">{{classe.montantRestantAPayerParentTTC | number : 2 }} €</div></td>
+								<td ng-init="calculTotal(classe.montantTotalParentTTC,classe.montantRestantAPayerParentTTC)">
+									<div ng-show="classe.montantRestantAPayerParentTTC>0">{{classe.montantRestantAPayerParentTTC | number : 2 }} €</div>
+								</td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td><h5>{{ montantTotal | number : 2 }} €</h5></td>
+								<td><h5>{{ restantTotal | number : 2 }} €</h5></td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-
-				<a ui-sref="generic.ecoleEleves" class="btn btn-info"
-					title="Visualiser les élèves de l'école">Visualiser les élèves</a>
 
 			</div>
 		</div>
@@ -74,7 +81,7 @@
 
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">Commandes non payées</h3>
+				<h3 class="panel-title">Commandes d'élèves non payées</h3>
 			</div>
 
 			<div class="panel-body">
@@ -83,11 +90,11 @@
 					<table class="table noBottomMargin">
 						<thead>
 							<tr>
-								<th>Identifiant</th>
-								<th>Elève(s)</th>
-								<th>Date de la commande</th>
-								<th>Montant</th>
-								<th>&nbsp;</th>
+								<th class='col-md-1'>Identifiant</th>
+								<th class='col-md-5'>Elève(s)</th>
+								<th class='col-md-1'>Date de la commande</th>
+								<th class='col-md-1'>Montant</th>
+								<th class='col-md-2'>&nbsp;</th>
 							</tr>
 						</thead>
 						<tbody>

@@ -1,12 +1,31 @@
 
 
-myApp.controller('EcoleCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
+myApp.controller('EcoleCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.ecole=Auth.getUserData();
+	
+	
+
+	$scope.montantTotal=0;
+	$scope.restantTotal=0;
+	
+	$scope.calculTotal = function(montant, restant) {
+		$scope.montantTotal=montant+$scope.montantTotal;
+		$scope.restantTotal=restant+$scope.restantTotal;
+	}
+	
+	$scope.visualiseClasse = function(classeId) {
+		
+		Auth.setUserClasseVisualise(classeId);
+		$state.go('generic.ecole.classe', {'id' : classeId});
+		
+	}
+	
+	
 	
 }
 ]);
 
-myApp.controller('EcoleSyntCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
+myApp.controller('EcoleSyntheseCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
 	$scope.ecole=Auth.getUserData();
 	$scope.eleves=null;
 	$scope.predicate='nom';
@@ -26,17 +45,7 @@ myApp.controller('EcoleSyntCtrl', ['$scope', '$http', 'Auth', '$stateParams', fu
 				});
 	};
 	
-	$scope.getSyntheseClasses = function() { 
-		$http.get('/ws/ecole/classe/getSynthese')
-		.success(
-				function(data, status, headers, config) {
-					$scope.eleves = data;
-				})
-		.error(
-				function(data, status, headers, config) {
-					$scope.errorMessage = "Erreur au chargement des données de l'école";
-				});
-	};
+	
 	
 	
 	$scope.calculTotal = function(montant, restant) {
@@ -46,30 +55,87 @@ myApp.controller('EcoleSyntCtrl', ['$scope', '$http', 'Auth', '$stateParams', fu
 }
 ]);
 
-//Information des données de synthèse de l'école
-myApp.controller('EcoleSyntheseCtrl', [ '$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
-	$scope.commandes = null;
-		
-	
-	
-}]);
 
-myApp.controller('EcoleClasseCtrl', [ '$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
-	$scope.nomClasse;
-	$scope.eleves = null;
-	$scope.getSynthese = function() { 
-		$scope.nomClasse = $stateParams.nom;
-		$http.get('/ws/ecole/loadClasses/' + $stateParams.id)
-		.success(
-				function(data, status, headers, config) {
-					$scope.eleves = data;
-				})
-		.error(
-				function(data, status, headers, config) {
-					$scope.errorMessage = "Erreur au chargement des données de la classe";
-				});
-	};
+
+myApp.controller('EcoleClasseSyntheseCtrl', [ '$scope', '$http', '$state', 'Auth', '$stateParams', "$filter", function($scope, $http, $state, Auth, $stateParams, $filter) {
+	$scope.ecole=Auth.getUserData();
+	$scope.eleves=Auth.getUserCommandes();
+	$scope.predicate='nom';
+	$scope.reverse=false;
+	$scope.montantTotal=0;
+	$scope.restantTotal=0;
+	$scope.edition=false;
+	$scope.messageInformation="";
+
+	$scope.calculTotal = function(montant, restant) {
+		$scope.montantTotal=montant+$scope.montantTotal;
+		$scope.restantTotal=restant+$scope.restantTotal;
+	}
+	
+	$scope.visualiserCommandes = function(identifiantEleve) {
+		$state.go('generic.ecole.commandesEleve', { id : identifiantEleve });
+	}
+	
+	
+	
+	$scope.editer = function() {
+		$scope.edition=!$scope.edition;
+		if($scope.edition) {
+			$scope.messageInformation="";
+		}
+	}
+	
+	
+	$scope.sauver = function() {
 		
+		$scope.messageInformation="";
+		
+		angular.forEach($scope.eleves,function(eleve,index) {    
+			
+			//Convertion de la date
+			eleve.newDateLimiteAcces = $filter('date')(eleve.newDateLimiteAcces, "dd/MM/yyyy");
+			
+            $http.post('/ws/ecole/classe/eleve/edition', eleve)
+    		.success(
+    				function(data, status, headers, config) {
+    					eleve.dateLimiteAcces = eleve.newDateLimiteAcces;
+    					eleve.nom = eleve.newNom;
+    				}
+            )
+    		.error(
+    				function(data, status, headers, config) {
+    					$scope.messageInformation="Erreur durant l'enregistrement, veuillez retentez ultérieurement";
+    				});
+        })
+        if($scope.messageInformation.length==0) {
+        	$scope.messageInformation="Modifications enregistrées";
+        	$scope.editer();
+        } 
+		
+		
+	}
+	
+	$scope.openedInstances = [];
+	$scope.i = 0;
+	$scope.format = 'dd/MM/yyyy';
+	
+	$scope.open = function($event, instance) {
+		
+	    $event.preventDefault();
+	    $event.stopPropagation();
+
+	    $scope.openedInstances[instance] = true;
+	};
+	
+	 // Disable weekend selection
+	$scope.disabled = function(date, mode) {
+		//return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+		return false;
+	};
+	$scope.dateOptions = {
+		    formatYear: 'yy',
+		    startingDay: 1
+		  };
 }]);
 
 
@@ -164,4 +230,27 @@ myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth'
 		
 	};
 	
+}]);
+
+myApp.controller('EcoleEleveCommandesCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
+	$scope.commandes = Auth.getUserCommandes();
+	$scope.classe = Auth.getUserClasseVisualise();
+	$scope.eleveIdentifiant=0;
+	
+	$scope.getCommandesList = function() { 
+		$http.post('/ws/ecole/eleve/commande/getList?identifiant=' + $scope.eleveIdentifiant)
+		.success(
+				function(data, status, headers, config) {
+					$scope.commandes = data;					
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de l'école";
+				});
+	};
+	
+	$scope.retourArriere = function() {
+		$state.go('generic.ecole.classe', {'id' : $scope.classe});
+	}
+
 }]);

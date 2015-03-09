@@ -77,7 +77,7 @@ public class FamilleController extends AbstractRestHandler {
                 LOGGER.debug("chemin acces image eleve : " + eleveDTO.getCheminAccesImageEleve());
                 eleveDTO.setCheminAccesImageGroupe(famille.getEcole().getIdentifiantChiffre() + "/" + eleve.getClasse().getIdentifiantChiffre());
 
-                eleveDTO.setDateLimiteAcces(eleve.getDateLimiteAcces());
+                eleveDTO.setDateLimiteAccesFromDate(eleve.getDateLimiteAcces());
                 eleveDTO.setIdentifiantChiffre(eleve.getIdentifiantChiffre());
                 eleveDTO.setNomClasse(eleve.getClasse().getNom());
                 eleveDTO.setNom(eleve.getNom());

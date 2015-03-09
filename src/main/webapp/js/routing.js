@@ -103,9 +103,6 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			views : {
 				'content-body@' : {
 					templateUrl : '/ecole/ecole.html' 
-				},
-				'content-ecole@generic.ecole' : {
-					templateUrl : '/ecole/classes/eleves.html',
 				}
 			}
 		})
@@ -115,18 +112,22 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 				views : {
 					'content-ecole@generic.ecole' : {
 						templateUrl : '/ecole/classes/classe.html',
+						controller : 'EcoleClasseSyntheseCtrl',
+						resolve : {	additionalData : loadClasseSynthese }
 					}
 				}
-			})
-			// - liste des élèves
-			.state('generic.ecole.eleves', {
-				url : '/eleves',
+			})	
+			// - liste des commandes d'un élève
+			.state('generic.ecole.commandesEleve', {
+				url : '/classe/eleve/{id}',
 				views : {
 					'content-ecole@generic.ecole' : {
-						templateUrl : '/ecole/classes/eleves.html',
+						templateUrl : '/ecole/classes/commandesEleve.html',
+						controller : 'EcoleEleveCommandesCtrl',
+						resolve : {	additionalData : loadCommandesEleve }
 					}
 				}
-			})
+			})	
 		// Commandes
 		.state('generic.classesCommandes', {
 			url : 'classes/{id}/commande',
@@ -178,6 +179,34 @@ var loadCommandeFamille = function($q, $http, $stateParams, $timeout, Auth) {
 	
 	return deferred.promise;
 };
+
+
+var loadClasseSynthese = function($q, $http, $stateParams, $timeout, Auth) {
+
+	var deferred = $q.defer();	
+	
+	$http.get('/ws/ecole/classe/getSynthese?idClasse=' + $stateParams.id)
+	.success(function(data, status, headers, config) {
+		Auth.setUserCommandes(data);
+		$timeout(deferred.resolve, 0);
+	});
+	
+	return deferred.promise;
+};
+
+var loadCommandesEleve = function($q, $http, $stateParams, $timeout, Auth) {
+
+	var deferred = $q.defer();	
+	
+	$http.get('/ws/ecole/eleve/commande/getList?identifiant=' + $stateParams.id)
+	.success(function(data, status, headers, config) {
+		Auth.setUserCommandes(data);
+		$timeout(deferred.resolve, 0);
+	});
+	
+	return deferred.promise;
+};
+
 
 
 var loadCommandeClasse = function($q, $http, $stateParams, $timeout, Auth) {

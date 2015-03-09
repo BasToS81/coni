@@ -61,6 +61,8 @@ myApp.service('Auth', function() {
 	var userData = '';
 	var userEcoleData = '';
 	var userCommandes = '';
+	var userClasseVisualise = '';
+	var paramOne = '';
 	return {
 		getUser : function() {
 			return user;
@@ -88,6 +90,18 @@ myApp.service('Auth', function() {
 		},
 		setUserCommandes : function(newUserCommandes) {
 			userCommandes = newUserCommandes;
+		},
+		getUserClasseVisualise : function() {
+			return userClasseVisualise;
+		},
+		setUserClasseVisualise : function(newUserClasseVisualise) {
+			userClasseVisualise = newUserClasseVisualise;
+		},
+		getParamOne : function() {
+			return paramOne;
+		},
+		setParamOne : function(newParamOne) {
+			paramOne = newParamOne;
 		}
 	};
 });
