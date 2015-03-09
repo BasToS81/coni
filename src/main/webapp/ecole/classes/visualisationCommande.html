@@ -1,0 +1,47 @@
+<div class="panel-body" ng-controller='EcoleCommandeVisualisationCtrl'>
+	<!-- Affichage de la liste des produits disponible dans la commande pour chaque élève -->
+ 
+ 	<accordion close-others="false"> 
+		<accordion-group ng-repeat='commandeEleve in commandesEleve' heading="Eleve : {{commandeEleve.eleve.nom}}" is-open="true" > 
+		 
+		 	<div class="col-md-3">
+		 		<img class="img-responsive img-thumbnail" ng-src="/data/{{commandeEleve.eleve.cheminAccesImageEleve}}.jpg" />
+		 	</div>
+		 	<div class="col-md-9">
+			 	<div class="table-responsive">
+				 	<table class="table table-striped noBottomMargin">
+					 	<thead>
+					 		<tr class="table-heading">
+								<th class="col-md-1">Identifiant</td>
+								<th class="col-md-5">Designation</td>
+								<th class="col-md-2">Prix unitaire TTC</td>
+								<th class="col-md-1">Quantité</td>
+								<th class="col-md-2">Montant</td>
+							</tr>
+						</thead>
+					
+						<tr ng-repeat="produit in commandeEleve.produitsCommandes">
+							<td class="col-md-1">{{produit.produit.identifiant}}</td>
+							<td class="col-md-5">{{produit.produit.designation}}</td>
+							<td class="col-md-2">{{produit.produit.prixParentHT | toTTC:this | number : 2 }} €</td>
+							<td class="col-md-1">{{produit.quantite}}</td>
+							<td class="col-md-2">{{produit.montantParentTTC  | number : 2 }} €</td>
+						</tr>
+							
+						
+					</table>
+				</div>
+			</div>
+		</accordion-group> 				
+	</accordion>
+	
+	<div class="text-center">
+		<h4>Total de la commande  : </h4>
+		<div  class="col-md-12" ><h4>{{commandeEnCours.montantParentTTC | number : 2 }} €</h4></div>
+		<div  class="col-md-12" >&nbsp;</div>		
+		<h4>Mode de paiement : </h4>		
+		<div  class="col-md-12" >{{commandeEnCours.moyenPayement}}</div>		
+		<div  class="col-md-12" >&nbsp;</div>
+	</div>	
+</div>
+

@@ -128,6 +128,17 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 					}
 				}
 			})	
+			// - visualisation d'une commande d'un élève
+			.state('generic.ecole.commandesEleve.visualisation', {
+				url : '/classe/eleve/commande/{idCommande}',
+				views : {
+					'content-ecole-eleve@generic.ecole.commandesEleve' : {
+						templateUrl : '/ecole/classes/visualisationCommande.html',
+						controller : 'EcoleCommandeVisualisationCtrl',
+						resolve : {	additionalData : visualiserCommandeEleve }
+					}
+				}
+			})	
 		// Commandes
 		.state('generic.classesCommandes', {
 			url : 'classes/{id}/commande',
@@ -207,6 +218,18 @@ var loadCommandesEleve = function($q, $http, $stateParams, $timeout, Auth) {
 	return deferred.promise;
 };
 
+var visualiserCommandeEleve = function($q, $http, $stateParams, $timeout, Auth) {
+
+	var deferred = $q.defer();	
+	
+	$http.get('/ws/famille/commande/get?identifiant=' + $stateParams.idCommande)
+	.success(function(data, status, headers, config) {
+		Auth.setUserCommandes(data);
+		$timeout(deferred.resolve, 0);
+	});
+	
+	return deferred.promise;
+};
 
 
 var loadCommandeClasse = function($q, $http, $stateParams, $timeout, Auth) {

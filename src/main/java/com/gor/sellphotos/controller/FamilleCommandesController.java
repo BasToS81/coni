@@ -319,6 +319,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();
         Long identifiantEcole = sessionData.getIdentifiantEcole();
 
+        // TODO verifier que la commande appartient bien à l'élève et que l'élève appartien bien à l'école.
+
         CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
 
         LOGGER.debug("loading commande {}", identifiantCommande);

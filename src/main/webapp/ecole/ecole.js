@@ -252,5 +252,15 @@ myApp.controller('EcoleEleveCommandesCtrl', ['$scope', '$http', '$state', 'Auth'
 	$scope.retourArriere = function() {
 		$state.go('generic.ecole.classe', {'id' : $scope.classe});
 	}
+	
+	$scope.openCommande = function(identifiantCommande) { 
+		$state.go('generic.ecole.commandesEleve.visualisation', {'idCommande' : identifiantCommande});
+	}
+	$scope.commandeEnCours = Auth.getUserCommandes();
+	$scope.commandesEleve = $scope.commandeEnCours.commandesEleve;
+}]);
 
+myApp.controller('EcoleCommandeVisualisationCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
+	$scope.commandeEnCours = Auth.getUserCommandes();
+	$scope.commandesEleve = $scope.commandeEnCours.commandesEleve;
 }]);
