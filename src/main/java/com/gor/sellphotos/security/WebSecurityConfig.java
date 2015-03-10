@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.www.NonceExpiredException;
 
 @Configuration
 @EnableWebMvcSecurity
@@ -90,7 +91,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             @Override
             public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException,
                             ServletException {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+
+                LOGGER.debug("Commence : Authentification erronée : {}" + authException);
+
+                if (authException instanceof NonceExpiredException) {
+                    response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+                }
+                else {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                }
             }
         });
     }

@@ -1,5 +1,7 @@
 package com.gor.sellphotos.dao;
 
+import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,6 +38,9 @@ public class Utilisateur {
 
     @Basic
     private String nom;
+
+    @Basic
+    private Date dateLimiteAcces;
 
     /**
      * @return the identifiant
@@ -107,9 +112,24 @@ public class Utilisateur {
         this.nom = nom;
     }
 
+    /**
+     * @return the dateLimiteAcces
+     */
+    public Date getDateLimiteAcces() {
+        return dateLimiteAcces;
+    }
+
+    /**
+     * @param dateLimiteAcces the dateLimiteAcces to set
+     */
+    public void setDateLimiteAcces(Date dateLimiteAcces) {
+        this.dateLimiteAcces = dateLimiteAcces;
+    }
+
     @Override
     public String toString() {
-        return "Utilisateur [id=" + id + ", nom=" + nom + ", identifiant=" + identifiant + ", code d'acces=" + codeAcces + "]";
+        return "Utilisateur [id=" + id + ", nom=" + nom + ", identifiant=" + identifiant + ", code d'acces=" + codeAcces + ", dateLimiteAcces="
+                        + dateLimiteAcces + "]";
     }
 
 }

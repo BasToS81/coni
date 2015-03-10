@@ -128,9 +128,20 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 					}
 				}
 			})	
+			// - liste des commandes d'un élève
+			.state('generic.ecole.commandesEleveNonPayees', {
+				url : '/commandesNonPayees',
+				views : {
+					'content-ecole@generic.ecole' : {
+						templateUrl : '/ecole/classes/commandesNonPayees.html',
+						controller : 'EcoleEleveCommandesCtrl',
+						resolve : {	additionalData : loadCommandesEleveNonPayees }
+					}
+				}
+			})
 			// - visualisation d'une commande d'un élève
 			.state('generic.ecole.commandesEleve.visualisation', {
-				url : '/classe/eleve/commande/{idCommande}',
+				url : '/commande/{idCommande}',
 				views : {
 					'content-ecole-eleve@generic.ecole.commandesEleve' : {
 						templateUrl : '/ecole/classes/visualisationCommande.html',
@@ -138,7 +149,18 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 						resolve : {	additionalData : visualiserCommandeEleve }
 					}
 				}
-			})	
+			})
+			// - visualisation d'une commande non payee d'un élève 
+			.state('generic.ecole.commandesEleveNonPayees.visualisation', {
+				url : '/commande/{idCommande}',
+				views : {
+					'content-ecole-eleve@generic.ecole.commandesEleveNonPayees' : {
+						templateUrl : '/ecole/classes/visualisationCommande.html',
+						controller : 'EcoleCommandeVisualisationCtrl',
+						resolve : {	additionalData : visualiserCommandeEleve }
+					}
+				}
+			})
 		// Commandes
 		.state('generic.classesCommandes', {
 			url : 'classes/{id}/commande',
@@ -209,7 +231,24 @@ var loadCommandesEleve = function($q, $http, $stateParams, $timeout, Auth) {
 
 	var deferred = $q.defer();	
 	
-	$http.get('/ws/ecole/eleve/commande/getList?identifiant=' + $stateParams.id)
+	var url = '/ws/ecole/eleve/commande/getList?identifiant=' + $stateParams.id;
+	
+	$http.get(url)
+	.success(function(data, status, headers, config) {
+		Auth.setUserCommandes(data);
+		$timeout(deferred.resolve, 0);
+	});
+	
+	return deferred.promise;
+};
+
+var loadCommandesEleveNonPayees = function($q, $http, $stateParams, $timeout, Auth) {
+
+	var deferred = $q.defer();	
+	
+	var url = '/ws/ecole/commande/getListNonPaye'
+
+	$http.get(url)
 	.success(function(data, status, headers, config) {
 		Auth.setUserCommandes(data);
 		$timeout(deferred.resolve, 0);

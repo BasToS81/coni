@@ -18,14 +18,17 @@
 		    </div>
 			<div class="collapse navbar-collapse" id="ecole-nav-bar">
 		  
-				<ul class="nav navbar-nav" >
+				<ul class="nav navbar-nav navbar-left" >
 					<li></li>	
 					<li><button type="button" class="btn btn-default navbar-btn" ng-click="visualiseClasse('0')">Toutes les classes</button></li>	
 		        	<li  role="presentation"  ng-repeat="classe in ecole.classes">
 		        		<button type="button" class="btn btn-default navbar-btn" ng-click="visualiseClasse(classe.id)">{{classe.nom}}</button>
 		        	</li>
-		        		        	
+		        	 	
 		        </ul>
+		        <ul class="nav navbar-nav navbar-right">
+		        	<li><button type="button" class="btn btn-default navbar-btn" ng-click="visualiseCommandesNonPayees()">Commandes non payées</button></li>
+		        </ul>	       
 			</div>
 		</div>
 	</nav>

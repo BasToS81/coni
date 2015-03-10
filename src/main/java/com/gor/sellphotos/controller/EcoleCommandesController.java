@@ -22,6 +22,7 @@ import com.gor.sellphotos.dao.CommandeEcole;
 import com.gor.sellphotos.dao.CommandeEcole.StatutCommandeEcole;
 import com.gor.sellphotos.dao.CommandeEleve;
 import com.gor.sellphotos.dao.CommandeFamille;
+import com.gor.sellphotos.dao.CommandeFamille.StatutCommandeFamille;
 import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dao.ModeleEtTarif;
 import com.gor.sellphotos.dao.Produit;
@@ -200,40 +201,6 @@ public class EcoleCommandesController extends AbstractRestHandler {
      * ------------------------------------
      */
 
-    @RequestMapping("/ws/ecole/commande/getListNonPaye")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    @Transactional
-    public List<CommandeFamilleDTOEcole> getCommandesFamillesNonPayees(Authentication authentication) {
-
-        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
-        String identifiantUtilisateur = sessionData.getIdentifiantUtilisateur();
-        Long identifiantEcole = sessionData.getIdentifiantEcole();
-
-        LOGGER.debug("loading commandes familles non payés de la classe {}", identifiantEcole);
-
-        List<CommandeFamilleDTOEcole> commandesFamillesDTO = new ArrayList<CommandeFamilleDTOEcole>();
-
-        List<CommandeFamille> commandesFamilles = commandeFamilleRepository.findByIdEcoleEtStatutNonPaye(identifiantEcole);
-
-        if (commandesFamilles != null) {
-            for (CommandeFamille cmdFamille : commandesFamilles) {
-
-                CommandeFamilleDTOEcole cmdFamilleDTO = MapperUtils.convert(cmdFamille, CommandeFamilleDTOEcole.class);
-
-                for (CommandeEleve cmdEleve : cmdFamille.getCommandesEleve()) {
-                    cmdFamilleDTO.addNomEleve(cmdEleve.getEleve().getNom());
-                }
-
-                commandesFamillesDTO.add(cmdFamilleDTO);
-
-            }
-        }
-
-        return commandesFamillesDTO;
-
-    }
-
     @RequestMapping("/ws/ecole/commande/classe/getList")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -367,20 +334,88 @@ public class EcoleCommandesController extends AbstractRestHandler {
         List<CommandeEleveSyntheseDTOEleve> commandesDTO = new ArrayList<CommandeEleveSyntheseDTOEleve>();
 
         List<CommandeFamille> commandes = commandeFamilleRepository.findValidateByIdentifiantEleve(identifiantEleve);
-        for (CommandeFamille commandeFamille : commandes) {
+        if (commandes != null) {
 
-            CommandeEleveSyntheseDTOEleve cmdDTO = null;
+            for (CommandeFamille commandeFamille : commandes) {
 
-            cmdDTO = MapperUtils.convert(commandeFamille, CommandeEleveSyntheseDTOEleve.class);
+                CommandeEleveSyntheseDTOEleve cmdDTO = null;
 
-            double tva = FinanceUtils.getTVAValue(commandeFamille.getDateValidation(), tvaRepository);
+                cmdDTO = MapperUtils.convert(commandeFamille, CommandeEleveSyntheseDTOEleve.class);
 
-            cmdDTO.setTva(tva);
+                double tva = FinanceUtils.getTVAValue(commandeFamille.getDateValidation(), tvaRepository);
 
-            commandesDTO.add(cmdDTO);
+                cmdDTO.setTva(tva);
+
+                commandesDTO.add(cmdDTO);
+            }
         }
-
         LOGGER.debug("commande eleve {}", commandes);
         return commandesDTO;
+    }
+
+    @RequestMapping("/ws/ecole/commande/getListNonPaye")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public List<CommandeFamilleDTOEcole> getCommandesFamillesNonPayees(Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantUtilisateur = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        LOGGER.debug("loading commandes familles non payés de la classe {}", identifiantEcole);
+
+        List<CommandeFamilleDTOEcole> commandesFamillesDTO = new ArrayList<CommandeFamilleDTOEcole>();
+
+        List<CommandeFamille> commandesFamilles = commandeFamilleRepository.findByIdEcoleEtStatutNonPaye(identifiantEcole);
+
+        if (commandesFamilles != null) {
+            for (CommandeFamille cmdFamille : commandesFamilles) {
+
+                CommandeFamilleDTOEcole cmdFamilleDTO = MapperUtils.convert(cmdFamille, CommandeFamilleDTOEcole.class);
+
+                for (CommandeEleve cmdEleve : cmdFamille.getCommandesEleve()) {
+                    cmdFamilleDTO.addNomEleve(cmdEleve.getEleve().getNom());
+                }
+
+                commandesFamillesDTO.add(cmdFamilleDTO);
+
+            }
+        }
+
+        return commandesFamillesDTO;
+
+    }
+
+    @RequestMapping("/ws/ecole/commande/validatePaiement")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public void validatePaiementCommandeFamille(
+                    @RequestParam("identifiant") Long identifiantCommande,
+                    Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        // TODO: vérifier que la commande appartient à un élève de l'école
+
+        LOGGER.debug("validate paiement commande {}", identifiantCommande);
+
+        CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
+
+        // On update la commande que si elle est dans le bon statut
+        if (cmdFamilleEnBase.getStatut().equals(StatutCommandeFamille.EN_ATTENTE_PAYEMENT)) {
+
+            cmdFamilleEnBase.setDateValidation(DateUtils.getCurrentDate());
+            cmdFamilleEnBase.setStatut(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE);
+            // sauvegarde de la commande
+            commandeFamilleRepository.save(cmdFamilleEnBase);
+        }
+        LOGGER.debug("statut de la commande:{}", cmdFamilleEnBase.getStatut());
+
+        LOGGER.debug("fin validate paiement commande");
+
     }
 }

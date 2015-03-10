@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.gor.sellphotos.utils.DateUtils;
+
 public class CommandeFamilleDTOEcole {
 
     private Long identifiant;
 
-    private Date dateCommande;
+    private String dateCommande;
 
     private String moyenPayement;
 
     private String statut;
 
-    private Date dateValidation;
+    private String dateValidation;
 
     private double montantParentHT;
 
@@ -24,7 +26,7 @@ public class CommandeFamilleDTOEcole {
 
     private double montantEcoleTTC;
 
-    private Date dateLivraison;
+    private String dateLivraison;
 
     private String typeCommande;
 
@@ -54,14 +56,21 @@ public class CommandeFamilleDTOEcole {
     /**
      * @return the dateCommande
      */
-    public Date getDateCommande() {
+    public String getDateCommande() {
         return dateCommande;
     }
 
     /**
      * @param dateCommande the dateCommande to set
      */
-    public void setDateCommande(Date dateCommande) {
+    public void setDateCommandeFromDate(Date dateCommande) {
+        this.dateCommande = DateUtils.formatDate(dateCommande);
+    }
+
+    /**
+     * @param dateCommande the dateCommande to set
+     */
+    public void setDateCommande(String dateCommande) {
         this.dateCommande = dateCommande;
     }
 
@@ -96,14 +105,21 @@ public class CommandeFamilleDTOEcole {
     /**
      * @return the dateValidation
      */
-    public Date getDateValidation() {
+    public String getDateValidation() {
         return dateValidation;
     }
 
     /**
      * @param dateValidation the dateValidation to set
      */
-    public void setDateValidation(Date dateValidation) {
+    public void setDateValidationFromDate(Date dateValidation) {
+        this.dateValidation = DateUtils.formatDate(dateValidation);
+    }
+
+    /**
+     * @param dateValidation the dateValidation to set
+     */
+    public void setDateValidation(String dateValidation) {
         this.dateValidation = dateValidation;
     }
 
@@ -138,15 +154,22 @@ public class CommandeFamilleDTOEcole {
     /**
      * @return the dateLivraison
      */
-    public Date getDateLivraison() {
+    public String getDateLivraison() {
         return dateLivraison;
     }
 
     /**
      * @param dateLivraison the dateLivraison to set
      */
-    public void setDateLivraison(Date dateLivraison) {
+    public void setDateLivraison(String dateLivraison) {
         this.dateLivraison = dateLivraison;
+    }
+
+    /**
+     * @param dateLivraison the dateLivraison to set
+     */
+    public void setDateLivraisonFromDate(Date dateLivraison) {
+        this.dateLivraison = DateUtils.formatDate(dateLivraison);
     }
 
     /**

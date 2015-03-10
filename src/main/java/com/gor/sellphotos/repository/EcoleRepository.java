@@ -1,7 +1,9 @@
 package com.gor.sellphotos.repository;
 
+import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -72,6 +74,10 @@ public interface EcoleRepository extends CrudRepository<Ecole, Long> {
                                     + " JOIN c.ecole ec "
                                     + " WHERE ec.id = :idEcole and el.dateLimiteAcces < CURRENT_DATE";
 
+    public final static String UPDATE_ETAT_ACTIVATION_ELEVE =
+                    "UPDATE Eleve e SET e.dateLimiteAcces = :newDate "
+                                    + " WHERE e.classe.ecole.id=:idEcole";
+
     // @formatter:on
 
     @Query(FIND_BY_IDENTIFIANT_UTILISATEUR_RESPONSABLE)
@@ -100,5 +106,9 @@ public interface EcoleRepository extends CrudRepository<Ecole, Long> {
     @Query(FIND_ETAT_ACTIVATION_DESACTIVE)
     public int findEtatActivationDesactive(@Param("idEcole") Long idEcole);
 
-    public Ecole findById(Long id);
+    @Modifying
+    @Query(UPDATE_ETAT_ACTIVATION_ELEVE)
+    public int setAccesEleve(@Param("idEcole") Long idEcole, @Param("newDate") Date newDate);
+
+    Ecole findById(Long id);
 }

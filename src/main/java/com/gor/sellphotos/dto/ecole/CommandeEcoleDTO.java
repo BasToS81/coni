@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.gor.sellphotos.dto.EcoleDTO;
+import com.gor.sellphotos.utils.DateUtils;
 
 public class CommandeEcoleDTO {
 
@@ -13,15 +14,15 @@ public class CommandeEcoleDTO {
 
     private EcoleDTO ecole;
 
-    private Date dateCommande;
+    private String dateCommande;
 
     private String statut;
 
-    private Date dateValidation;
+    private String dateValidation;
 
     private List<CommandeFamilleDTOEcole> commandesFamilles;
 
-    private Date dateLivraison;
+    private String dateLivraison;
 
     /**
      * @return the id
@@ -68,14 +69,21 @@ public class CommandeEcoleDTO {
     /**
      * @return the dateCommande
      */
-    public Date getDateCommande() {
+    public String getDateCommande() {
         return dateCommande;
     }
 
     /**
      * @param dateCommande the dateCommande to set
      */
-    public void setDateCommande(Date dateCommande) {
+    public void setDateCommandeFromDate(Date dateCommande) {
+        this.dateCommande = DateUtils.formatDate(dateCommande);
+    }
+
+    /**
+     * @param dateCommande the dateCommande to set
+     */
+    public void setDateCommande(String dateCommande) {
         this.dateCommande = dateCommande;
     }
 
@@ -96,14 +104,21 @@ public class CommandeEcoleDTO {
     /**
      * @return the dateValidation
      */
-    public Date getDateValidation() {
+    public String getDateValidation() {
         return dateValidation;
     }
 
     /**
      * @param dateValidation the dateValidation to set
      */
-    public void setDateValidation(Date dateValidation) {
+    public void setDateValidationFromDate(Date dateValidation) {
+        this.dateValidation = DateUtils.formatDate(dateValidation);
+    }
+
+    /**
+     * @param dateValidation the dateValidation to set
+     */
+    public void setDateValidation(String dateValidation) {
         this.dateValidation = dateValidation;
     }
 
@@ -124,14 +139,21 @@ public class CommandeEcoleDTO {
     /**
      * @return the dateLivraison
      */
-    public Date getDateLivraison() {
+    public String getDateLivraison() {
         return dateLivraison;
     }
 
     /**
      * @param dateLivraison the dateLivraison to set
      */
-    public void setDateLivraison(Date dateLivraison) {
+    public void setDateLivraisonFromDate(Date dateLivraison) {
+        this.dateLivraison = DateUtils.formatDate(dateLivraison);
+    }
+
+    /**
+     * @param dateLivraison the dateLivraison to set
+     */
+    public void setDateLivraison(String dateLivraison) {
         this.dateLivraison = dateLivraison;
     }
 

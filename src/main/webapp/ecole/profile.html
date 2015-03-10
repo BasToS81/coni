@@ -14,19 +14,18 @@
 
 					<div ng-if="ecole.etatActivation==0">
 						Tous les élèves ont leur accès désactivé. </br>
-						<button class="btn btn-warning" style="margin-top: 7px"
-							title="Activer l'accès à tous les élèves de l'école">Cliquez
-							ici pour réactiver tous les accés</button>
+						<button class="btn btn-warning" style="margin-top: 7px" ng-click="activerTousLesAcces()"
+						title="Activer l'accès à tous les élèves de l'école">Cliquez ici pour réactiver tous les accés</button>
 					</div>
 					<div ng-if="ecole.etatActivation==1">
 						Tous les élèves ont leur accès activé. </br>
-						<button class="btn btn-success" style="margin-top: 7px"
+						<button class="btn btn-success" style="margin-top: 7px" ng-click="desactiverTousLesAcces()"
 							title="Désactiver l'accès à tous les élèves de l'école">Cliquez
 							ici pour désactiver tous les accès</button>
 					</div>
 					<div ng-if="ecole.etatActivation==-1">
 						Certains élèves ont leur accès désactivé. </br>
-						<button class="btn btn-info" style="margin-top: 7px"
+						<button class="btn btn-info" style="margin-top: 7px"  ng-click="activerTousLesAcces()"
 							title="Activer l'accès à tous les élèves de l'école">Cliquez
 							ici pour réactiver tous les accés</button>
 					</div>
@@ -73,52 +72,13 @@
 						</tbody>
 					</table>
 				</div>
-
+				<div class="text-right">
+					<button class="btn btn-success" ui-sref="generic.ecole.commandesEleveNonPayees" style="margin-top: 7px"	title="Visualiser les commandes non payées"><span class="glyphicon glyphicon-eye-open"></span> &nbsp;&nbsp;Commandes non payées</button>
+				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-6" ng-controller="EcoleCommandesCtrl">
-
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">Commandes d'élèves non payées</h3>
-			</div>
-
-			<div class="panel-body">
-
-				<div class="table-responsive col-md-12"	ng-init="getCommandesNonPayees()">
-					<table class="table table-hover noBottomMargin">
-						<thead>
-							<tr>
-								<th class='col-md-1'>Identifiant</th>
-								<th class='col-md-5'>Elève(s)</th>
-								<th class='col-md-1'>Date de la commande</th>
-								<th class='col-md-1'>Montant</th>
-								<th class='col-md-2'>&nbsp;</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="commande in commandesNonPayees">
-								<td>{{commande.identifiant}}</td>
-								<td>{{commande.nomEleves}}</td>
-								<td>{{commande.dateCommande}}</td>
-								<td>{{commande.montantParentTTC | number : 2 }} €</td>
-								<td>
-									<button title="Visualiser la commande" class="btn btn-sm btn-success"
-										ng-click="openCommande(commande.identifiant)">
-										<span class="glyphicon glyphicon-eye-open"></span>
-									</button>
-									<button title="Supprimer la commande" class="btn btn-sm btn-primary"
-										ng-click="deleteCommande(commande.identifiant)">
-										<span class="glyphicon glyphicon-check"></span>
-									</button>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
 
 		<div class="panel panel-default">
 			<div class="panel-heading">

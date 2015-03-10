@@ -1,6 +1,9 @@
 package com.gor.sellphotos.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -284,6 +287,8 @@ public class EcoleController extends AbstractRestHandler {
             elevesDTO.add(eleveDTO);
         }
 
+        LOGGER.debug("getSyntheseEleve eleve {}", elevesDTO);
+
         return elevesDTO;
     }
 
@@ -366,6 +371,8 @@ public class EcoleController extends AbstractRestHandler {
             elevesDTO.add(eleveDTO);
         }
 
+        LOGGER.debug("getSyntheseEleveFromClasse eleve {}", elevesDTO);
+
         return elevesDTO;
     }
 
@@ -400,6 +407,55 @@ public class EcoleController extends AbstractRestHandler {
 
         }
 
+    }
+
+    @RequestMapping("/ws/ecole/eleve/activeAcces")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public void activeTousLesAcces(Authentication authentication) {
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        // Mise à jour de la date limite d'accès de l'élève
+
+        // Ajout de deux mois
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.MONTH, 2);
+        Date newDate = calendar.getTime();
+
+        updateDateLimiteAccesEleves(identifiantEcole, newDate);
+    }
+
+    @RequestMapping("/ws/ecole/eleve/desactiveAcces")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public void desactiveTousLesAcces(Authentication authentication) {
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        // Mise à jour de la date limite d'accès de l'élève
+        // Définition de la date d'hier
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date newDate = calendar.getTime();
+
+        updateDateLimiteAccesEleves(identifiantEcole, newDate);
+
+    }
+
+    /**
+     * @param identifiantEcole
+     * @param newDate
+     */
+    private void updateDateLimiteAccesEleves(Long identifiantEcole, Date newDate) {
+        List<Eleve> eleves = eleveRepository.findByIdEcole(identifiantEcole);
+        for (Eleve eleve : eleves) {
+            eleve.setDateLimiteAcces(newDate);
+
+        }
+        eleveRepository.save(eleves);
     }
 
 }

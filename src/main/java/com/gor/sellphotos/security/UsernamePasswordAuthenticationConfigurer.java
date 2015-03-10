@@ -17,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.security.web.util.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -92,7 +93,15 @@ public class UsernamePasswordAuthenticationConfigurer extends
         @Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                         AuthenticationException exception) throws IOException, ServletException {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            LOGGER.debug("Authentification erronée : {}" + exception);
+
+            if (exception instanceof NonceExpiredException) {
+                response.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
+            }
+            else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            }
             PrintWriter writer = response.getWriter();
             writer.write(exception.getMessage());
             writer.flush();

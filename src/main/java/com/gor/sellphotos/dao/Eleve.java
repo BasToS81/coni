@@ -1,6 +1,5 @@
 package com.gor.sellphotos.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -22,9 +21,6 @@ public class Eleve extends Utilisateur {
 
     @OneToMany(mappedBy = "eleve")
     private List<CommandeEleve> commandes;
-
-    @Basic
-    private Date dateLimiteAcces;
 
     public Eleve() {
 
@@ -76,27 +72,13 @@ public class Eleve extends Utilisateur {
         this.classe = classe;
     }
 
-    /**
-     * @return the dateLimiteAcces
-     */
-    public Date getDateLimiteAcces() {
-        return dateLimiteAcces;
-    }
-
-    /**
-     * @param dateLimiteAcces the dateLimiteAcces to set
-     */
-    public void setDateLimiteAcces(Date dateLimiteAcces) {
-        this.dateLimiteAcces = dateLimiteAcces;
-    }
-
     public String toStringComplet() {
         return "Eleve [id=" + getId() + ", identifiant_chiffre=" + identifiantChiffre + "]";
     }
 
     @Override
     public String toString() {
-        return "Eleve [identifiantChiffre=" + identifiantChiffre + ", dateLimiteAcces=" + dateLimiteAcces + ", toString()=" + super.toString() + "]";
+        return "Eleve [identifiantChiffre=" + identifiantChiffre + ", toString()=" + super.toString() + "]";
     }
 
     public List<CommandeEleve> getCommandes() {

@@ -1,6 +1,6 @@
 
 
-myApp.controller('EcoleCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
+myApp.controller('EcoleCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', '$window', function($scope, $http, $state, Auth, $stateParams, $window) {
 	$scope.ecole=Auth.getUserData();
 	
 	
@@ -20,7 +20,36 @@ myApp.controller('EcoleCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParam
 		
 	}
 	
+	$scope.visualiseCommandesNonPayees = function() {
+
+		$state.go('generic.ecole.commandesEleveNonPayees');
+		
+	}
 	
+	
+	$scope.activerTousLesAcces = function() {
+		$http.post('/ws/ecole/eleve/activeAcces')
+		.success(
+				function(data, status, headers, config) {
+					$scope.ecole.etatActivation=1;
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de l'école";
+				});
+	}
+	
+	$scope.desactiverTousLesAcces = function() {
+		$http.post('/ws/ecole/eleve/desactiveAcces')
+		.success(
+				function(data, status, headers, config) {
+					$scope.ecole.etatActivation=0;
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de l'école";
+				});
+	}
 	
 }
 ]);
@@ -237,17 +266,7 @@ myApp.controller('EcoleEleveCommandesCtrl', ['$scope', '$http', '$state', 'Auth'
 	$scope.classe = Auth.getUserClasseVisualise();
 	$scope.eleveIdentifiant=0;
 	
-	$scope.getCommandesList = function() { 
-		$http.post('/ws/ecole/eleve/commande/getList?identifiant=' + $scope.eleveIdentifiant)
-		.success(
-				function(data, status, headers, config) {
-					$scope.commandes = data;					
-				})
-		.error(
-				function(data, status, headers, config) {
-					$scope.errorMessage = "Erreur au chargement des données de l'école";
-				});
-	};
+	
 	
 	$scope.retourArriere = function() {
 		$state.go('generic.ecole.classe', {'id' : $scope.classe});
@@ -256,6 +275,25 @@ myApp.controller('EcoleEleveCommandesCtrl', ['$scope', '$http', '$state', 'Auth'
 	$scope.openCommande = function(identifiantCommande) { 
 		$state.go('generic.ecole.commandesEleve.visualisation', {'idCommande' : identifiantCommande});
 	}
+	$scope.openCommandeNonPayee = function(identifiantCommande) { 
+		$state.go('generic.ecole.commandesEleveNonPayees.visualisation', {'idCommande' : identifiantCommande});
+	}
+	
+	$scope.validerPaiementCommande = function(commande) {
+		
+		$http.post('/ws/ecole/commande/validatePaiement?identifiant=' + commande.identifiant)
+		.success(
+				function(data, status, headers, config) {
+					commande.statut='EN_ATTENTE_VALID_RESPONSABLE';
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de la commande";
+				});
+	}
+	
+	
+	
 	$scope.commandeEnCours = Auth.getUserCommandes();
 	$scope.commandesEleve = $scope.commandeEnCours.commandesEleve;
 }]);
