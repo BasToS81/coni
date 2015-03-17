@@ -102,7 +102,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			url : '/liste',
 			views : {
 				'content-body@' : {
-					templateUrl : '/ecole/ecole.html' 
+					templateUrl : '/ecole/classes/menu.html' 
 				}
 			}
 		})
@@ -162,16 +162,48 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 				}
 			})
 		// Commandes
-		.state('generic.classesCommandes', {
-			url : 'classes/{id}/commande',
-			views : {
-				'content-body@' : {
-					templateUrl : '/ecole/commande/commande.html',
-					controller : 'EcoleClasseCommandeCtrl',
-					resolve : {	additionalData : loadCommandeClasse }
+			.state('generic.ecoleCommandes', {
+				url : '/commandesEcole',
+				views : {
+					'content-body@' : {
+						templateUrl : '/ecole/commande/menu.html' 
+					}
 				}
-			}
-		});
+			})
+				// - liste des classes
+				.state('generic.ecoleCommandes.classe', {
+					url : '/classe/{id}',
+					views : {
+						'content-commande@generic.ecoleCommandes' : {
+							templateUrl : '/ecole/commande/commande.html',
+							controller : 'EcoleClasseCommandeCtrl',
+							resolve : {	additionalData : loadCommandeClasse }
+						}
+					}
+				})	
+				// - visualisation des commandes
+				.state('generic.ecoleCommandes.liste', {
+					url : '/liste',
+					views : {
+						'content-commande@generic.ecoleCommandes' : {
+							templateUrl : '/ecole/commande/commandesFamille.html',
+							controller : 'EcoleCommandesEleveCtrl',
+							resolve : {	additionalData : loadCommandeEcole }
+						}
+					}
+				})
+					// - visualisation d'une commande d'un élève
+					.state('generic.ecoleCommandes.liste.visualisation', {
+						url : '/{idCommande}',
+						views : {
+							'content-ecole-commande@generic.ecoleCommandes.liste' : {
+								templateUrl : '/ecole/commande/visualisationCommande.html',
+								controller : 'EcoleCommandeVisualisationCtrl',
+								resolve : {	additionalData : visualiserCommandeEleve }
+							}
+						}
+					})
+		;
 });
 
 var loadData = function($q, $http, $stateParams, $timeout, Auth) {
@@ -284,3 +316,15 @@ var loadCommandeClasse = function($q, $http, $stateParams, $timeout, Auth) {
 	return deferred.promise;
 };
 
+var loadCommandeEcole = function($q, $http, $stateParams, $timeout, Auth) {
+
+	var deferred = $q.defer();
+
+	$http.get('/ws/ecole/commandes/eleve/getList')
+	.success(function(data, status, headers, config) {
+		Auth.setUserCommandes(data);
+		$timeout(deferred.resolve, 0);
+	});
+	
+	return deferred.promise;
+};

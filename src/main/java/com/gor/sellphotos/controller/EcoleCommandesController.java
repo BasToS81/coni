@@ -213,6 +213,13 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("loading commandes classe {}", identifiantChiffreClasse);
 
+        if (identifiantChiffreClasse.compareTo("0") == 0) {
+            List<Classe> classes = classeRepository.findByIdEcoleOrderByNom(identifiantEcole);
+            if (classes != null) {
+                identifiantChiffreClasse = classes.get(0).getIdentifiantChiffre();
+            }
+        }
+
         CommandeClasseSyntheseDTOEcole commandesClasseSyntheseDTO = new CommandeClasseSyntheseDTOEcole();
 
         ModeleEtTarif modeleEtTarif = modeleEtTarifRepository.findByIdEcole(identifiantEcole);
@@ -417,5 +424,38 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("fin validate paiement commande");
 
+    }
+
+    @RequestMapping("/ws/ecole/commandes/eleve/getList")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public List<CommandeFamilleDTOEcole> getCommandesFamille(Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        // TODO : vérifier que l'élève fait partie de l'école
+
+        LOGGER.debug("loading commandes eleves");
+
+        List<CommandeFamilleDTOEcole> commandesDTO = new ArrayList<CommandeFamilleDTOEcole>();
+
+        List<CommandeFamille> commandesFamilles = commandeFamilleRepository.findValidateByIdEcole(identifiantEcole);
+        if (commandesFamilles != null) {
+            for (CommandeFamille cmdFamille : commandesFamilles) {
+
+                CommandeFamilleDTOEcole cmdFamilleDTO = MapperUtils.convert(cmdFamille, CommandeFamilleDTOEcole.class);
+
+                for (CommandeEleve cmdEleve : cmdFamille.getCommandesEleve()) {
+                    cmdFamilleDTO.addNomEleve(cmdEleve.getEleve().getNom());
+                }
+
+                commandesDTO.add(cmdFamilleDTO);
+
+            }
+        }
+        LOGGER.debug("commande eleve {}", commandesFamilles);
+        return commandesDTO;
     }
 }

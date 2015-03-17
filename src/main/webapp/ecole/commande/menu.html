@@ -1,0 +1,37 @@
+<div class="col-md-12 main-panel" ng-controller="EcoleCtrl">
+
+	<!--  Onglet pour chaque classe et tous les élèves -->
+	
+	<nav class="navbar navbar-default">
+		
+		<div class="container-fluid">
+		
+			<!-- Brand and toggle get grouped for better mobile display -->
+    		<div class="navbar-header">
+		      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#commande-nav-bar">
+		        <span class="sr-only">Toggle navigation</span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>
+		      </button>
+		      <a class="navbar-brand" ui-sref="generic({type : 'ecole'})">Accueil</a> 
+		    </div>
+			<div class="collapse navbar-collapse" id="commande-nav-bar">
+		  
+				<ul class="nav navbar-nav navbar-left" >
+					<li><p class="navbar-text">Bordereau de commandes</p></li>	
+					<li  role="presentation"  ng-repeat="classe in ecole.classes">
+		        		<button type="button" class="btn btn-default navbar-btn" ng-click="visualiseCommandesClasse(classe.identifiantChiffre)">{{classe.nom}}</button>
+		        	</li>
+		        </ul>
+		        <ul class="nav navbar-nav navbar-right">
+		        	<li><button type="button" class="btn btn-default navbar-btn" ng-click="visualiseCommandes()">Lister l'ensemble des commandes</button></li>	
+		        </ul>	       
+			</div>
+		</div>
+	</nav>
+	
+	<div ui-view="content-commande"></div>
+
+	
+</div>

@@ -45,7 +45,7 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
                                     + " JOIN pc.produit p "
                                     + "WHERE "
                                     + " c.identifiantChiffre = :identifiantChiffre and "
-                                    + " cf.statut in ('EN_COURS', 'EN_ATTENTE_PAYEMENT') "
+                                    + " cf.statut in ('EN_ATTENTE_VALID_RESPONSABLE', 'EN_ATTENTE_PAYEMENT') "
                                     + "GROUP BY "
                                     + " el.identifiant, p.id";
 
