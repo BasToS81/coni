@@ -139,25 +139,30 @@ myApp.controller('FamilleCommandeEnCoursCtrl', ['$scope', '$http', '$state', 'Au
 		return valeur * $scope.tva;
 	};
 	$scope.calcul = function( commandeEnCours, produit ) { 
-
 		if(IsInteger(produit.quantite)&&produit.quantite>=0) {
 			var ancienMontant = produit.montantParentHT;
-			produit.montantParentHT = produit.quantite * produit.produit.prixParentHT;
+			produit.montantParentHT = parseInt(produit.quantite) * produit.produit.prixParentHT;
 			var diffMontant = produit.montantParentHT - ancienMontant;
 			commandeEnCours.montantParentHT += diffMontant;
 		}
 	};
 	$scope.addQuantite = function(commandeEnCours, produit ) { 
 		var ancienMontant = produit.montantParentHT;
-		produit.quantite = produit.quantite + 1;
+
+		if( IsInteger(produit.quantite) && produit.quantite >=0 ) {
+			produit.quantite = parseInt(produit.quantite) + 1;
+		} else {
+			produit.quantite = 1;
+		}
 		produit.montantParentHT = produit.quantite * produit.produit.prixParentHT;
 		var diffMontant = produit.montantParentHT - ancienMontant;
 		commandeEnCours.montantParentHT += diffMontant;
+		
 	};
 	$scope.removeQuantite = function(commandeEnCours, produit ) { 
 		var ancienMontant = produit.montantParentHT;
 		if(produit.quantite>0) {
-			produit.quantite = produit.quantite - 1;
+			produit.quantite = parseInt(produit.quantite) - 1;
 			produit.montantParentHT = produit.quantite * produit.produit.prixParentHT;
 		} else {
 			produit.quantite = 0;

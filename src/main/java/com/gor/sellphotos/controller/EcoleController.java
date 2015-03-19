@@ -310,8 +310,10 @@ public class EcoleController extends AbstractRestHandler {
         List<Object[]> syntheseMontantTotalCommandesEleve = null;
         List<Object[]> syntheseMontantsAPayerCommandesEleve = null;
 
-        // Si l'id de la classe = 0 alors on prend tous les élèves de l'école
+        // Si l'id de la classe = 0 alors on prend tous les élèves qui n'ont pas de commandes
         if (idClasse == 0) {
+
+            // TODO : optimisation des performances en filtrant dans la base de données
 
             eleves = eleveRepository.findByIdEcoleOrderByNom(idEcole);
 
@@ -335,6 +337,7 @@ public class EcoleController extends AbstractRestHandler {
 
             eleveDTO.setNomClasse(eleve.getClasse().getNom());
             eleveDTO.setNewNom(eleveDTO.getNom());
+            eleveDTO.setNewMotDePasse("****");
             eleveDTO.setDateLimiteAccesFromDate(eleve.getDateLimiteAcces());
             eleveDTO.setNewDateLimiteAcces(eleveDTO.getDateLimiteAcces());
 
@@ -368,7 +371,10 @@ public class EcoleController extends AbstractRestHandler {
                     break;
                 }
             }
-            elevesDTO.add(eleveDTO);
+            if (!(idClasse == 0 && eleveDTO.getNbCommandes() != 0)) {
+                elevesDTO.add(eleveDTO);
+            }
+
         }
 
         LOGGER.debug("getSyntheseEleveFromClasse eleve {}", elevesDTO);
@@ -397,7 +403,7 @@ public class EcoleController extends AbstractRestHandler {
                 // L'elève existe
 
                 eleve.setNom(eleveDTO.getNewNom());
-                if (eleveDTO.getNewMotDePasse() != null && eleveDTO.getNewMotDePasse().length() != 0) {
+                if (eleveDTO.getNewMotDePasse() != null && eleveDTO.getNewMotDePasse().length() != 0 && !eleveDTO.getNewMotDePasse().equals("****")) {
                     eleve.setCodeAcces(eleveDTO.getNewMotDePasse());
                 }
                 eleve.setDateLimiteAcces(DateUtils.parseDate(eleveDTO.getNewDateLimiteAcces()));

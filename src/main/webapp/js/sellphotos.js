@@ -114,7 +114,7 @@ myApp.service('Auth', function() {
 function IsInteger(input)
 {
 	if(IsNumeric(input)) {
-		return input.indexOf(".") == -1;
+		return input.toString().indexOf(".") == -1;
 	} else {
 		return false;
 	}

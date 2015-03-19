@@ -10,7 +10,7 @@ public class ProduitDTO {
 
     private double prixParentHT;
 
-    private double prixEcoleHT;
+    private double prixParentTTC;
 
     private int ordre;
 
@@ -73,17 +73,17 @@ public class ProduitDTO {
     }
 
     /**
-     * @return the prix_ecole_ttc
+     * @return the prix_parent_ttc
      */
-    public double getPrixEcoleHT() {
-        return prixEcoleHT;
+    public double getPrixParentTTC() {
+        return prixParentTTC;
     }
 
     /**
      * @param prix_ecole_ttc the prix_ecole_ttc to set
      */
-    public void setPrixEcoleHT(double prixEcoleHT) {
-        this.prixEcoleHT = prixEcoleHT;
+    public void setPrixParentTTC(double prixParentTTC) {
+        this.prixParentTTC = prixParentTTC;
     }
 
     /**

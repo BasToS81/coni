@@ -79,6 +79,8 @@ myApp.controller('EcoleClasseSyntheseCtrl', [ '$scope', '$http', '$state', 'Auth
 	$scope.restantTotal=0;
 	$scope.edition=false;
 	$scope.messageInformation="";
+	
+	$scope.myRegex = /[a-zA-Z0-9]*/;
 
 	$scope.calculTotal = function(montant, restant) {
 		$scope.montantTotal=montant+$scope.montantTotal;
@@ -192,6 +194,7 @@ myApp.controller('EcoleEleveCommandesCtrl', ['$scope', '$http', '$state', 'Auth'
 myApp.controller('EcoleCommandeVisualisationCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.commandeEnCours = Auth.getUserCommandes();
 	$scope.commandesEleve = $scope.commandeEnCours.commandesEleve;
+	$scope.tva = $scope.commandeEnCours.tva;
 }]);
 
 

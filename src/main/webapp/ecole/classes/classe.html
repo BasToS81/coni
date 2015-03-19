@@ -36,7 +36,7 @@
 				<tr ng-repeat="eleve in eleves | orderBy:predicate:reverse">
 					<td>{{eleve.identifiant}}</td>
 					<td><div ng-show="!edition">{{eleve.nom}}</div><input  class="col-md-12" ng-show="edition" type="text" ng-model="eleve.newNom"/></td>
-					<td><div ng-show="!edition"></div><input  class="col-md-12" ng-show="edition" type="text" ng-model="eleve.newMotDePasse"/></td>
+					<td><div ng-show="!edition">****</div><input  class="col-md-12" ng-show="edition" type="text" ng-model="eleve.newMotDePasse" ng-pattern="/[a-zA-Z0-9]*/"/></td>
 					<td><div ng-show="!edition">{{eleve.dateLimiteAcces}}</div>
 						<!-- Date picker -->
 					    <div class="row" ng-show="edition">

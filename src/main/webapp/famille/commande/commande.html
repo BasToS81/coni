@@ -55,7 +55,6 @@
 					 	<table class="table table-striped noBottomMargin">
 						 	<thead>
 						 		<tr class="table-heading">
-									<th class="col-md-1">Ref.</td>
 									<th class="col-md-4">Designation</td>
 									<th class="col-md-2">Prix uni. TTC</td>
 									<th class="col-md-1">Quantité</td>
@@ -64,7 +63,6 @@
 								</tr>
 							</thead>
 						<tr ng-repeat="produit in commandeEleve.produitsCommandes">
-								<td class="col-md-1">{{produit.produit.identifiant}}</td>
 								<td class="col-md-4">{{produit.produit.designation}}</td>
 								<td class="col-md-2">{{produit.produit.prixParentHT | toTTC:this | number : 2 }} €</td>
 								<td class="col-md-1">

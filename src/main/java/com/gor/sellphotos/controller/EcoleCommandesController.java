@@ -351,6 +351,8 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
                 double tva = FinanceUtils.getTVAValue(commandeFamille.getDateValidation(), tvaRepository);
 
+                // TODO : regarder pour voir comment gérer la TVA lors de la visualisation des produits
+
                 cmdDTO.setTva(tva);
 
                 commandesDTO.add(cmdDTO);
