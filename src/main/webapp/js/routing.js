@@ -19,7 +19,9 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			}
 		}
 	})
+	// ############################
 	//Page Accueil après login
+	// ############################	
 	.state('generic', {
 		url : '/{type}',
 		views : {
@@ -38,18 +40,20 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			}
 		}
 	})
-	// Page famille
-	.state('generic.commander', {
-		url : '/commande',
-		views : {
-			'content-body@' : {
-				
-				templateUrl : '/famille/commande/commande.html' 
-			}
-		}
-	})
+	// ############################
+	// FAMILLE
+	// ############################
+	
 	// Page Commande 
-	   
+		.state('generic.commander', {
+			url : '/commande',
+			views : {
+				'content-body@' : {
+					
+					templateUrl : '/famille/commande/commande.html' 
+				}
+			}
+		})
 	    .state('generic.mode', {
 	    	url : '/commande/mode',
 			views : {
@@ -95,9 +99,12 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 			}	
 		}
     })
+    
+	// ############################
+	// ECOLE
+	// ############################
 
-
-	// Page ecole 
+	// Page élèves par classe 
     	.state('generic.ecole', {
 			url : '/liste',
 			views : {
@@ -106,7 +113,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 				}
 			}
 		})
-			// - liste des classes
+			// liste des classes
 			.state('generic.ecole.classe', {
 				url : '/classe/{id}',
 				views : {
@@ -128,7 +135,7 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 					}
 				}
 			})	
-			// - liste des commandes d'un élève
+			// - liste des commandes non payées
 			.state('generic.ecole.commandesEleveNonPayees', {
 				url : '/commandesNonPayees',
 				views : {
@@ -161,48 +168,72 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 					}
 				}
 			})
+		//   ---------
 		// Commandes
-			.state('generic.ecoleCommandes', {
-				url : '/commandesEcole',
+		//   ---------
+		.state('generic.ecoleCommandes', {
+			url : '/commandesEcole',
+			views : {
+				'content-body@' : {
+					templateUrl : '/ecole/commande/menu.html' 
+				}
+			}
+		})
+			// - liste des classes
+			.state('generic.ecoleCommandes.classe', {
+				url : '/classe/{id}',
 				views : {
-					'content-body@' : {
-						templateUrl : '/ecole/commande/menu.html' 
+					'content-commande@generic.ecoleCommandes' : {
+						templateUrl : '/ecole/commande/creation/commande.html',
+						controller : 'EcoleClasseCommandeCtrl',
+						resolve : {	additionalData : loadCommandeClasse }
+					}
+				}
+			})	
+			// - visualisation des commandes
+			.state('generic.ecoleCommandes.liste', {
+				url : '/liste',
+				views : {
+					'content-commande@generic.ecoleCommandes' : {
+						templateUrl : '/ecole/commande/creation/commandesFamille.html',
+						controller : 'EcoleCommandesEleveCtrl',
+						resolve : {	additionalData : loadCommandesEcole }
 					}
 				}
 			})
-				// - liste des classes
-				.state('generic.ecoleCommandes.classe', {
-					url : '/classe/{id}',
+				// - visualisation d'une commande d'un élève
+				.state('generic.ecoleCommandes.liste.visualisation', {
+					url : '/{idCommande}',
 					views : {
-						'content-commande@generic.ecoleCommandes' : {
-							templateUrl : '/ecole/commande/commande.html',
-							controller : 'EcoleClasseCommandeCtrl',
-							resolve : {	additionalData : loadCommandeClasse }
-						}
-					}
-				})	
-				// - visualisation des commandes
-				.state('generic.ecoleCommandes.liste', {
-					url : '/liste',
-					views : {
-						'content-commande@generic.ecoleCommandes' : {
-							templateUrl : '/ecole/commande/commandesFamille.html',
-							controller : 'EcoleCommandesEleveCtrl',
-							resolve : {	additionalData : loadCommandeEcole }
+						'content-ecole-commande@generic.ecoleCommandes.liste' : {
+							templateUrl : '/ecole/commande/creation/visualisationCommande.html',
+							controller : 'EcoleCommandeVisualisationCtrl',
+							resolve : {	additionalData : visualiserCommandeEleve }
 						}
 					}
 				})
-					// - visualisation d'une commande d'un élève
-					.state('generic.ecoleCommandes.liste.visualisation', {
-						url : '/{idCommande}',
-						views : {
-							'content-ecole-commande@generic.ecoleCommandes.liste' : {
-								templateUrl : '/ecole/commande/visualisationCommande.html',
-								controller : 'EcoleCommandeVisualisationCtrl',
-								resolve : {	additionalData : visualiserCommandeEleve }
-							}
+			// - visualisation des commandes Ecoles
+			.state('generic.visualisationEcoleCommandes', {
+				url : '/visualisationEcoleCommandes/{id}',
+				views : {
+					'content-body@' : {
+						templateUrl : '/ecole/commande/visualisation/commandesEcole.html',
+						controller : 'EcoleCommandesEcoleCtrl',
+						resolve : {	additionalData : loadCommandeEcole }
+					}
+				}
+			})	
+				// - visualisation d'une commande d'un élève
+				.state('generic.visualisationEcoleCommandes.visualisation', {
+					url : '/{idCommande}',
+					views : {
+						'content-ecole-commande@generic.visualisationEcoleCommandes' : {
+							templateUrl : '/ecole/commande/visualisation/visualisationCommande.html',
+							controller : 'EcoleCommandeVisualisationCtrl',
+							resolve : {	additionalData : visualiserCommandeEleve }
 						}
-					})
+					}
+				})
 		;
 });
 
@@ -246,85 +277,3 @@ var loadCommandeFamille = function($q, $http, $stateParams, $timeout, Auth) {
 };
 
 
-var loadClasseSynthese = function($q, $http, $stateParams, $timeout, Auth) {
-
-	var deferred = $q.defer();	
-	
-	$http.get('/ws/ecole/classe/getSynthese?idClasse=' + $stateParams.id)
-	.success(function(data, status, headers, config) {
-		Auth.setUserCommandes(data);
-		$timeout(deferred.resolve, 0);
-	});
-	
-	return deferred.promise;
-};
-
-var loadCommandesEleve = function($q, $http, $stateParams, $timeout, Auth) {
-
-	var deferred = $q.defer();	
-	
-	var url = '/ws/ecole/eleve/commande/getList?identifiant=' + $stateParams.id;
-	
-	$http.get(url)
-	.success(function(data, status, headers, config) {
-		Auth.setUserCommandes(data);
-		$timeout(deferred.resolve, 0);
-	});
-	
-	return deferred.promise;
-};
-
-var loadCommandesEleveNonPayees = function($q, $http, $stateParams, $timeout, Auth) {
-
-	var deferred = $q.defer();	
-	
-	var url = '/ws/ecole/commande/getListNonPaye'
-
-	$http.get(url)
-	.success(function(data, status, headers, config) {
-		Auth.setUserCommandes(data);
-		$timeout(deferred.resolve, 0);
-	});
-	
-	return deferred.promise;
-};
-
-var visualiserCommandeEleve = function($q, $http, $stateParams, $timeout, Auth) {
-
-	var deferred = $q.defer();	
-	
-	$http.get('/ws/famille/commande/get?identifiant=' + $stateParams.idCommande)
-	.success(function(data, status, headers, config) {
-		Auth.setUserCommandes(data);
-		$timeout(deferred.resolve, 0);
-	});
-	
-	return deferred.promise;
-};
-
-
-var loadCommandeClasse = function($q, $http, $stateParams, $timeout, Auth) {
-
-	var deferred = $q.defer();
-
-	$http.get('/ws/ecole/commande/classe/getList?idClasse=' + $stateParams.id)
-	.success(function(data, status, headers, config) {
-		Auth.setUserCommandes(data);
-		$timeout(deferred.resolve, 0);
-	});
-	
-	return deferred.promise;
-};
-
-var loadCommandeEcole = function($q, $http, $stateParams, $timeout, Auth) {
-
-	var deferred = $q.defer();
-
-	$http.get('/ws/ecole/commandes/eleve/getList')
-	.success(function(data, status, headers, config) {
-		Auth.setUserCommandes(data);
-		$timeout(deferred.resolve, 0);
-	});
-	
-	return deferred.promise;
-};

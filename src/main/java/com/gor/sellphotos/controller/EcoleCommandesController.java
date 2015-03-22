@@ -137,7 +137,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
         CommandeEcole commandeEcoleEnCours = null;
 
-        List<CommandeEcole> commandeEcoleStatutEnCours = commandeEcoleRepository.findByIdEcoleEtStatut(identifiantEcole, StatutCommandeEcole.EN_COURS.name());
+        List<CommandeEcole> commandeEcoleStatutEnCours = commandeEcoleRepository.findByIdEcoleEtStatut(identifiantEcole, StatutCommandeEcole.EN_COURS);
 
         if (null == commandeEcoleStatutEnCours || commandeEcoleStatutEnCours.size() == 0) {
 
@@ -190,9 +190,80 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
         commandeEcoleEnCours.setStatut(StatutCommandeEcole.COMMANDEE);
 
+        // Recherche des commandes des familles à ajouter à la commande de l'école
+        List<CommandeFamille> commandesFamilles = commandeFamilleRepository.findValidateByIdEcole(identifiantEcole);
+
+        for (CommandeFamille commandeFamille : commandesFamilles) {
+
+            commandeFamille.setDateValidation(commandeEcoleEnCours.getDateCommande());
+            commandeFamille.setStatut(StatutCommandeFamille.EN_LIVRAISON);
+
+            commandeEcoleEnCours.addCommandesFamille(commandeFamille);
+        }
+
+        commandeEcoleRepository.save(commandeEcoleEnCours);
+
         LOGGER.debug("validation commande ecole effectuée {}", identifiantCommandeEcoleEnCours);
 
         return true;
+    }
+
+    @RequestMapping("/ws/ecole/commande/createAndValidate")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public boolean createAndValidateCommandeEcole(Authentication authentication) {
+
+        LOGGER.debug("création et validation");
+
+        // TODO: voir si on ne simplifie pas cette partie
+
+        getOrCreateCommandeEcole(authentication);
+        validateCommandeEcole(authentication);
+
+        LOGGER.debug("création et validation ecole effectuée {}");
+
+        return true;
+    }
+
+    @RequestMapping("/ws/ecole/commande/get")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public CommandeEcoleDTO getOrCreateCommandeEcole(@RequestParam("id") Long idCommande, Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantUtilisateur = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        LOGGER.debug("get commande {} de l' ecole {}", idCommande, identifiantEcole);
+
+        CommandeEcoleDTO commandeEcoleDTO = null;
+
+        // TODO: vérifier que la commande fait partie de l'école
+
+        CommandeEcole commandeEcole = commandeEcoleRepository.findById(idCommande);
+
+        if (null != commandeEcole) {
+
+            commandeEcoleDTO = MapperUtils.convert(commandeEcole, CommandeEcoleDTO.class);
+
+            for (CommandeFamille cmdFamille : commandeEcole.getCommandesFamille()) {
+                LOGGER.debug(" Ajout des commandes Familles");
+                CommandeFamilleDTOEcole cmdFamilleDTO = MapperUtils.convert(cmdFamille, CommandeFamilleDTOEcole.class);
+
+                for (CommandeEleve cmdEleve : cmdFamille.getCommandesEleve()) {
+                    cmdFamilleDTO.addNomEleve(cmdEleve.getEleve().getNom());
+                }
+
+                commandeEcoleDTO.addCommandeFamille(cmdFamilleDTO);
+            }
+
+        }
+
+        LOGGER.debug("get commande ecole effectuée {}", idCommande);
+
+        return commandeEcoleDTO;
     }
 
     /*
@@ -229,6 +300,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
         commandesClasseSyntheseDTO.setNom(classe.getNom());
 
         List<Object[]> commandes = commandeEleveRepository.findSyntheseByIdentifiantChiffreClasse(identifiantChiffreClasse);
+        List<Object[]> montantAPayer = commandeEleveRepository.findSyntheseByIdentifiantChiffreClasse(identifiantChiffreClasse);
         Map<String, CommandeEleveDTOEcole> commandesDTO = new HashMap<String, CommandeEleveDTOEcole>();
 
         for (Object[] commandeEleve : commandes) {
@@ -340,7 +412,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
         List<CommandeEleveSyntheseDTOEleve> commandesDTO = new ArrayList<CommandeEleveSyntheseDTOEleve>();
 
-        List<CommandeFamille> commandes = commandeFamilleRepository.findValidateByIdentifiantEleve(identifiantEleve);
+        List<CommandeFamille> commandes = commandeFamilleRepository.findNotEnCoursByIdentifiantEleve(identifiantEleve);
         if (commandes != null) {
 
             for (CommandeFamille commandeFamille : commandes) {

@@ -1,5 +1,4 @@
-var myApp = angular.module('ShellPhotosAngular', [ 'ui.router','ui.bootstrap'
-]);
+var myApp = angular.module('ShellPhotosAngular', [ 'ui.router','ui.bootstrap','constants' ]);
 
 myApp.controller('GlobalCtrl', [ '$scope', function($scope) {
 	$scope.utilisateur = {

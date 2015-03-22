@@ -25,10 +25,14 @@ public interface CommandeFamilleRepository extends CrudRepository<CommandeFamill
                     "LEFT JOIN ce.eleve e " +
                     "WHERE e.identifiant = :idEleve and cf.statut in ('EN_ATTENTE_VALID_RESPONSABLE', 'EN_ATTENTE_PAYEMENT')";
 
-    public final static String FIND_VALIDATE_BY_ID_ECOLE = "SELECT cf " +
+    public final static String FIND_NOT_EN_COURS_BY_ID_ELEVE = "SELECT cf " +
                     "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf " +
-                    "LEFT JOIN cf.famille.ecole e " +
-                    "WHERE e.id = :idEcole and cf.statut in ('EN_ATTENTE_VALID_RESPONSABLE', 'EN_ATTENTE_PAYEMENT')";
+                    "LEFT JOIN ce.eleve e " +
+                    "WHERE e.identifiant = :idEleve and cf.statut not in ('EN_COURS')";
+
+    public final static String FIND_VALIDATE_BY_ID_ECOLE = "SELECT cf " +
+                    "FROM CommandeFamille cf " +
+                    "WHERE cf.famille.ecole.id = :idEcole and cf.statut in ('EN_ATTENTE_VALID_RESPONSABLE', 'EN_ATTENTE_PAYEMENT')";
 
     public final static String FIND_BY_ID_CMD_ECOLE = "SELECT cf " +
                     "FROM CommandeFamille cf LEFT JOIN cf.commandeEcole cecol " +
@@ -59,6 +63,9 @@ public interface CommandeFamilleRepository extends CrudRepository<CommandeFamill
 
     @Query(FIND_VALIDATE_BY_ID_ELEVE)
     public List<CommandeFamille> findValidateByIdentifiantEleve(@Param("idEleve") String identifiantEleve);
+
+    @Query(FIND_NOT_EN_COURS_BY_ID_ELEVE)
+    public List<CommandeFamille> findNotEnCoursByIdentifiantEleve(@Param("idEleve") String identifiantEleve);
 
     @Query(FIND_BY_ID_FAMILLE)
     public List<CommandeFamille> findByIdentifiantFamille(@Param("idFamille") String identifiantFamille);

@@ -1,5 +1,6 @@
 package com.gor.sellphotos.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,22 @@ public class CommandeEcole {
 
     @Basic
     private Date dateLivraison;
+
+    @Basic
+    private double montantParentHT;
+
+    @Basic
+    private double montantEcoleHT;
+
+    @Basic
+    private double montantParentTTC;
+
+    @Basic
+    private double montantEcoleTTC;
+
+    public CommandeEcole() {
+        commandesFamille = new ArrayList<CommandeFamille>();
+    }
 
     /**
      * @return the id
@@ -148,6 +165,18 @@ public class CommandeEcole {
     }
 
     /**
+     * @param commandesEleves the commandesEleves to set
+     */
+    public void addCommandesFamille(CommandeFamille commandeFamille) {
+        this.commandesFamille.add(commandeFamille);
+        this.montantEcoleHT += commandeFamille.getMontantEcoleHT();
+        this.montantEcoleTTC += commandeFamille.getMontantEcoleTTC();
+        this.montantParentHT += commandeFamille.getMontantParentHT();
+        this.montantParentTTC += commandeFamille.getMontantParentTTC();
+        commandeFamille.setCommandeEcole(this);
+    }
+
+    /**
      * @return the dateLivraison
      */
     public Date getDateLivraison() {
@@ -159,6 +188,62 @@ public class CommandeEcole {
      */
     public void setDateLivraison(Date dateLivraison) {
         this.dateLivraison = dateLivraison;
+    }
+
+    /**
+     * @return the montantParentHT
+     */
+    public double getMontantParentHT() {
+        return montantParentHT;
+    }
+
+    /**
+     * @param montantParentHT the montantParentHT to set
+     */
+    public void setMontantParentHT(double montantParentHT) {
+        this.montantParentHT = montantParentHT;
+    }
+
+    /**
+     * @return the montantEcoleHT
+     */
+    public double getMontantEcoleHT() {
+        return montantEcoleHT;
+    }
+
+    /**
+     * @param montantEcoleHT the montantEcoleHT to set
+     */
+    public void setMontantEcoleHT(double montantEcoleHT) {
+        this.montantEcoleHT = montantEcoleHT;
+    }
+
+    /**
+     * @return the montantParentTTC
+     */
+    public double getMontantParentTTC() {
+        return montantParentTTC;
+    }
+
+    /**
+     * @param montantParentTTC the montantParentTTC to set
+     */
+    public void setMontantParentTTC(double montantParentTTC) {
+        this.montantParentTTC = montantParentTTC;
+    }
+
+    /**
+     * @return the montantEcoleTTC
+     */
+    public double getMontantEcoleTTC() {
+        return montantEcoleTTC;
+    }
+
+    /**
+     * @param montantEcoleTTC the montantEcoleTTC to set
+     */
+    public void setMontantEcoleTTC(double montantEcoleTTC) {
+        this.montantEcoleTTC = montantEcoleTTC;
     }
 
     @Override

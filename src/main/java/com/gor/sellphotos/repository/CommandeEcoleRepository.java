@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.gor.sellphotos.dao.CommandeEcole;
+import com.gor.sellphotos.dao.CommandeEcole.StatutCommandeEcole;
 
 public interface CommandeEcoleRepository extends CrudRepository<CommandeEcole, Long> {
 
@@ -24,7 +25,7 @@ public interface CommandeEcoleRepository extends CrudRepository<CommandeEcole, L
     public List<CommandeEcole> findByIdEcole(@Param("idEcole") Long idEcole);
 
     @Query(FIND_BY_ID_ECOLE_AND_STATUT)
-    public List<CommandeEcole> findByIdEcoleEtStatut(@Param("idEcole") Long idEcole, @Param("statut") String statut);
+    public List<CommandeEcole> findByIdEcoleEtStatut(@Param("idEcole") Long idEcole, @Param("statut") StatutCommandeEcole statut);
 
     public List<CommandeEcole> findByStatut(String statut);
 

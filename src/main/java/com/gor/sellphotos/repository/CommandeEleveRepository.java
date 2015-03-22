@@ -49,6 +49,20 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
                                     + "GROUP BY "
                                     + " el.identifiant, p.id";
 
+    public final static String GET_SYNTHESE_MONTANT_A_PAYER_BY_ID_CHIFFRE_CLASSE =
+                    "SELECT c.id, el.identifiant, el.nom as nomEleve, sum(ce.montantParentHT) as montantParent, sum(ce.montantEcoleHT) as montantEcole, "
+                                    + "sum(ce.montantParentTTC) as montantParentTTC, sum(ce.montantEcoleTTC) as montantEcoleTTC "
+                                    + "FROM "
+                                    + " Eleve el "
+                                    + " JOIN el.classe c "
+                                    + " LEFT JOIN el.commandes ce "
+                                    + " JOIN ce.commandeFamille cf "
+                                    + "WHERE "
+                                    + " c.identifiantChiffre = :identifiantChiffre and "
+                                    + " cf.statut in ('EN_ATTENTE_PAYEMENT') "
+                                    + "GROUP BY "
+                                    + " el.identifiant";
+
     public final static String FIND_BY_ID_CMD_ECOLE = "SELECT ce " +
                     "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf " +
                     "LEFT JOIN cf.commandeEcole cecol " +
@@ -127,6 +141,9 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
 
     @Query(FIND_SYNTHESE_BY_ID_CHIFFRE_CLASSE)
     public List<Object[]> findSyntheseByIdentifiantChiffreClasse(@Param("identifiantChiffre") String identifiantChiffreClasse);
+
+    @Query(GET_SYNTHESE_MONTANT_A_PAYER_BY_ID_CHIFFRE_CLASSE)
+    public List<Object[]> getSyntheseMontantAPayerByIdentifiantChiffreClasse(@Param("identifiantChiffre") String identifiantChiffreClasse);
 
     // @Query(FIND_BY_ID_FAMILLE)
     // public List<CommandeEleve> findByIdentifiantFamille(@Param("idFamille") String identifiantFamille);

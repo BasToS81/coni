@@ -130,51 +130,10 @@ public class Famille {
     /**
      * @return the commandesEnAttenteValidationPayement
      */
-    public List<CommandeFamille> getCommandesEnAttenteValidationPayement() {
+    public List<CommandeFamille> getCommandesByStatut(StatutCommandeFamille statut) {
         List<CommandeFamille> listCommande = new ArrayList<CommandeFamille>();
         for (CommandeFamille commande : commandes) {
-            if (commande.getStatut().equals(StatutCommandeFamille.EN_ATTENTE_PAYEMENT)) {
-                listCommande.add(commande);
-            }
-        }
-        return listCommande;
-    }
-
-    /**
-     * @return the commandesEnAttenteValidationEcole
-     */
-    public List<CommandeFamille> getCommandesEnAttenteValidationEcole() {
-        List<CommandeFamille> listCommande = new ArrayList<CommandeFamille>();
-        for (CommandeFamille commande : commandes) {
-            if (commande.getStatut().equals(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE)) {
-                listCommande.add(commande);
-            }
-        }
-        return listCommande;
-
-    }
-
-    /**
-     * @return the commandesEnLivraison
-     */
-    public List<CommandeFamille> getCommandesEnLivraison() {
-        List<CommandeFamille> listCommande = new ArrayList<CommandeFamille>();
-        for (CommandeFamille commande : commandes) {
-            if (commande.getStatut().equals(StatutCommandeFamille.EN_LIVRAISON)) {
-                listCommande.add(commande);
-            }
-        }
-        return listCommande;
-    }
-
-    /**
-     * @return the commandesLivrees
-     */
-    public List<CommandeFamille> getCommandesLivrees() {
-
-        List<CommandeFamille> listCommande = new ArrayList<CommandeFamille>();
-        for (CommandeFamille commande : commandes) {
-            if (commande.getStatut().equals(StatutCommandeFamille.LIVREE)) {
+            if (commande.getStatut().equals(statut)) {
                 listCommande.add(commande);
             }
         }

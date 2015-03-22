@@ -12,41 +12,32 @@
 						<th ng-repeat="produit in classe.modeleEtTarif.produits">
 							{{produit.designation}}
 						</th>
-						<th>Total prix vente TTC</th>
+						<th>Total prix vente HT</th>
 						<th>Paiement effectué</th>
-						<th>Actions</th>
-						<th>Commentaire</th>
 					</tr>
 					<tr class="table-heading">
-						<th class="col-md-1">&nbsp;</td>
+						<th class="col-md-1">Prix unitaire HT</th>
 						<th ng-repeat="produit in classe.modeleEtTarif.produits">
 							{{produit.prixParentHT  | number : 2 }} €
 						</th>
 						<th>{{classe.montantTotalParentHT  | number : 2 }} €</th>
 						<th class="text-center"><button class="btn btn-success btn-sm" ng-click="selectAllCheckbox()"><span class='glyphicon glyphicon-ok-circle'></button></th>
-						<th>&nbsp;</th>
-						<th>&nbsp;</th>
+
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="commandesEleve in commandesEleves">
-						<td class="col-md-1">{{commandesEleve.eleve.identifiant}}</td>
+						<td class="col-md-1">{{commandesEleve.eleve.nom}}</td>
 						<td ng-repeat="produitCommande in commandesEleve.produitsCommandes">
 						 	<input ng-model="produitCommande.quantite" class="form-control" ng-change="calcul(commandesEleve,produitCommande)"/>
 						</td>
 						<td>
-							{{commandesEleve.montantTotalParentHT  | number : 2 }} €
+							{{commandesEleve.montantParentHT  | number : 2 }} €
 						</td>
 						<td>
 							<div class="checkbox text-center">
 							   <input type="checkbox" ng-model="commandesEleve.paiementEffectue">
 							</div>
-						</td>
-						<td>
-							&nbsp;
-						</td>
-						<td>
-							{{commandesEleve.commentaire}}
 						</td>
 					</tr>
 					

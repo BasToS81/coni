@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.gor.sellphotos.dao.CommandeEcole.StatutCommandeEcole;
+
 @Entity
 public class Ecole {
 
@@ -52,14 +54,8 @@ public class Ecole {
     @OneToOne
     private ModeleEtTarif modeleEtTarif;
 
-    @OneToOne(mappedBy = "ecole")
-    private CommandeEcole commandeEnCours;
-
     @OneToMany(mappedBy = "ecole")
-    private List<CommandeEcole> commandeEnLivraison;
-
-    @OneToMany(mappedBy = "ecole")
-    private List<CommandeEcole> commandeLivrees;
+    private List<CommandeEcole> commandes;
 
     @Basic
     private Date dateLimiteDesCommandesEleves;
@@ -73,8 +69,7 @@ public class Ecole {
     public Ecole() {
         responsables = new ArrayList<Responsable>();
         classes = new ArrayList<Classe>();
-        commandeEnLivraison = new ArrayList<CommandeEcole>();
-        commandeLivrees = new ArrayList<CommandeEcole>();
+        commandes = new ArrayList<CommandeEcole>();
     }
 
     /**
@@ -258,45 +253,39 @@ public class Ecole {
     }
 
     /**
+     * @return the commandes
+     */
+    public List<CommandeEcole> getCommandes() {
+        return commandes;
+    }
+
+    /**
+     * @param commandes the commandes to set
+     */
+    public void setCommandes(List<CommandeEcole> commandes) {
+        this.commandes = commandes;
+    }
+
+    /**
+     * @param commandes the commandes to add
+     */
+    public void addCommande(CommandeEcole commande) {
+        commande.setEcole(this);
+        this.commandes.add(commande);
+    }
+
+    /**
      * @return the commandeEnCours
      */
-    public CommandeEcole getCommandeEnCours() {
-        return commandeEnCours;
-    }
+    public List<CommandeEcole> getCommandeByStatus(StatutCommandeEcole statut) {
+        List<CommandeEcole> listCommande = new ArrayList<CommandeEcole>();
+        for (CommandeEcole commande : commandes) {
+            if (commande.getStatut().equals(statut)) {
+                listCommande.add(commande);
+            }
+        }
 
-    /**
-     * @param commandeEnCours the commandeEnCours to set
-     */
-    public void setCommandeEnCours(CommandeEcole commandeEnCours) {
-        this.commandeEnCours = commandeEnCours;
-    }
-
-    /**
-     * @return the commandeEnLivraison
-     */
-    public List<CommandeEcole> getCommandeEnLivraison() {
-        return commandeEnLivraison;
-    }
-
-    /**
-     * @param commandeEnLivraison the commandeEnLivraison to set
-     */
-    public void setCommandeEnLivraison(List<CommandeEcole> commandeEnLivraison) {
-        this.commandeEnLivraison = commandeEnLivraison;
-    }
-
-    /**
-     * @return the commandeLivrees
-     */
-    public List<CommandeEcole> getCommandeLivrees() {
-        return commandeLivrees;
-    }
-
-    /**
-     * @param commandeLivrees the commandeLivrees to set
-     */
-    public void setCommandeLivrees(List<CommandeEcole> commandeLivrees) {
-        this.commandeLivrees = commandeLivrees;
+        return listCommande;
     }
 
     /**
