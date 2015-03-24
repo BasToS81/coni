@@ -266,6 +266,43 @@ public class EcoleCommandesController extends AbstractRestHandler {
         return commandeEcoleDTO;
     }
 
+    @RequestMapping("/ws/ecole/commandes/classe/eleve/getList")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public List<CommandeEleveSyntheseDTOEleve> getCommandesFamilleACommander(@RequestParam("identifiant") String identifiantEleve, Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        // TODO : vérifier que l'élève fait partie de l'école
+
+        LOGGER.debug("loading commandes eleves {}", identifiantEleve);
+
+        List<CommandeEleveSyntheseDTOEleve> commandesDTO = new ArrayList<CommandeEleveSyntheseDTOEleve>();
+
+        List<CommandeFamille> commandes = commandeFamilleRepository.findValidateByIdentifiantEleve(identifiantEleve);
+        if (commandes != null) {
+
+            for (CommandeFamille commandeFamille : commandes) {
+
+                CommandeEleveSyntheseDTOEleve cmdDTO = null;
+
+                cmdDTO = MapperUtils.convert(commandeFamille, CommandeEleveSyntheseDTOEleve.class);
+
+                double tva = FinanceUtils.getTVAValue(commandeFamille.getDateValidation(), tvaRepository);
+
+                // TODO : regarder pour voir comment gérer la TVA lors de la visualisation des produits
+
+                cmdDTO.setTva(tva);
+
+                commandesDTO.add(cmdDTO);
+            }
+        }
+        LOGGER.debug("commande eleve {}", commandes);
+        return commandesDTO;
+    }
+
     /*
      * ------------------------------------
      * Commande des élèves pour l'école
@@ -300,7 +337,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
         commandesClasseSyntheseDTO.setNom(classe.getNom());
 
         List<Object[]> commandes = commandeEleveRepository.findSyntheseByIdentifiantChiffreClasse(identifiantChiffreClasse);
-        List<Object[]> montantAPayer = commandeEleveRepository.findSyntheseByIdentifiantChiffreClasse(identifiantChiffreClasse);
+
         Map<String, CommandeEleveDTOEcole> commandesDTO = new HashMap<String, CommandeEleveDTOEcole>();
 
         for (Object[] commandeEleve : commandes) {
@@ -315,12 +352,19 @@ public class EcoleCommandesController extends AbstractRestHandler {
                 EleveDTO eleveDTO = MapperUtils.convert(eleve, EleveDTO.class);
                 cmdDTO.setEleve(eleveDTO);
 
+                // Détermination si les commandes sont toutes payées
+                if (eleve.getCommandesByStatut(StatutCommandeFamille.EN_ATTENTE_PAYEMENT).size() > 0) {
+                    eleveDTO.setMontantRestantAPayerEcoleHT(1);
+                }
+
                 for (Produit produit : modeleEtTarif.getProduits()) {
                     Long idProduit = (Long) commandeEleve[3];
 
                     CommandeProduitDTOEcole cmdProduitDTO = new CommandeProduitDTOEcole();
+                    CommandeProduitDTOEcole newCmdProduitDTO = new CommandeProduitDTOEcole();
                     ProduitDTO produitDTO = MapperUtils.convert(produit, ProduitDTO.class);
                     cmdProduitDTO.setProduit(produitDTO);
+                    newCmdProduitDTO.setProduit(produitDTO);
 
                     cmdProduitDTO.setQuantite(0);
                     cmdProduitDTO.setMontantParentHT(0);
@@ -378,10 +422,13 @@ public class EcoleCommandesController extends AbstractRestHandler {
         // affichage des élèves qui n'ont pas de commande en cours.
         for (Eleve eleveDeLaClasse : classe.getEleves()) {
             CommandeEleveDTOEcole cmdDTO = commandesDTO.get(eleveDeLaClasse.getIdentifiant());
+
             if (null == cmdDTO) {
                 // Pas de commandes en base, on en créée une virtuelle
                 cmdDTO = new CommandeEleveDTOEcole();
-                cmdDTO.setEleve(MapperUtils.convert(eleveDeLaClasse, EleveDTO.class));
+                EleveDTO eleveDTO = MapperUtils.convert(eleveDeLaClasse, EleveDTO.class);
+                cmdDTO.setEleve(eleveDTO);
+
                 for (Produit produit : modeleEtTarif.getProduits()) {
                     CommandeProduitDTOEcole cmdProduitDTO = new CommandeProduitDTOEcole();
                     cmdProduitDTO.setProduit(MapperUtils.convert(produit, ProduitDTO.class));
@@ -391,6 +438,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
             }
 
             commandesClasseSyntheseDTO.addCommandeEleveSynthese(cmdDTO);
+
         }
 
         LOGGER.debug("commandes eleve de classe {}", commandesClasseSyntheseDTO);

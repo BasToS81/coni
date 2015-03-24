@@ -1,0 +1,95 @@
+<div class="col-md-12 main-panel" ng-controller='EcoleClasseCommandeCtrl'>
+
+
+	<div class="col-md-12">
+		<h4> Classe : {{classe.nom}}</h4>
+		<!-- Affichage de la liste des élèves de classe en ligne et des produits en colonne -->
+		<div class="table-responsive">
+		 	<table class="table table-striped,noBottomMargin">
+			 	<thead>
+			 		<tr class="table-heading">
+						<th class="col-md-1">Eleve</td>
+						<th class="col-md-1">&nbsp;</td>
+						<th ng-repeat="produit in classe.modeleEtTarif.produits">
+							{{produit.designation}}
+						</th>
+						<th>Total (HT)</th>
+						<th>Total (HT)</th>
+						<th>Total (HT)</th>
+					</tr>
+					<tr class="table-heading">
+						<th class="col-md-1">Prix unitaire HT</th>
+						<th class="col-md-1">&nbsp;</th>
+						<th ng-repeat="produit in classe.modeleEtTarif.produits">
+							{{produit.prixParentHT  | number : 2 }} €
+						</th>
+						<th>Nouvelles commandes</th>
+						<th>Commandes existantes</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="commandesEleve in commandesEleves">
+						<td class="col-md-1">{{commandesEleve.eleve.nom}}</td>
+						<td class="col-md-1">
+							<button class="btn btn-sm btn-success" ng-show="commandesEleve.eleve.montantRestantAPayerEcoleHT==0" ng-click="visualiserCommandes(commandesEleve.eleve.identifiant)"><span class='glyphicon glyphicon-eye-open'></button>
+							<button class="btn btn-sm btn-warning" ng-show="commandesEleve.eleve.montantRestantAPayerEcoleHT!=0" ng-click="visualiserCommandes(commandesEleve.eleve.identifiant)"><span class='glyphicon glyphicon-eye-open'></button>
+						</td>
+						<td ng-repeat="produitCommande in commandesEleve.produitsCommandes" class="col-md-1">
+							<div class="input-group" ng-show="produitCommande.quantite>0">
+							  <input type="text" class="form-control" ng-model="produitCommande.newQuantite" ng-change="calcul(commandesEleve,produitCommande)" aria-describedby="basic-addon2">
+							  <span class="input-group-addon" id="basic-addon2">{{produitCommande.quantite}}</span>
+							</div>
+							<div class="input-group" ng-show="produitCommande.quantite==0">
+								<input type="text" class="form-control" ng-model="produitCommande.newQuantite" ng-change="calcul(commandesEleve,produitCommande)">
+							</div>
+						</td>
+						<td>
+							{{commandesEleve.newMontantParentHT  | number : 2 }} €
+						</td>
+						<td>
+							{{commandesEleve.montantParentHT  | number : 2 }} €
+						</td>
+						<td>
+							{{commandesEleve.newMontantParentHT + commandesEleve.montantParentHT  | number : 2 }} €
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td ng-repeat="produit in classe.modeleEtTarif.produits">
+							&nbsp;
+						</td>
+						<td>
+							{{classe.newMontantTotalParentHT  | number : 2 }} €
+						</td>
+						<td>
+							{{classe.montantTotalParentHT  | number : 2 }} €
+						</td>
+						<td>
+							{{classe.newMontantTotalParentHT + classe.montantTotalParentHT | number : 2 }} €
+						</td>
+						
+					</tr>
+							
+				</tbody>
+			</table>
+		</div>
+		
+		
+		
+		<div  class="col-md-12" >
+			<div class="col-md-2"> </div>
+			<div class="col-md-2">
+				<button class="btn btn-lg btn-warning btn-block" ui-sref="generic({type : 'ecole'})" ><span class="glyphicon glyphicon-circle-arrow-left"	></span>  &nbsp;&nbsp;Retour</button>
+			</div>
+			
+			<div class="col-md-3">
+				<button class="btn btn-lg btn-primary btn-block" ng-click="saveModifications()">Enregistrer  &nbsp;&nbsp;<span class="glyphicon glyphicon-save"></span></button>
+			</div>
+			
+			<div class="col-md-3"> </div>
+		</div>
+		<div  class="col-md-12" >&nbsp;</div>
+	</div>
+</div>

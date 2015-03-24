@@ -1,11 +1,14 @@
 package com.gor.sellphotos.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.gor.sellphotos.dao.CommandeFamille.StatutCommandeFamille;
 
 @Entity
 public class Eleve extends Utilisateur {
@@ -83,6 +86,17 @@ public class Eleve extends Utilisateur {
 
     public List<CommandeEleve> getCommandes() {
         return commandes;
+    }
+
+    public List<CommandeEleve> getCommandesByStatut(StatutCommandeFamille statut) {
+        List<CommandeEleve> resultat = new ArrayList<CommandeEleve>();
+
+        for (CommandeEleve cmdEleve : commandes) {
+            if (cmdEleve.getCommandeFamille().getStatut().equals(statut)) {
+                resultat.add(cmdEleve);
+            }
+        }
+        return resultat;
     }
 
     public void setCommandes(List<CommandeEleve> commandes) {

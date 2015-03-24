@@ -19,6 +19,14 @@ public class CommandeClasseSyntheseDTOEcole {
 
     private double montantTotalEcoleTTC;
 
+    private double newMontantTotalParentHT;
+
+    private double newMontantTotalEcoleHT;
+
+    private double newMontantTotalParentTTC;
+
+    private double newMontantTotalEcoleTTC;
+
     private ModeleEtTarifDTO modeleEtTarif;
 
     public CommandeClasseSyntheseDTOEcole() {
@@ -137,6 +145,62 @@ public class CommandeClasseSyntheseDTOEcole {
      */
     public void setMontantTotalEcoleTTC(double montantTotalEcoleTTC) {
         this.montantTotalEcoleTTC = montantTotalEcoleTTC;
+    }
+
+    /**
+     * @return the newMontantTotalParentHT
+     */
+    public double getNewMontantTotalParentHT() {
+        return newMontantTotalParentHT;
+    }
+
+    /**
+     * @param newMontantTotalParentHT the newMontantTotalParentHT to set
+     */
+    public void setNewMontantTotalParentHT(double newMontantTotalParentHT) {
+        this.newMontantTotalParentHT = newMontantTotalParentHT;
+    }
+
+    /**
+     * @return the newMontantTotalEcoleHT
+     */
+    public double getNewMontantTotalEcoleHT() {
+        return newMontantTotalEcoleHT;
+    }
+
+    /**
+     * @param newMontantTotalEcoleHT the newMontantTotalEcoleHT to set
+     */
+    public void setNewMontantTotalEcoleHT(double newMontantTotalEcoleHT) {
+        this.newMontantTotalEcoleHT = newMontantTotalEcoleHT;
+    }
+
+    /**
+     * @return the newMontantTotalParentTTC
+     */
+    public double getNewMontantTotalParentTTC() {
+        return newMontantTotalParentTTC;
+    }
+
+    /**
+     * @param newMontantTotalParentTTC the newMontantTotalParentTTC to set
+     */
+    public void setNewMontantTotalParentTTC(double newMontantTotalParentTTC) {
+        this.newMontantTotalParentTTC = newMontantTotalParentTTC;
+    }
+
+    /**
+     * @return the newMontantTotalEcoleTTC
+     */
+    public double getNewMontantTotalEcoleTTC() {
+        return newMontantTotalEcoleTTC;
+    }
+
+    /**
+     * @param newMontantTotalEcoleTTC the newMontantTotalEcoleTTC to set
+     */
+    public void setNewMontantTotalEcoleTTC(double newMontantTotalEcoleTTC) {
+        this.newMontantTotalEcoleTTC = newMontantTotalEcoleTTC;
     }
 
 }

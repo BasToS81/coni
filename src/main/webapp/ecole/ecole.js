@@ -98,6 +98,22 @@ var loadCommandeEcole = function($q, $http, $stateParams, $timeout, Auth) {
 	
 	return deferred.promise;
 };
+
+
+var loadEcoleCommandesClasseEleve = function($q, $http, $stateParams, $timeout, Auth) {
+
+	var deferred = $q.defer();	
+	
+	var url = '/ws/ecole/commandes/classe/eleve/getList?identifiant=' + $stateParams.idEleve;
+	
+	$http.get(url)
+	.success(function(data, status, headers, config) {
+		Auth.setUserCommandes(data);
+		$timeout(deferred.resolve, 0);
+	});
+	
+	return deferred.promise;
+};
 //#########################################
 //#########################################
 
@@ -376,11 +392,13 @@ myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth'
 	
 	$scope.calcul = function( commandeEnCours, produit ) { 
 		
-		if(IsInteger(produit.quantite)&&produit.quantite>=0) {
-			var ancienMontant = produit.montantParentHT;
-			produit.montantParentHT = parseInt(produit.quantite) * produit.produit.prixParentHT;
-			var diffMontant = produit.montantParentHT - ancienMontant;
-			commandeEnCours.montantParentHT += diffMontant;
+		if(IsInteger(produit.newQuantite)&&produit.newQuantite>=0) {
+			var ancienMontant = produit.newMontantParentHT;
+			var ancienMontantTotal = $scope.classe.newMontantTotalParentHT;
+			produit.newMontantParentHT = parseInt(produit.newQuantite) * produit.produit.prixParentHT;
+			var diffMontant = produit.newMontantParentHT - ancienMontant;
+			commandeEnCours.newMontantParentHT += diffMontant;
+			$scope.classe.newMontantTotalParentHT += diffMontant;
 		}
 		
 	};
@@ -399,8 +417,45 @@ myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth'
 		
 	};
 	
+	$scope.visualiserCommandes = function(identifiantEleve) {
+		$state.go('generic.ecoleCommandes.eleve', { idEleve : identifiantEleve });
+	}
+	
 }]);
 
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~
+//PAGE BORDEREAU : VISUALISATION DES COMMANDES ELEVES 
+//~~~~~~~~~~~~~~~~~~~~~~~~~
+
+myApp.controller('EcoleCommandesClasseEleveCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', 'StatutCommandeFamille', function($scope, $http, $state, Auth, $stateParams, StatutCommandeFamille) {
+	$scope.commandes = Auth.getUserCommandes();
+	$scope.classe = Auth.getUserClasseVisualise();
+	$scope.eleveIdentifiant=0;
+	
+	
+	$scope.retourArriere = function() {
+		$state.go('generic.ecoleCommandes.classe', {'id' : $scope.classe});
+	}
+	
+	$scope.openCommande = function(identifiantCommande) { 
+		$state.go('generic.ecoleCommandes.eleve.visualisation', {'idCommande' : identifiantCommande});
+	}
+	
+	$scope.validerPaiementCommande = function(commande) {
+		
+		$http.post('/ws/ecole/commande/validatePaiement?identifiant=' + commande.identifiant)
+		.success(
+				function(data, status, headers, config) {
+					commande.statut=StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE;
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de la commande";
+				});
+	}
+
+}]);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~
 //PAGE DES COMMANDES ELEVES POUR CREATION COMMANDE ECOLE

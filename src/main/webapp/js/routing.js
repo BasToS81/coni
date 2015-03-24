@@ -184,18 +184,41 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 				url : '/classe/{id}',
 				views : {
 					'content-commande@generic.ecoleCommandes' : {
-						templateUrl : '/ecole/commande/creation/commande.html',
+						templateUrl : '/ecole/commande/creation/bordereau.html',
 						controller : 'EcoleClasseCommandeCtrl',
 						resolve : {	additionalData : loadCommandeClasse }
 					}
 				}
 			})	
+				// - visualisation des commandes d'un élève
+				.state('generic.ecoleCommandes.eleve', {
+					url : '/eleve/{idEleve}',
+					views : {
+						'content-commande@generic.ecoleCommandes' : {
+							templateUrl : '/ecole/commande/creation/commandesFamille.html',
+							controller : 'EcoleCommandesClasseEleveCtrl',
+							resolve : {	additionalData : loadEcoleCommandesClasseEleve }
+						}
+					}
+				})
+					// - visualisation d'une commande d'un élève
+					.state('generic.ecoleCommandes.eleve.visualisation', {
+						url : '/{idCommande}',
+						views : {
+							'content-ecole-commande@generic.ecoleCommandes.eleve' : {
+								templateUrl : '/ecole/commande/creation/visualisationCommande.html',
+								controller : 'EcoleCommandeVisualisationCtrl',
+								resolve : {	additionalData : visualiserCommandeEleve }
+							}
+						}
+					})
+			
 			// - visualisation des commandes
 			.state('generic.ecoleCommandes.liste', {
 				url : '/liste',
 				views : {
 					'content-commande@generic.ecoleCommandes' : {
-						templateUrl : '/ecole/commande/creation/commandesFamille.html',
+						templateUrl : '/ecole/commande/creation/toutesLesCommandesFamille.html',
 						controller : 'EcoleCommandesEleveCtrl',
 						resolve : {	additionalData : loadCommandesEcole }
 					}
