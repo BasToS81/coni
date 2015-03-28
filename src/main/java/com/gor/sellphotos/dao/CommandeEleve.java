@@ -78,11 +78,14 @@ public class CommandeEleve {
     }
 
     public void addProduitCommande(CommandeProduit produitCommande) {
-        this.produitsCommandes.add(produitCommande);
-        this.montantParentHT += produitCommande.getMontantParentHT();
-        this.montantEcoleHT += produitCommande.getMontantEcoleHT();
-        this.montantParentTTC += produitCommande.getMontantParentTTC();
-        this.montantEcoleTTC += produitCommande.getMontantEcoleTTC();
+        if (produitCommande != null) {
+            this.produitsCommandes.add(produitCommande);
+            produitCommande.setCommandeEleve(this);
+            this.montantParentHT += produitCommande.getMontantParentHT();
+            this.montantEcoleHT += produitCommande.getMontantEcoleHT();
+            this.montantParentTTC += produitCommande.getMontantParentTTC();
+            this.montantEcoleTTC += produitCommande.getMontantEcoleTTC();
+        }
     }
 
     /**

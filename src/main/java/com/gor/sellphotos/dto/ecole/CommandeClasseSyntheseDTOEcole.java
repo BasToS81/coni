@@ -9,7 +9,7 @@ public class CommandeClasseSyntheseDTOEcole {
 
     private String nom;
 
-    private List<CommandeEleveDTOEcole> commandeEleve;
+    private List<CommandeElevePayeEtNonPayeDTOEcole> commandeEleve;
 
     private double montantTotalParentHT;
 
@@ -19,18 +19,18 @@ public class CommandeClasseSyntheseDTOEcole {
 
     private double montantTotalEcoleTTC;
 
-    private double newMontantTotalParentHT;
+    private double montantTotalParentHTNonPaye;
 
-    private double newMontantTotalEcoleHT;
+    private double montantTotalEcoleHTNonPaye;
 
-    private double newMontantTotalParentTTC;
+    private double montantTotalParentTTCNonPaye;
 
-    private double newMontantTotalEcoleTTC;
+    private double montantTotalEcoleTTCNonPaye;
 
     private ModeleEtTarifDTO modeleEtTarif;
 
     public CommandeClasseSyntheseDTOEcole() {
-        commandeEleve = new ArrayList<CommandeEleveDTOEcole>();
+        commandeEleve = new ArrayList<CommandeElevePayeEtNonPayeDTOEcole>();
     }
 
     /**
@@ -50,14 +50,14 @@ public class CommandeClasseSyntheseDTOEcole {
     /**
      * @return the commandeEleveSyntheseDTO
      */
-    public List<CommandeEleveDTOEcole> getCommandeEleve() {
+    public List<CommandeElevePayeEtNonPayeDTOEcole> getCommandeEleve() {
         return commandeEleve;
     }
 
     /**
      * @param commandeEleveSyntheseDTO the commandeEleveSyntheseDTO to set
      */
-    public void setCommandeEleve(List<CommandeEleveDTOEcole> commandeEleve) {
+    public void setCommandeEleve(List<CommandeElevePayeEtNonPayeDTOEcole> commandeEleve) {
         this.commandeEleve = commandeEleve;
     }
 
@@ -78,16 +78,18 @@ public class CommandeClasseSyntheseDTOEcole {
     /**
      * @param commandeEleveSyntheseDTO the commandeEleveSyntheseDTO to set
      */
-    public void addCommandeEleveSynthese(CommandeEleveDTOEcole commandeEleve) {
+    public void addCommandeEleveSynthese(CommandeElevePayeEtNonPayeDTOEcole commandeEleve) {
         this.commandeEleve.add(commandeEleve);
 
         this.montantTotalParentHT += commandeEleve.getMontantParentHT();
-
         this.montantTotalEcoleHT += commandeEleve.getMontantEcoleHT();
-
         this.montantTotalParentTTC += commandeEleve.getMontantParentTTC();
-
         this.montantTotalEcoleTTC += commandeEleve.getMontantEcoleTTC();
+
+        this.montantTotalParentHTNonPaye += commandeEleve.getMontantParentHTNonPaye();
+        this.montantTotalEcoleHTNonPaye += commandeEleve.getMontantEcoleHTNonPaye();
+        this.montantTotalParentTTCNonPaye += commandeEleve.getMontantParentTTCNonPaye();
+        this.montantTotalEcoleTTCNonPaye += commandeEleve.getMontantEcoleTTCNonPaye();
 
     }
 
@@ -147,60 +149,36 @@ public class CommandeClasseSyntheseDTOEcole {
         this.montantTotalEcoleTTC = montantTotalEcoleTTC;
     }
 
-    /**
-     * @return the newMontantTotalParentHT
-     */
-    public double getNewMontantTotalParentHT() {
-        return newMontantTotalParentHT;
+    public double getMontantTotalParentHTNonPaye() {
+        return montantTotalParentHTNonPaye;
     }
 
-    /**
-     * @param newMontantTotalParentHT the newMontantTotalParentHT to set
-     */
-    public void setNewMontantTotalParentHT(double newMontantTotalParentHT) {
-        this.newMontantTotalParentHT = newMontantTotalParentHT;
+    public void setMontantTotalParentHTNonPaye(double montantTotalParentHTNonPaye) {
+        this.montantTotalParentHTNonPaye = montantTotalParentHTNonPaye;
     }
 
-    /**
-     * @return the newMontantTotalEcoleHT
-     */
-    public double getNewMontantTotalEcoleHT() {
-        return newMontantTotalEcoleHT;
+    public double getMontantTotalEcoleHTNonPaye() {
+        return montantTotalEcoleHTNonPaye;
     }
 
-    /**
-     * @param newMontantTotalEcoleHT the newMontantTotalEcoleHT to set
-     */
-    public void setNewMontantTotalEcoleHT(double newMontantTotalEcoleHT) {
-        this.newMontantTotalEcoleHT = newMontantTotalEcoleHT;
+    public void setMontantTotalEcoleHTNonPaye(double montantTotalEcoleHTNonPaye) {
+        this.montantTotalEcoleHTNonPaye = montantTotalEcoleHTNonPaye;
     }
 
-    /**
-     * @return the newMontantTotalParentTTC
-     */
-    public double getNewMontantTotalParentTTC() {
-        return newMontantTotalParentTTC;
+    public double getMontantTotalParentTTCNonPaye() {
+        return montantTotalParentTTCNonPaye;
     }
 
-    /**
-     * @param newMontantTotalParentTTC the newMontantTotalParentTTC to set
-     */
-    public void setNewMontantTotalParentTTC(double newMontantTotalParentTTC) {
-        this.newMontantTotalParentTTC = newMontantTotalParentTTC;
+    public void setMontantTotalParentTTCNonPaye(double montantTotalParentTTCNonPaye) {
+        this.montantTotalParentTTCNonPaye = montantTotalParentTTCNonPaye;
     }
 
-    /**
-     * @return the newMontantTotalEcoleTTC
-     */
-    public double getNewMontantTotalEcoleTTC() {
-        return newMontantTotalEcoleTTC;
+    public double getMontantTotalEcoleTTCNonPaye() {
+        return montantTotalEcoleTTCNonPaye;
     }
 
-    /**
-     * @param newMontantTotalEcoleTTC the newMontantTotalEcoleTTC to set
-     */
-    public void setNewMontantTotalEcoleTTC(double newMontantTotalEcoleTTC) {
-        this.newMontantTotalEcoleTTC = newMontantTotalEcoleTTC;
+    public void setMontantTotalEcoleTTCNonPaye(double montantTotalEcoleTTCNonPaye) {
+        this.montantTotalEcoleTTCNonPaye = montantTotalEcoleTTCNonPaye;
     }
 
 }

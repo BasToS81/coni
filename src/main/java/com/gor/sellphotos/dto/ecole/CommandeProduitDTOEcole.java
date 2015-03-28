@@ -8,8 +8,6 @@ public class CommandeProduitDTOEcole {
 
     private int quantite;
 
-    private int newQuantite;
-
     private double montantParentHT;
 
     private double montantEcoleHT;
@@ -17,14 +15,6 @@ public class CommandeProduitDTOEcole {
     private double montantParentTTC;
 
     private double montantEcoleTTC;
-
-    private double newMontantParentHT;
-
-    private double newMontantEcoleHT;
-
-    private double newMontantParentTTC;
-
-    private double newMontantEcoleTTC;
 
     /**
      * @return the produit
@@ -55,6 +45,13 @@ public class CommandeProduitDTOEcole {
     }
 
     /**
+     * @param quantite the quantite to set
+     */
+    public void addQuantite(int quantite) {
+        this.quantite += quantite;
+    }
+
+    /**
      * @return the montantParentHT
      */
     public double getMontantParentHT() {
@@ -66,6 +63,13 @@ public class CommandeProduitDTOEcole {
      */
     public void setMontantParentHT(double montantParentHT) {
         this.montantParentHT = montantParentHT;
+    }
+
+    /**
+     * @param montantParentHT the montantParentHT to set
+     */
+    public void addMontantParentHT(double montantParentHT) {
+        this.montantParentHT += montantParentHT;
     }
 
     /**
@@ -83,6 +87,13 @@ public class CommandeProduitDTOEcole {
     }
 
     /**
+     * @param montantEcoleHT the montantEcoleHT to set
+     */
+    public void addMontantEcoleHT(double montantEcoleHT) {
+        this.montantEcoleHT += montantEcoleHT;
+    }
+
+    /**
      * @return the montantParentTTC
      */
     public double getMontantParentTTC() {
@@ -94,6 +105,13 @@ public class CommandeProduitDTOEcole {
      */
     public void setMontantParentTTC(double montantParentTTC) {
         this.montantParentTTC = montantParentTTC;
+    }
+
+    /**
+     * @param montantParentTTC the montantParentTTC to set
+     */
+    public void addMontantParentTTC(double montantParentTTC) {
+        this.montantParentTTC += montantParentTTC;
     }
 
     /**
@@ -111,73 +129,9 @@ public class CommandeProduitDTOEcole {
     }
 
     /**
-     * @return the newQuantite
+     * @param montantEcoleTTC the montantEcoleTTC to set
      */
-    public int getNewQuantite() {
-        return newQuantite;
+    public void addMontantEcoleTTC(double montantEcoleTTC) {
+        this.montantEcoleTTC += montantEcoleTTC;
     }
-
-    /**
-     * @param newQuantite the newQuantite to set
-     */
-    public void setNewQuantite(int newQuantite) {
-        this.newQuantite = newQuantite;
-    }
-
-    /**
-     * @return the newMontantParentHT
-     */
-    public double getNewMontantParentHT() {
-        return newMontantParentHT;
-    }
-
-    /**
-     * @param newMontantParentHT the newMontantParentHT to set
-     */
-    public void setNewMontantParentHT(double newMontantParentHT) {
-        this.newMontantParentHT = newMontantParentHT;
-    }
-
-    /**
-     * @return the newMontantEcoleHT
-     */
-    public double getNewMontantEcoleHT() {
-        return newMontantEcoleHT;
-    }
-
-    /**
-     * @param newMontantEcoleHT the newMontantEcoleHT to set
-     */
-    public void setNewMontantEcoleHT(double newMontantEcoleHT) {
-        this.newMontantEcoleHT = newMontantEcoleHT;
-    }
-
-    /**
-     * @return the newMontantParentTTC
-     */
-    public double getNewMontantParentTTC() {
-        return newMontantParentTTC;
-    }
-
-    /**
-     * @param newMontantParentTTC the newMontantParentTTC to set
-     */
-    public void setNewMontantParentTTC(double newMontantParentTTC) {
-        this.newMontantParentTTC = newMontantParentTTC;
-    }
-
-    /**
-     * @return the newMontantEcoleTTC
-     */
-    public double getNewMontantEcoleTTC() {
-        return newMontantEcoleTTC;
-    }
-
-    /**
-     * @param newMontantEcoleTTC the newMontantEcoleTTC to set
-     */
-    public void setNewMontantEcoleTTC(double newMontantEcoleTTC) {
-        this.newMontantEcoleTTC = newMontantEcoleTTC;
-    }
-
 }

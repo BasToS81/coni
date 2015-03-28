@@ -1,9 +1,7 @@
 package com.gor.sellphotos.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +22,7 @@ import com.gor.sellphotos.dao.CommandeEcole.StatutCommandeEcole;
 import com.gor.sellphotos.dao.CommandeEleve;
 import com.gor.sellphotos.dao.CommandeFamille;
 import com.gor.sellphotos.dao.CommandeFamille.StatutCommandeFamille;
+import com.gor.sellphotos.dao.CommandeProduit;
 import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dao.ModeleEtTarif;
 import com.gor.sellphotos.dao.Produit;
@@ -32,9 +31,9 @@ import com.gor.sellphotos.dto.ModeleEtTarifDTO;
 import com.gor.sellphotos.dto.ProduitDTO;
 import com.gor.sellphotos.dto.ecole.CommandeClasseSyntheseDTOEcole;
 import com.gor.sellphotos.dto.ecole.CommandeEcoleDTO;
-import com.gor.sellphotos.dto.ecole.CommandeEleveDTOEcole;
+import com.gor.sellphotos.dto.ecole.CommandeElevePayeEtNonPayeDTOEcole;
 import com.gor.sellphotos.dto.ecole.CommandeFamilleDTOEcole;
-import com.gor.sellphotos.dto.ecole.CommandeProduitDTOEcole;
+import com.gor.sellphotos.dto.ecole.CommandeProduitPayeEtNonPayeDTOEcole;
 import com.gor.sellphotos.dto.eleve.CommandeEleveSyntheseDTOEleve;
 import com.gor.sellphotos.repository.ClasseRepository;
 import com.gor.sellphotos.repository.CommandeEcoleRepository;
@@ -153,8 +152,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
             commandeEcoleRepository.save(commandeEcoleEnCours);
             sessionData.setIdentifiantCommmandeEnCours(commandeEcoleEnCours.getId());
 
-        }
-        else {
+        } else {
             commandeEcoleEnCours = commandeEcoleStatutEnCours.get(0);
         }
 
@@ -308,8 +306,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public void saveCommandesACommander(@RequestBody CommandeClasseSyntheseDTOEcole commandesClasseSyntheseDTO,
-                    Authentication authentication) {
+    public void saveCommandesACommander(@RequestBody CommandeClasseSyntheseDTOEcole commandesClasseSyntheseDTO, Authentication authentication) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
         Long identifiantEcole = sessionData.getIdentifiantEcole();
@@ -318,32 +315,94 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("saving new commandes eleves de la classe {}", commandesClasseSyntheseDTO.getNom());
 
-        Map<String, CommandeFamille> listCommandesFamilles = new HashMap<String, CommandeFamille>();
+        // On parcourt toutes les commandes et on créer des nouvelles commandes familles pour chaque élève si pas de commandes en attente de payement déjà
+        // existante.
+        for (CommandeElevePayeEtNonPayeDTOEcole cmdEleveDTO : commandesClasseSyntheseDTO.getCommandeEleve()) {
 
-        // On parcourt toutes les commandes et on créer des nouvelles commandes familles pour chaque élève.
-        for (CommandeEleveDTOEcole cmdEleveDTO : commandesClasseSyntheseDTO.getCommandeEleve()) {
+            // récupération de l'élève
+            Eleve eleve = eleveRepository.findByIdentifiantChiffre(cmdEleveDTO.getEleve().getIdentifiantChiffre());
 
-            CommandeFamille cmdFamille = new CommandeFamille();
-            cmdFamille.setDateCommande(DateUtils.getCurrentDate());
-            cmdFamille.setMoyenPayement("ESPECE");
-            cmdFamille.setStatut();
+            boolean nonTrouve = true;
 
-            // On parcourt les produits commandés
-            for (CommandeProduitDTOEcole cmdProduits : cmdEleveDTO.getProduitsCommandes()) {
+            // Commande déjà existante
+            if (cmdEleveDTO.getId() != null) {
 
-                if (cmdProduits.getNewQuantite() > 0) {
+                CommandeEleve commandeAPayer = commandeEleveRepository.findOne(cmdEleveDTO.getId());
 
-                    // On vérifie si on a une commande famille existante pour l'élève
-                    CommandeFamille cmdFamille = listCommandesFamilles.get(cmdEleveDTO.getEleve().getIdentifiant());
-                    if (cmdFamille != null) {
+                if (commandeAPayer != null) {
+                    // commande existante
+                    nonTrouve = false;
+                    LOGGER.debug("commande à mettre à jour trouvé {}", commandeAPayer.getId());
 
-                        CommandeEleve cmdEleve = new CommandeEleve();
-                        cmdEleve.setCommandeFamille(cmdFamille);
-                        cmdEleve.setEleve(eleve);
+                    // Mise à jour de celle ci
 
+                    // Effacer tous les produits existants
+                    commandeProduitRepository.delete(commandeAPayer.getProduitsCommandes());
+                    commandeAPayer.setMontantEcoleHT(0);
+                    commandeAPayer.setMontantEcoleTTC(0);
+                    commandeAPayer.setMontantParentHT(0);
+                    commandeAPayer.setMontantParentTTC(0);
+                    LOGGER.debug("suppression des produits commandés");
+
+                    for (CommandeProduitPayeEtNonPayeDTOEcole produitsCommandesPayeEtNonPayeDTO : cmdEleveDTO.getProduitsCommandes()) {
+
+                        if (produitsCommandesPayeEtNonPayeDTO.getQuantiteNonPaye() > 0) {
+                            // Sauvegarde que des produits commandes (avec une quantité superieure à 0
+
+                            CommandeProduit commandeProduit = new CommandeProduit();
+                            Produit produit = produitRepository.findOne(produitsCommandesPayeEtNonPayeDTO.getProduit().getId());
+                            commandeProduit.setProduit(produit);
+                            commandeProduit.setQuantite(produitsCommandesPayeEtNonPayeDTO.getQuantiteNonPaye(), tvaRepository);
+
+                            commandeAPayer.addProduitCommande(commandeProduit);
+                            LOGGER.debug("Ajout du produit dans la commande {}, quantite = {}", produit.getId(), commandeProduit.getQuantite());
+
+                        }
                     }
-
+                    commandeProduitRepository.save(commandeAPayer.getProduitsCommandes());
+                    commandeEleveRepository.save(commandeAPayer);
+                    LOGGER.debug("Sauvegarde de la commande");
                 }
+
+            }
+
+            if (nonTrouve) {
+                // Création d'une nouvelle commande
+                CommandeFamille cmdFamille = new CommandeFamille();
+                cmdFamille.setDateCommande(DateUtils.getCurrentDate());
+                cmdFamille.setMoyenPayement("ESPECE");
+                cmdFamille.setStatut(StatutCommandeFamille.EN_ATTENTE_PAYEMENT);
+                cmdFamille.setFamille(eleve.getFamille());
+                LOGGER.debug("Création de la commande famille");
+
+                // Création de la commande Eleve
+                CommandeEleve commandeAPayer = new CommandeEleve();
+                commandeAPayer.setCommandeFamille(cmdFamille);
+                commandeAPayer.setEleve(eleve);
+                commandeAPayer.setFamille(eleve.getFamille());
+                LOGGER.debug("Création de la commande eleve");
+
+                for (CommandeProduitPayeEtNonPayeDTOEcole produitsCommandesPayeEtNonPayeDTO : cmdEleveDTO.getProduitsCommandes()) {
+
+                    if (produitsCommandesPayeEtNonPayeDTO.getQuantiteNonPaye() > 0) {
+                        // Sauvegarde que des produits commandes (avec une quantité superieure à 0
+
+                        CommandeProduit commandeProduit = new CommandeProduit();
+                        Produit produit = produitRepository.findOne(produitsCommandesPayeEtNonPayeDTO.getProduit().getId());
+                        commandeProduit.setProduit(produit);
+                        commandeProduit.setQuantite(produitsCommandesPayeEtNonPayeDTO.getQuantiteNonPaye(), tvaRepository);
+
+                        commandeAPayer.addProduitCommande(commandeProduit);
+                        LOGGER.debug("Ajout du produit dans la commande {}, quantite = {}", produit.getId(), commandeProduit.getQuantite());
+                    }
+                }
+                commandeProduitRepository.save(commandeAPayer.getProduitsCommandes());
+
+                cmdFamille.addCommandeEleve(commandeAPayer);
+
+                commandeEleveRepository.save(commandeAPayer);
+                commandeFamilleRepository.save(cmdFamille);
+                LOGGER.debug("Sauvegarde des produits, de la commande eleve et commande famille");
 
             }
 
@@ -386,110 +445,62 @@ public class EcoleCommandesController extends AbstractRestHandler {
         Classe classe = classeRepository.findByIdentifiantChiffre(identifiantChiffreClasse);
         commandesClasseSyntheseDTO.setNom(classe.getNom());
 
-        List<Object[]> commandes = commandeEleveRepository.findSyntheseByIdentifiantChiffreClasse(identifiantChiffreClasse);
-        
-        List<CommandeEleve> commandesElevesDeLaClasse = commandeEleveRepository.findACommanderByIdChiffreClasse(identifiantChiffreClasse);
-
-        Map<String, CommandeEleveDTOEcole> commandesDTO = new HashMap<String, CommandeEleveDTOEcole>();
-
-        //Parcours des élèves
+        // Parcours des élèves
         for (Eleve eleve : classe.getEleves()) {
 
-            eleve.get
-            
-            // Récupération de la commande si elle est déjà présente dans la map
-            CommandeEleveDTOEcole cmdDTO = commandesDTO.get((String) commandeEleve[1]);
-            if (cmdDTO == null) {
-                // création de la commande
-                cmdDTO = new CommandeEleveDTOEcole();
+            // création de la commande de synthese
+            CommandeElevePayeEtNonPayeDTOEcole cmdDTO = new CommandeElevePayeEtNonPayeDTOEcole();
+            EleveDTO eleveDTO = MapperUtils.convert(eleve, EleveDTO.class);
+            cmdDTO.setEleve(eleveDTO);
 
-                Eleve eleve = eleveRepository.findByIdentifiant((String) commandeEleve[1]);
-                EleveDTO eleveDTO = MapperUtils.convert(eleve, EleveDTO.class);
-                cmdDTO.setEleve(eleveDTO);
+            for (Produit produit : modeleEtTarif.getProduits()) {
 
-                // Détermination si les commandes sont toutes payées
-                if (eleve.getCommandesByStatut(StatutCommandeFamille.EN_ATTENTE_PAYEMENT).size() > 0) {
-                    eleveDTO.setMontantRestantAPayerEcoleHT(1);
-                }
+                CommandeProduitPayeEtNonPayeDTOEcole cmdProduitDTO = new CommandeProduitPayeEtNonPayeDTOEcole();
+                ProduitDTO produitDTO = MapperUtils.convert(produit, ProduitDTO.class);
+                cmdProduitDTO.setProduit(produitDTO);
 
-                for (Produit produit : modeleEtTarif.getProduits()) {
-                    Long idProduit = (Long) commandeEleve[3];
+                cmdProduitDTO.setQuantite(0);
+                cmdProduitDTO.setMontantParentHT(0);
+                cmdProduitDTO.setMontantEcoleHT(0);
+                cmdProduitDTO.setMontantParentTTC(0);
+                cmdProduitDTO.setMontantEcoleTTC(0);
+                cmdProduitDTO.setQuantiteNonPaye(0);
+                cmdProduitDTO.setMontantParentHTNonPaye(0);
+                cmdProduitDTO.setMontantEcoleHTNonPaye(0);
+                cmdProduitDTO.setMontantParentTTCNonPaye(0);
+                cmdProduitDTO.setMontantEcoleTTCNonPaye(0);
 
-                    CommandeProduitDTOEcole cmdProduitDTO = new CommandeProduitDTOEcole();
-                    CommandeProduitDTOEcole newCmdProduitDTO = new CommandeProduitDTOEcole();
-                    ProduitDTO produitDTO = MapperUtils.convert(produit, ProduitDTO.class);
-                    cmdProduitDTO.setProduit(produitDTO);
-                    newCmdProduitDTO.setProduit(produitDTO);
+                for (CommandeEleve cmdEleve : eleve.getCommandes()) {
 
-                    cmdProduitDTO.setQuantite(0);
-                    cmdProduitDTO.setMontantParentHT(0);
-                    cmdProduitDTO.setMontantEcoleHT(0);
-                    cmdProduitDTO.setMontantParentTTC(0);
-                    cmdProduitDTO.setMontantEcoleTTC(0);
+                    if (cmdEleve.getCommandeFamille().getStatut().equals(StatutCommandeFamille.EN_ATTENTE_PAYEMENT)) {
+                        // Commande Non Paye
+                        for (CommandeProduit cmdProduit : cmdEleve.getProduitsCommandes()) {
+                            if (cmdProduit.getProduit().getId().equals(produit.getId())) {
+                                cmdProduitDTO.addQuantiteNonPaye(cmdProduit.getQuantite());
+                                cmdProduitDTO.addMontantParentHTNonPaye(cmdProduit.getMontantParentHT());
+                                cmdProduitDTO.addMontantEcoleHTNonPaye(cmdProduit.getMontantEcoleHT());
+                                cmdProduitDTO.addMontantParentTTCNonPaye(cmdProduit.getMontantParentTTC());
+                                cmdProduitDTO.addMontantEcoleTTCNonPaye(cmdProduit.getMontantEcoleTTC());
+                            }
+                        }
 
-                    if (idProduit == produit.getId()) {
+                        cmdDTO.setId(cmdEleve.getId());
 
-                        cmdProduitDTO.setQuantite(((Long) commandeEleve[4]).intValue());
-                        cmdProduitDTO.setMontantParentHT((double) commandeEleve[5]);
-                        cmdProduitDTO.setMontantEcoleHT((double) commandeEleve[6]);
-                        cmdProduitDTO.setMontantParentTTC((double) commandeEleve[7]);
-                        cmdProduitDTO.setMontantEcoleTTC((double) commandeEleve[8]);
-
-                    }
-
-                    cmdDTO.addMontantEcoleHT(cmdProduitDTO.getMontantEcoleHT());
-                    cmdDTO.addMontantParentHT(cmdProduitDTO.getMontantParentHT());
-                    cmdDTO.addMontantEcoleTTC(cmdProduitDTO.getMontantEcoleTTC());
-                    cmdDTO.addMontantParentTTC(cmdProduitDTO.getMontantParentTTC());
-
-                    cmdDTO.addProduitsCommandes(cmdProduitDTO);
-                }
-
-                commandesDTO.put(eleve.getIdentifiant(), cmdDTO);
-
-            }
-            else {
-                // Mise à jour de la commande
-
-                for (CommandeProduitDTOEcole cmdProduitDTO : cmdDTO.getProduitsCommandes()) {
-                    Long idProduit = (Long) commandeEleve[3];
-                    if (idProduit == cmdProduitDTO.getProduit().getId()) {
-
-                        cmdProduitDTO.setQuantite(((Long) commandeEleve[4]).intValue());
-                        cmdProduitDTO.setMontantParentHT((double) commandeEleve[5]);
-                        cmdProduitDTO.setMontantEcoleHT((double) commandeEleve[6]);
-                        cmdProduitDTO.setMontantParentTTC((double) commandeEleve[7]);
-                        cmdProduitDTO.setMontantEcoleTTC((double) commandeEleve[8]);
-
-                        cmdDTO.addMontantEcoleHT(cmdProduitDTO.getMontantEcoleHT());
-                        cmdDTO.addMontantParentHT(cmdProduitDTO.getMontantParentHT());
-                        cmdDTO.addMontantEcoleTTC(cmdProduitDTO.getMontantEcoleTTC());
-                        cmdDTO.addMontantParentTTC(cmdProduitDTO.getMontantParentTTC());
-
-                        break;
+                    } else if (cmdEleve.getCommandeFamille().getStatut().equals(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE)) {
+                        // Commande Paye
+                        for (CommandeProduit cmdProduit : cmdEleve.getProduitsCommandes()) {
+                            if (cmdProduit.getProduit().getId().equals(produit.getId())) {
+                                cmdProduitDTO.addQuantite(cmdProduit.getQuantite());
+                                cmdProduitDTO.addMontantParentHT(cmdProduit.getMontantParentHT());
+                                cmdProduitDTO.addMontantEcoleHT(cmdProduit.getMontantEcoleHT());
+                                cmdProduitDTO.addMontantParentTTC(cmdProduit.getMontantParentTTC());
+                                cmdProduitDTO.addMontantEcoleTTC(cmdProduit.getMontantEcoleTTC());
+                            }
+                        }
                     }
                 }
 
-            }
-
-        }
-
-        // affichage des élèves qui n'ont pas de commande en cours.
-        for (Eleve eleveDeLaClasse : classe.getEleves()) {
-            CommandeEleveDTOEcole cmdDTO = commandesDTO.get(eleveDeLaClasse.getIdentifiant());
-
-            if (null == cmdDTO) {
-                // Pas de commandes en base, on en créée une virtuelle
-                cmdDTO = new CommandeEleveDTOEcole();
-                EleveDTO eleveDTO = MapperUtils.convert(eleveDeLaClasse, EleveDTO.class);
-                cmdDTO.setEleve(eleveDTO);
-
-                for (Produit produit : modeleEtTarif.getProduits()) {
-                    CommandeProduitDTOEcole cmdProduitDTO = new CommandeProduitDTOEcole();
-                    cmdProduitDTO.setProduit(MapperUtils.convert(produit, ProduitDTO.class));
-                    cmdDTO.addProduitsCommandes(cmdProduitDTO);
-                }
-
+                cmdDTO.addProduitsCommandes(cmdProduitDTO);
             }
 
             commandesClasseSyntheseDTO.addCommandeEleveSynthese(cmdDTO);
@@ -575,9 +586,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public void validatePaiementCommandeFamille(
-                    @RequestParam("identifiant") Long identifiantCommande,
-                    Authentication authentication) {
+    public void validatePaiementCommandeFamille(@RequestParam("identifiant") Long identifiantCommande, Authentication authentication) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();

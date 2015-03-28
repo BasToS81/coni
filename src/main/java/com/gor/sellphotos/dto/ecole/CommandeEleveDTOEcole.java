@@ -19,14 +19,6 @@ public class CommandeEleveDTOEcole {
 
     private double montantEcoleTTC;
 
-    private double newMontantParentHT;
-
-    private double newMontantEcoleHT;
-
-    private double newMontantParentTTC;
-
-    private double newMontantEcoleTTC;
-
     private EleveDTO eleve;
 
     public CommandeEleveDTOEcole() {
@@ -51,7 +43,14 @@ public class CommandeEleveDTOEcole {
      * @param produitsCommandes the produitsCommandes to set
      */
     public void addProduitsCommandes(CommandeProduitDTOEcole produitCommande) {
-        this.produitsCommandes.add(produitCommande);
+
+        if (produitCommande != null) {
+            this.produitsCommandes.add(produitCommande);
+            this.montantEcoleHT += produitCommande.getMontantEcoleHT();
+            this.montantParentHT += produitCommande.getMontantParentHT();
+            this.montantParentTTC += produitCommande.getMontantParentTTC();
+            this.montantEcoleTTC += produitCommande.getMontantEcoleTTC();
+        }
     }
 
     /**
@@ -152,60 +151,12 @@ public class CommandeEleveDTOEcole {
         this.montantEcoleTTC += montantEcoleTTC;
     }
 
-    /**
-     * @return the newMontantParentHT
-     */
-    public double getNewMontantParentHT() {
-        return newMontantParentHT;
+    public Long getId() {
+        return id;
     }
 
-    /**
-     * @param newMontantParentHT the newMontantParentHT to set
-     */
-    public void setNewMontantParentHT(double newMontantParentHT) {
-        this.newMontantParentHT = newMontantParentHT;
-    }
-
-    /**
-     * @return the newMontantEcoleHT
-     */
-    public double getNewMontantEcoleHT() {
-        return newMontantEcoleHT;
-    }
-
-    /**
-     * @param newMontantEcoleHT the newMontantEcoleHT to set
-     */
-    public void setNewMontantEcoleHT(double newMontantEcoleHT) {
-        this.newMontantEcoleHT = newMontantEcoleHT;
-    }
-
-    /**
-     * @return the newMontantParentTTC
-     */
-    public double getNewMontantParentTTC() {
-        return newMontantParentTTC;
-    }
-
-    /**
-     * @param newMontantParentTTC the newMontantParentTTC to set
-     */
-    public void setNewMontantParentTTC(double newMontantParentTTC) {
-        this.newMontantParentTTC = newMontantParentTTC;
-    }
-
-    /**
-     * @return the newMontantEcoleTTC
-     */
-    public double getNewMontantEcoleTTC() {
-        return newMontantEcoleTTC;
-    }
-
-    /**
-     * @param newMontantEcoleTTC the newMontantEcoleTTC to set
-     */
-    public void setNewMontantEcoleTTC(double newMontantEcoleTTC) {
-        this.newMontantEcoleTTC = newMontantEcoleTTC;
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

@@ -15,13 +15,20 @@ public class FinanceUtils {
         return valueTTC / (1 + (tva / 100));
     }
 
+    public static double getCurrentTTCFromHT(double valueHT, TvaRepository tvaRepository) {
+        return getTTCFromHT(valueHT, getCurrentTVA(tvaRepository));
+    }
+
+    public static double getCurrentHTFromTTC(double valueTTC, TvaRepository tvaRepository) {
+        return getHTFromTTC(valueTTC, getCurrentTVA(tvaRepository));
+    }
+
     public static double getTVAValue(Date dateValidation, TvaRepository tvaRepository) {
         Tva tva = null;
         double resultatTva = 0;
         if (dateValidation != null) {
             tva = tvaRepository.findByDateDeDemande(dateValidation, dateValidation);
-        }
-        else {
+        } else {
             tva = tvaRepository.findByDateCourante();
         }
         if (tva != null) {
@@ -29,6 +36,10 @@ public class FinanceUtils {
         }
 
         return resultatTva;
+    }
+
+    public static double getCurrentTVA(TvaRepository tvaRepository) {
+        return getTVAValue(null, tvaRepository);
     }
 
 }

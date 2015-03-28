@@ -7,6 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.gor.sellphotos.repository.TvaRepository;
+import com.gor.sellphotos.utils.FinanceUtils;
+
 @Entity
 public class CommandeProduit {
 
@@ -89,6 +92,22 @@ public class CommandeProduit {
      */
     public void setQuantite(int quantite) {
         this.quantite = quantite;
+    }
+
+    /**
+     * @param quantite the quantite to set
+     */
+    public void setQuantite(int quantite, TvaRepository tvaRepository) {
+        this.quantite = quantite;
+
+        if (this.produit != null) {
+
+            this.montantEcoleHT = produit.getPrixEcoleHT() * this.quantite;
+            this.montantParentHT = produit.getPrixParentHT() * this.quantite;
+            this.montantEcoleTTC = FinanceUtils.getCurrentTTCFromHT(this.montantEcoleHT, tvaRepository);
+            this.montantParentTTC = FinanceUtils.getCurrentTTCFromHT(this.montantParentHT, tvaRepository);
+        }
+
     }
 
     /**

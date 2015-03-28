@@ -392,20 +392,20 @@ myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth'
 	
 	$scope.calcul = function( commandeEnCours, produit ) { 
 		
-		if(IsInteger(produit.newQuantite)&&produit.newQuantite>=0) {
-			var ancienMontant = produit.newMontantParentHT;
-			var ancienMontantTotal = $scope.classe.newMontantTotalParentHT;
-			produit.newMontantParentHT = parseInt(produit.newQuantite) * produit.produit.prixParentHT;
-			var diffMontant = produit.newMontantParentHT - ancienMontant;
-			commandeEnCours.newMontantParentHT += diffMontant;
-			$scope.classe.newMontantTotalParentHT += diffMontant;
+		if(IsInteger(produit.quantiteNonPaye)&&produit.quantiteNonPaye>=0) {
+			var ancienMontant = produit.montantParentHTNonPaye;
+			var ancienMontantTotal = $scope.classe.montantTotalParentHTNonPaye;
+			produit.montantParentHTNonPaye = parseInt(produit.quantiteNonPaye) * produit.produit.prixParentHT;
+			var diffMontant = produit.montantParentHTNonPaye - ancienMontant;
+			commandeEnCours.montantParentHTNonPaye += diffMontant;
+			$scope.classe.montantTotalParentHTNonPaye += diffMontant;
 		}
 		
 	};
 	
 	$scope.sauvegarderCommandes = function() {
 		
-		$http.post('/ws/ecole/commande/sauverCommandes', $scope.commandesEleves)
+		$http.post('/ws/ecole/commandes/classe/eleve/save', $scope.classe)
 		.success(
 				function(data, status, headers, config) {
 					
