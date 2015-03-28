@@ -403,19 +403,37 @@ myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth'
 		
 	};
 	
-	$scope.selectAllCheckbox = function( ) { 
+	$scope.sauvegarderCommandes = function() {
 		
-		var count = $scope.commandesEleves.length;
-
-		for(var i = 0; i < count; i++) {
-			if($scope.commandesEleves[i].montantTotalParentHT>0) {
-				$scope.commandesEleves[i].paiementEffectue = $scope.selectAll;
-			}
-		}
+		$http.post('/ws/ecole/commande/sauverCommandes', $scope.commandesEleves)
+		.success(
+				function(data, status, headers, config) {
+					
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de la commande";
+				});
+	}
+	
+	$scope.commander = function() {
 		
-		$scope.selectAll=!$scope.selectAll;
+		//Sauvegarde au préalable des dernières modifications
+		$scope.sauvegarderCommandes();
 		
-	};
+		//Commande au photographe
+		$http.post('/ws/ecole/commande/createAndValidate')
+		.success(
+				function(data, status, headers, config) {
+					$state.go('generic', {'type' : 'ecole'});
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de la commande";
+				});
+		
+		
+	}
 	
 	$scope.visualiserCommandes = function(identifiantEleve) {
 		$state.go('generic.ecoleCommandes.eleve', { idEleve : identifiantEleve });

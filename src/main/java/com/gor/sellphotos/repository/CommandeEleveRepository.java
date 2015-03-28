@@ -63,10 +63,10 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
                                     + "GROUP BY "
                                     + " el.identifiant";
 
-    public final static String FIND_BY_ID_CMD_ECOLE = "SELECT ce " +
-                    "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf " +
-                    "LEFT JOIN cf.commandeEcole cecol " +
-                    "WHERE cecol.identifiant = :idCmdEcole";
+    public final static String FIND_A_COMMANDER_BY_ID_CHIFFRE_CLASSE = "SELECT ce " +
+                    "FROM CommandeEleve ce " +
+                    "WHERE ce.commandeFamille.statut in ('EN_ATTENTE_PAYEMENT', 'EN_ATTENTE_VALID_RESPONSABLE') " +
+                    "WHERE ce.eleve.classe.identifiantChiffre = :idChiffreClasse";
 
     public final static String FIND_BY_ID_FAMILLE = "SELECT ce " +
                     "FROM CommandeEleve  ce LEFT JOIN ce.eleve e " +
@@ -148,8 +148,8 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
     // @Query(FIND_BY_ID_FAMILLE)
     // public List<CommandeEleve> findByIdentifiantFamille(@Param("idFamille") String identifiantFamille);
 
-    // @Query(FIND_BY_ID_CMD_ECOLE)
-    // public List<CommandeEleve> findByIdCmdEcole(@Param("idCmdEcole") String idCmdEcole);
+    @Query(FIND_A_COMMANDER_BY_ID_CHIFFRE_CLASSE)
+    public List<CommandeEleve> findACommanderByIdChiffreClasse(@Param("idChiffreClasse") String idChiffreClasse);
 
     // @Query(FIND_CMD_DE_TOUTE_LA_FAMILLE_BY_ID_ELEVE)
     // public List<CommandeEleve> findCmdDeTouteLaFamilleByIdEleve(@Param("idEleve") String identifiantEleve);

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -303,6 +304,55 @@ public class EcoleCommandesController extends AbstractRestHandler {
         return commandesDTO;
     }
 
+    @RequestMapping("/ws/ecole/commandes/classe/eleve/save")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public void saveCommandesACommander(@RequestBody CommandeClasseSyntheseDTOEcole commandesClasseSyntheseDTO,
+                    Authentication authentication) {
+
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
+
+        // TODO : vérifier que les élèves font parti de l'école
+
+        LOGGER.debug("saving new commandes eleves de la classe {}", commandesClasseSyntheseDTO.getNom());
+
+        Map<String, CommandeFamille> listCommandesFamilles = new HashMap<String, CommandeFamille>();
+
+        // On parcourt toutes les commandes et on créer des nouvelles commandes familles pour chaque élève.
+        for (CommandeEleveDTOEcole cmdEleveDTO : commandesClasseSyntheseDTO.getCommandeEleve()) {
+
+            CommandeFamille cmdFamille = new CommandeFamille();
+            cmdFamille.setDateCommande(DateUtils.getCurrentDate());
+            cmdFamille.setMoyenPayement("ESPECE");
+            cmdFamille.setStatut();
+
+            // On parcourt les produits commandés
+            for (CommandeProduitDTOEcole cmdProduits : cmdEleveDTO.getProduitsCommandes()) {
+
+                if (cmdProduits.getNewQuantite() > 0) {
+
+                    // On vérifie si on a une commande famille existante pour l'élève
+                    CommandeFamille cmdFamille = listCommandesFamilles.get(cmdEleveDTO.getEleve().getIdentifiant());
+                    if (cmdFamille != null) {
+
+                        CommandeEleve cmdEleve = new CommandeEleve();
+                        cmdEleve.setCommandeFamille(cmdFamille);
+                        cmdEleve.setEleve(eleve);
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        LOGGER.debug("saving new commandes done");
+
+    }
+
     /*
      * ------------------------------------
      * Commande des élèves pour l'école
@@ -337,11 +387,16 @@ public class EcoleCommandesController extends AbstractRestHandler {
         commandesClasseSyntheseDTO.setNom(classe.getNom());
 
         List<Object[]> commandes = commandeEleveRepository.findSyntheseByIdentifiantChiffreClasse(identifiantChiffreClasse);
+        
+        List<CommandeEleve> commandesElevesDeLaClasse = commandeEleveRepository.findACommanderByIdChiffreClasse(identifiantChiffreClasse);
 
         Map<String, CommandeEleveDTOEcole> commandesDTO = new HashMap<String, CommandeEleveDTOEcole>();
 
-        for (Object[] commandeEleve : commandes) {
+        //Parcours des élèves
+        for (Eleve eleve : classe.getEleves()) {
 
+            eleve.get
+            
             // Récupération de la commande si elle est déjà présente dans la map
             CommandeEleveDTOEcole cmdDTO = commandesDTO.get((String) commandeEleve[1]);
             if (cmdDTO == null) {
