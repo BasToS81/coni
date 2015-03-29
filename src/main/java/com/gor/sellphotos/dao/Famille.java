@@ -128,7 +128,7 @@ public class Famille {
     }
 
     /**
-     * @return the commandesEnAttenteValidationPayement
+     * @return the commandesEnAttenteValidationPaiement
      */
     public List<CommandeFamille> getCommandesByStatut(StatutCommandeFamille statut) {
         List<CommandeFamille> listCommande = new ArrayList<CommandeFamille>();

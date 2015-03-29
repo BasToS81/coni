@@ -10,9 +10,11 @@ public class CommandeFamilleDTOEleve {
 
     private Date dateCommande;
 
-    private String moyenPayement;
+    private String moyenPaiement;
 
     private String statut;
+
+    private String statutPaiement;
 
     private Date dateValidation;
 
@@ -59,17 +61,17 @@ public class CommandeFamilleDTOEleve {
     }
 
     /**
-     * @return the moyenPayement
+     * @return the moyenPaiement
      */
-    public String getMoyenPayement() {
-        return moyenPayement;
+    public String getMoyenPaiement() {
+        return moyenPaiement;
     }
 
     /**
-     * @param moyenPayement the moyenPayement to set
+     * @param moyenPaiement the moyenPaiement to set
      */
-    public void setMoyenPayement(String moyenPayement) {
-        this.moyenPayement = moyenPayement;
+    public void setMoyenPaiement(String moyenPaiement) {
+        this.moyenPaiement = moyenPaiement;
     }
 
     /**
@@ -181,6 +183,14 @@ public class CommandeFamilleDTOEleve {
     public String toString() {
         return "Utilisateur [identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montantParentHT=" + montantParentHT
                         + "]";
+    }
+
+    public String getStatutPaiement() {
+        return statutPaiement;
+    }
+
+    public void setStatutPaiement(String statutPaiement) {
+        this.statutPaiement = statutPaiement;
     }
 
 }

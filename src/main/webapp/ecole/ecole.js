@@ -282,7 +282,7 @@ myApp.controller('EcoleClasseSyntheseCtrl', [ '$scope', '$http', '$state', 'Auth
 //PAGE VISUALISATION DES COMMANDES ELEVES 
 //~~~~~~~~~~~~~~~~~~~~~~~~~
 
-myApp.controller('EcoleEleveCommandesCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', 'StatutCommandeFamille', function($scope, $http, $state, Auth, $stateParams, StatutCommandeFamille) {
+myApp.controller('EcoleEleveCommandesCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', 'StatutPaiementCommandeFamille', function($scope, $http, $state, Auth, $stateParams, StatutPaiementCommandeFamille) {
 	$scope.commandes = Auth.getUserCommandes();
 	$scope.classe = Auth.getUserClasseVisualise();
 	$scope.eleveIdentifiant=0;
@@ -305,7 +305,7 @@ myApp.controller('EcoleEleveCommandesCtrl', ['$scope', '$http', '$state', 'Auth'
 		$http.post('/ws/ecole/commande/validatePaiement?identifiant=' + commande.identifiant)
 		.success(
 				function(data, status, headers, config) {
-					commande.statut=StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE;
+					commande.statutPaiement=StatutPaiementCommandeFamille.PAYE;
 				})
 		.error(
 				function(data, status, headers, config) {
@@ -313,7 +313,10 @@ myApp.controller('EcoleEleveCommandesCtrl', ['$scope', '$http', '$state', 'Auth'
 				});
 	}
 	
-	
+
+	$scope.checkCommandeNonPaye = function(commande) {
+		return (commande.statutPaiement==StatutPaiementCommandeFamille.NON_PAYE);
+	}
 	
 	$scope.commandeEnCours = Auth.getUserCommandes();
 	$scope.commandesEleve = $scope.commandeEnCours.commandesEleve;
@@ -408,7 +411,11 @@ myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth'
 		$http.post('/ws/ecole/commandes/classe/eleve/save', $scope.classe)
 		.success(
 				function(data, status, headers, config) {
-					
+					$http.get('/ws/ecole/commande/classe/getList?idClasse=' + Auth.getUserClasseVisualise())
+					.success(function(data, status, headers, config) {
+						$scope.classe = data;
+						$scope.commandesEleves = $scope.classe.commandeEleve;
+					});
 				})
 		.error(
 				function(data, status, headers, config) {
@@ -435,6 +442,25 @@ myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth'
 		
 	}
 	
+
+	$scope.validerPaiementCommande = function(commande) {
+		
+		$http.post('/ws/ecole/commande/validatePaiement?identifiant=' + commande.id)
+		.success(
+				function(data, status, headers, config) {
+					commande.id=null;
+					$http.get('/ws/ecole/commande/classe/getList?idClasse=' + Auth.getUserClasseVisualise())
+					.success(function(data, status, headers, config) {
+						$scope.classe = data;
+						$scope.commandesEleves = $scope.classe.commandeEleve;
+					});
+				})
+		.error(
+				function(data, status, headers, config) {
+					$scope.errorMessage = "Erreur au chargement des données de la commande";
+				});
+	}
+	
 	$scope.visualiserCommandes = function(identifiantEleve) {
 		$state.go('generic.ecoleCommandes.eleve', { idEleve : identifiantEleve });
 	}
@@ -446,7 +472,7 @@ myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth'
 //PAGE BORDEREAU : VISUALISATION DES COMMANDES ELEVES 
 //~~~~~~~~~~~~~~~~~~~~~~~~~
 
-myApp.controller('EcoleCommandesClasseEleveCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', 'StatutCommandeFamille', function($scope, $http, $state, Auth, $stateParams, StatutCommandeFamille) {
+myApp.controller('EcoleCommandesClasseEleveCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', 'StatutPaiementCommandeFamille', function($scope, $http, $state, Auth, $stateParams, StatutPaiementCommandeFamille) {
 	$scope.commandes = Auth.getUserCommandes();
 	$scope.classe = Auth.getUserClasseVisualise();
 	$scope.eleveIdentifiant=0;
@@ -465,20 +491,26 @@ myApp.controller('EcoleCommandesClasseEleveCtrl', ['$scope', '$http', '$state', 
 		$http.post('/ws/ecole/commande/validatePaiement?identifiant=' + commande.identifiant)
 		.success(
 				function(data, status, headers, config) {
-					commande.statut=StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE;
+					commande.statutPaiement=StatutPaiementCommandeFamille.PAYE;
 				})
 		.error(
 				function(data, status, headers, config) {
 					$scope.errorMessage = "Erreur au chargement des données de la commande";
 				});
 	}
+	
+	$scope.checkCommandeNonPaye = function(commande) {
+		return (commande.statutPaiement==StatutPaiementCommandeFamille.NON_PAYE);
+	}
+	
+	
 
 }]);
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~
 //PAGE DES COMMANDES ELEVES POUR CREATION COMMANDE ECOLE
 //~~~~~~~~~~~~~~~~~~~~~~~~~
-myApp.controller('EcoleCommandesEleveCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams', '$stateParams', 'StatutCommandeFamille', function($scope, $http, $state, Auth, $stateParams, StatutCommandeFamille) {
+myApp.controller('EcoleCommandesEleveCtrl', ['$scope', '$http', '$state', 'Auth', '$stateParams',  'StatutPaiementCommandeFamille', function($scope, $http, $state, Auth, $stateParams, StatutPaiementCommandeFamille) {
 	$scope.commandes = Auth.getUserCommandes();
 	$scope.classe = Auth.getUserClasseVisualise();
 	$scope.commandeEnCours = Auth.getUserCommandes();
@@ -501,7 +533,7 @@ myApp.controller('EcoleCommandesEleveCtrl', ['$scope', '$http', '$state', 'Auth'
 		$http.post('/ws/ecole/commande/validatePaiement?identifiant=' + commande.identifiant)
 		.success(
 				function(data, status, headers, config) {
-					commande.statut=StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE;
+					commande.statutPaiement=StatutPaiementCommandeFamille.PAYE;
 					$scope.initToutPaye();
 				})
 		.error(
@@ -526,13 +558,19 @@ myApp.controller('EcoleCommandesEleveCtrl', ['$scope', '$http', '$state', 'Auth'
 		
 	}
 	
+
+	$scope.checkCommandeNonPaye = function(commande) {
+		return (commande.statutPaiement==StatutPaiementCommandeFamille.NON_PAYE);
+	}
+	
+	
 	$scope.initToutPaye = function() {
 		$scope.toutPaye = true;
 		if($scope.commandes.length==0) {
 			$scope.toutPaye = false;
 		} else {
 			for(var i = 0; i < $scope.commandes.length; i++) {
-				$scope.toutPaye = $scope.toutPaye && ($scope.commandes[i].statut!=StatutCommandeFamille.EN_ATTENTE_PAYEMENT);
+				$scope.toutPaye = $scope.toutPaye && ($scope.commandes[i].statutPaiement!=StatutPaiementCommandeFamille.NON_PAYE);
 			}
 		}
 	}

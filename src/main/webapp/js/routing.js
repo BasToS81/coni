@@ -71,12 +71,12 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 				}
 			}
 	    })
-	    .state('generic.payement', {
-	        url: '/commande/payement',
+	    .state('generic.paiement', {
+	        url: '/commande/paiement',
 	        views : {
 				'content-body@' : {
 					
-					templateUrl : '/famille/commande/payement.html' 
+					templateUrl : '/famille/commande/paiement.html' 
 				}
 			}
 	    })

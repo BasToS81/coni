@@ -20,12 +20,11 @@ import com.gor.sellphotos.utils.DateUtils;
 public class CommandeFamille {
 
     public enum StatutCommandeFamille {
-        EN_COURS,
-        EN_ATTENTE_PAYEMENT,
-        EN_ATTENTE_VALID_RESPONSABLE,
-        EN_LIVRAISON,
-        LIVREE,
-        ABANDONNEE
+        EN_COURS, EN_ATTENTE_VALID_RESPONSABLE, EN_LIVRAISON, LIVREE, ABANDONNEE
+    }
+
+    public enum StatutPaiementCommandeFamille {
+        PAYE, NON_PAYE
     }
 
     @Id
@@ -36,10 +35,13 @@ public class CommandeFamille {
     private Date dateCommande;
 
     @Basic
-    private String moyenPayement;
+    private String moyenPaiement;
 
     @Enumerated(EnumType.STRING)
     private StatutCommandeFamille statut;
+
+    @Enumerated(EnumType.STRING)
+    private StatutPaiementCommandeFamille statutPaiement;
 
     @Basic
     private Date dateValidation;
@@ -72,6 +74,7 @@ public class CommandeFamille {
         commandesEleve = new ArrayList<CommandeEleve>();
         dateCommande = DateUtils.getCurrentDate();
         statut = StatutCommandeFamille.EN_COURS;
+        statutPaiement = StatutPaiementCommandeFamille.NON_PAYE;
     }
 
     /**
@@ -103,17 +106,17 @@ public class CommandeFamille {
     }
 
     /**
-     * @return the moyenPayement
+     * @return the moyenPaiement
      */
-    public String getMoyenPayement() {
-        return moyenPayement;
+    public String getMoyenPaiement() {
+        return moyenPaiement;
     }
 
     /**
-     * @param moyenPayement the moyenPayement to set
+     * @param moyenPaiement the moyenPaiement to set
      */
-    public void setMoyenPayement(String moyenPayement) {
-        this.moyenPayement = moyenPayement;
+    public void setMoyenPaiement(String moyenPaiement) {
+        this.moyenPaiement = moyenPaiement;
     }
 
     /**
@@ -269,6 +272,14 @@ public class CommandeFamille {
     public String toString() {
         return "Utilisateur [identifiant=" + identifiant + ", dateCommande=" + dateCommande + ", statut=" + statut + ", montantParentHT=" + montantParentHT
                         + ", montantEcoleHT=" + montantEcoleHT + "]";
+    }
+
+    public StatutPaiementCommandeFamille getStatutPaiement() {
+        return statutPaiement;
+    }
+
+    public void setStatutPaiement(StatutPaiementCommandeFamille statutPaiement) {
+        this.statutPaiement = statutPaiement;
     }
 
 }

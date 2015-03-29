@@ -194,11 +194,11 @@ myApp.controller('FamilleCommandeEnCoursValidationCtrl', ['$scope', '$http', '$s
 					$scope.commandesEleve = data.commandesEleve;
 					$scope.tva=data.tva;
 					
-					if($scope.commandeEnCours.moyenPayement=='ESPECE') {
+					if($scope.commandeEnCours.moyenPaiement=='ESPECE') {
 						$scope.espece=true;
-					} else if($scope.commandeEnCours.moyenPayement=='CHEQUE') {
+					} else if($scope.commandeEnCours.moyenPaiement=='CHEQUE') {
 						$scope.cheque=true;
-					} else if($scope.commandeEnCours.moyenPayement=='INTERNET') {
+					} else if($scope.commandeEnCours.moyenPaiement=='INTERNET') {
 						$scope.internet=true;
 					}
 				})
@@ -214,7 +214,7 @@ myApp.controller('FamilleCommandeEnCoursValidationCtrl', ['$scope', '$http', '$s
 				function(data, status, headers, config) {
 					$scope.commandeEnCours = data;
 					$scope.commandesEleve = data.commandesEleve;
-					$state.go('generic.payement');
+					$state.go('generic.paiement');
 				})
 		.error(
 				function(data, status, headers, config) {

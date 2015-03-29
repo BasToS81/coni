@@ -32,8 +32,8 @@
 					<tr ng-repeat="commandesEleve in commandesEleves">
 						<td class="col-md-1">{{commandesEleve.eleve.nom}}</td>
 						<td class="col-md-1">
-							<button class="btn btn-sm btn-success" ng-show="commandesEleve.id==null" ng-click="visualiserCommandes(commandesEleve.eleve.identifiant)"><span class='glyphicon glyphicon-eye-open'></button>
-							<button class="btn btn-sm btn-warning" ng-show="commandesEleve.id!=null" ng-click="visualiserCommandes(commandesEleve.eleve.identifiant)"><span class='glyphicon glyphicon-eye-open'></button>
+							<button title="Visualiser les commandes de l'élève" class="btn btn-sm btn-success" ng-click="visualiserCommandes(commandesEleve.eleve.identifiant)"><span class='glyphicon glyphicon-eye-open'></button>
+							<button title="Valider le paiement" class="btn btn-sm btn-primary" ng-show="commandesEleve.id!=null" ng-click="validerPaiementCommande(commandesEleve)" ng-show="checkCommandeNonPaye(commande)"><span class="glyphicon glyphicon-ok"></span></button>
 						</td>
 						<td ng-repeat="produitCommande in commandesEleve.produitsCommandes" class="col-md-1">
 							<div class="input-group" ng-show="produitCommande.quantite>0">

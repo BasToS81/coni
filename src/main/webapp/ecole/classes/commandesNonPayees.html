@@ -28,7 +28,7 @@
 							<td>{{commande.montantParentTTC | number : 2 }} €</td>
 							<td>
 								<button  title="Visualiser la commande" class="btn btn-sm btn-success" ng-click="openCommandeNonPayee(commande.identifiant)"><span class="glyphicon glyphicon-eye-open"></span></button>
-					    		<button  title="Valider le paiement" class="btn btn-sm btn-primary" ng-click="validerPaiementCommande(commande)" ng-show="commande.statut=='EN_ATTENTE_PAYEMENT'"><span class="glyphicon glyphicon-ok"></span></button>
+					    		<button  title="Valider le paiement" class="btn btn-sm btn-primary" ng-click="validerPaiementCommande(commande)" ng-show="checkCommandeNonPaye(commande)"><span class="glyphicon glyphicon-ok"></span></button>
 							</td>
 						</tr>
 					</tbody>

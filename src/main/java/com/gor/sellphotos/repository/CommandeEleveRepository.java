@@ -37,7 +37,8 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
                     + " JOIN pc.produit p "
                     + "WHERE "
                     + " c.identifiantChiffre = :identifiantChiffre and "
-                    + " cf.statut in ('EN_ATTENTE_VALID_RESPONSABLE', 'EN_ATTENTE_PAYEMENT') " + "GROUP BY " + " el.identifiant, p.id";
+                    + " cf.statut='EN_ATTENTE_VALID_RESPONSABLE' "
+                    + "GROUP BY " + " el.identifiant, p.id";
 
     public final static String GET_SYNTHESE_MONTANT_A_PAYER_BY_ID_CHIFFRE_CLASSE = "SELECT c.id, el.identifiant, el.nom as nomEleve, sum(ce.montantParentHT) as montantParent, sum(ce.montantEcoleHT) as montantEcole, "
                     + "sum(ce.montantParentTTC) as montantParentTTC, sum(ce.montantEcoleTTC) as montantEcoleTTC "
@@ -47,11 +48,10 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
                     + " LEFT JOIN el.commandes ce "
                     + " JOIN ce.commandeFamille cf "
                     + "WHERE "
-                    + " c.identifiantChiffre = :identifiantChiffre and " + " cf.statut in ('EN_ATTENTE_PAYEMENT') " + "GROUP BY " + " el.identifiant";
+                    + " c.identifiantChiffre = :identifiantChiffre and " + " cf.statutPaiement = 'NON_PAYE' " + "GROUP BY " + " el.identifiant";
 
     public final static String FIND_A_COMMANDER_BY_ID_CHIFFRE_CLASSE = "SELECT ce " + "FROM CommandeEleve ce "
-                    + "WHERE ce.commandeFamille.statut in ('EN_ATTENTE_PAYEMENT', 'EN_ATTENTE_VALID_RESPONSABLE') "
-                    + "AND ce.eleve.classe.identifiantChiffre = :idChiffreClasse";
+                    + "WHERE ce.commandeFamille.statut in ('EN_ATTENTE_VALID_RESPONSABLE') " + "AND ce.eleve.classe.identifiantChiffre = :idChiffreClasse";
 
     public final static String FIND_BY_ID_FAMILLE = "SELECT ce " + "FROM CommandeEleve  ce LEFT JOIN ce.eleve e " + "LEFT JOIN e.famille f "
                     + "WHERE f.id = :idFamille";
@@ -70,7 +70,7 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
     public final static String SUM_MONTANT_RESTANT_A_PAYER_PAR_ELEVE_BY_ID_ECOLE = "SELECT ce.eleve.id, sum(ce.montantParentHT), sum(ce.montantEcoleHT), sum(ce.montantParentTTC), sum(ce.montantEcoleTTC)  "
                     + "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf "
                     + "LEFT JOIN ce.eleve.classe.ecole ec "
-                    + "WHERE ec.id = :idEcole AND cf.statut in ('EN_ATTENTE_PAYEMENT') GROUP BY ce.eleve ORDER BY ce.eleve.classe.nom ASC";
+                    + "WHERE ec.id = :idEcole AND cf.statutPaiement = 'NON_PAYE' GROUP BY ce.eleve ORDER BY ce.eleve.classe.nom ASC";
 
     public final static String COUNT_NB_COMMANDES_PAR_ELEVE_BY_ID_ECOLE_AND_ID_CLASSE = "SELECT ce.eleve.id, count(ce)  " + "FROM CommandeEleve ce  "
                     + "LEFT JOIN ce.eleve.classe c " + "LEFT JOIN c.ecole ec "
@@ -86,7 +86,7 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
                     + "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf "
                     + "LEFT JOIN ce.eleve.classe c "
                     + "LEFT JOIN c.ecole ec "
-                    + "WHERE ec.id = :idEcole AND c.id = :idClasse AND cf.statut in ('EN_ATTENTE_PAYEMENT') GROUP BY ce.eleve ORDER BY ce.eleve.classe.nom ASC";
+                    + "WHERE ec.id = :idEcole AND c.id = :idClasse AND cf.statutPaiement = 'NON_PAYE' GROUP BY ce.eleve ORDER BY ce.eleve.classe.nom ASC";
 
     public final static String COUNT_NB_COMMANDES_PAR_CLASSE_BY_ID_ECOLE = "SELECT ce.eleve.classe.id, count(ce)  " + "FROM CommandeEleve ce  "
                     + "LEFT JOIN ce.eleve.classe.ecole ec " + "WHERE ec.id = :idEcole GROUP BY ce.eleve.classe ORDER BY ce.eleve.nom ASC";
@@ -99,7 +99,7 @@ public interface CommandeEleveRepository extends CrudRepository<CommandeEleve, L
     public final static String SUM_MONTANT_RESTANT_A_PAYER_PAR_CLASSE_BY_ID_ECOLE = "SELECT ce.eleve.classe.id, sum(ce.montantParentHT), sum(ce.montantEcoleHT), sum(ce.montantParentTTC), sum(ce.montantEcoleTTC)  "
                     + "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf "
                     + "LEFT JOIN ce.eleve.classe.ecole ec "
-                    + "WHERE ec.id = :idEcole AND cf.statut in ('EN_ATTENTE_PAYEMENT') GROUP BY ce.eleve.classe ORDER BY ce.eleve.classe.nom ASC";
+                    + "WHERE ec.id = :idEcole AND cf.statutPaiement = 'NON_PAYE' GROUP BY ce.eleve.classe ORDER BY ce.eleve.classe.nom ASC";
 
     @Query(FIND_SYNTHESE_BY_ID_CLASSE)
     public List<Object[]> findSyntheseByIdentifiantClasse(@Param("identifiantClasse") String identifiantClasse);

@@ -22,6 +22,7 @@ import com.gor.sellphotos.dao.CommandeEcole.StatutCommandeEcole;
 import com.gor.sellphotos.dao.CommandeEleve;
 import com.gor.sellphotos.dao.CommandeFamille;
 import com.gor.sellphotos.dao.CommandeFamille.StatutCommandeFamille;
+import com.gor.sellphotos.dao.CommandeFamille.StatutPaiementCommandeFamille;
 import com.gor.sellphotos.dao.CommandeProduit;
 import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dao.ModeleEtTarif;
@@ -152,8 +153,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
             commandeEcoleRepository.save(commandeEcoleEnCours);
             sessionData.setIdentifiantCommmandeEnCours(commandeEcoleEnCours.getId());
 
-        }
-        else {
+        } else {
             commandeEcoleEnCours = commandeEcoleStatutEnCours.get(0);
         }
 
@@ -318,7 +318,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
         double tva = FinanceUtils.getCurrentTVA(tvaRepository);
 
-        // On parcourt toutes les commandes et on créer des nouvelles commandes familles pour chaque élève si pas de commandes en attente de payement déjà
+        // On parcourt toutes les commandes et on créer des nouvelles commandes familles pour chaque élève si pas de commandes en attente de paiement déjà
         // existante.
         for (CommandeElevePayeEtNonPayeDTOEcole cmdEleveDTO : commandesClasseSyntheseDTO.getCommandeEleve()) {
 
@@ -330,12 +330,21 @@ public class EcoleCommandesController extends AbstractRestHandler {
             // Commande déjà existante
             if (cmdEleveDTO.getId() != null) {
 
-                CommandeEleve commandeAPayer = commandeEleveRepository.findOne(cmdEleveDTO.getId());
+                CommandeFamille commandeFamille = commandeFamilleRepository.findOne(cmdEleveDTO.getId());
 
-                if (commandeAPayer != null) {
+                if (commandeFamille != null) {
                     // commande existante
                     nonTrouve = false;
-                    LOGGER.debug("commande à mettre à jour trouvé {}", commandeAPayer.getId());
+                    LOGGER.debug("commande à mettre à jour trouvé {}", commandeFamille.getIdentifiant());
+
+                    CommandeEleve commandeAPayer = null;
+                    // Recherche de la commande de l'élève
+                    for (CommandeEleve commande : commandeFamille.getCommandesEleve()) {
+                        if (commande.getEleve().getId() == eleve.getId()) {
+                            commandeAPayer = commande;
+                            break;
+                        }
+                    }
 
                     // Mise à jour de celle ci
 
@@ -369,7 +378,6 @@ public class EcoleCommandesController extends AbstractRestHandler {
                     if (commandeAPayer.getProduitsCommandes().size() == 0) {
                         // plus de commande
                         // On supprime la commande Eleve.
-                        CommandeFamille commandeFamille = commandeAPayer.getCommandeFamille();
                         commandeFamille.getCommandesEleve().remove(commandeAPayer);
                         commandeEleveRepository.delete(commandeAPayer);
 
@@ -381,8 +389,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
                             LOGGER.debug("Passage de la commande à abandonnee");
                         }
                         commandeFamilleRepository.save(commandeFamille);
-                    }
-                    else {
+                    } else {
 
                         commandeProduitRepository.save(commandeAPayer.getProduitsCommandes());
                         commandeEleveRepository.save(commandeAPayer);
@@ -396,8 +403,9 @@ public class EcoleCommandesController extends AbstractRestHandler {
                 // Création d'une nouvelle commande
                 CommandeFamille cmdFamille = new CommandeFamille();
                 cmdFamille.setDateCommande(DateUtils.getCurrentDate());
-                cmdFamille.setMoyenPayement("ESPECE");
-                cmdFamille.setStatut(StatutCommandeFamille.EN_ATTENTE_PAYEMENT);
+                cmdFamille.setMoyenPaiement("ESPECE");
+                cmdFamille.setStatut(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE);
+                cmdFamille.setStatutPaiement(StatutPaiementCommandeFamille.NON_PAYE);
                 cmdFamille.setFamille(eleve.getFamille());
                 LOGGER.debug("Création de la commande famille");
 
@@ -430,8 +438,7 @@ public class EcoleCommandesController extends AbstractRestHandler {
                     commandeEleveRepository.save(commandeAPayer);
                     commandeFamilleRepository.save(cmdFamille);
                     LOGGER.debug("Sauvegarde des produits, de la commande eleve et commande famille");
-                }
-                else {
+                } else {
                     // Pas de sauvegarde des produits
                     LOGGER.debug("Pas de sauvegarde de la produit");
                 }
@@ -503,30 +510,31 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
                 for (CommandeEleve cmdEleve : eleve.getCommandes()) {
 
-                    if (cmdEleve.getCommandeFamille().getStatut().equals(StatutCommandeFamille.EN_ATTENTE_PAYEMENT)) {
-                        // Commande Non Paye
-                        for (CommandeProduit cmdProduit : cmdEleve.getProduitsCommandes()) {
-                            if (cmdProduit.getProduit().getId().equals(produit.getId())) {
-                                cmdProduitDTO.addQuantiteNonPaye(cmdProduit.getQuantite());
-                                cmdProduitDTO.addMontantParentHTNonPaye(cmdProduit.getMontantParentHT());
-                                cmdProduitDTO.addMontantEcoleHTNonPaye(cmdProduit.getMontantEcoleHT());
-                                cmdProduitDTO.addMontantParentTTCNonPaye(cmdProduit.getMontantParentTTC());
-                                cmdProduitDTO.addMontantEcoleTTCNonPaye(cmdProduit.getMontantEcoleTTC());
+                    if (cmdEleve.getCommandeFamille().getStatut().equals(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE)) {
+                        if (cmdEleve.getCommandeFamille().getStatutPaiement().equals(StatutPaiementCommandeFamille.NON_PAYE)) {
+                            // Commande Non Paye
+                            for (CommandeProduit cmdProduit : cmdEleve.getProduitsCommandes()) {
+                                if (cmdProduit.getProduit().getId().equals(produit.getId())) {
+                                    cmdProduitDTO.addQuantiteNonPaye(cmdProduit.getQuantite());
+                                    cmdProduitDTO.addMontantParentHTNonPaye(cmdProduit.getMontantParentHT());
+                                    cmdProduitDTO.addMontantEcoleHTNonPaye(cmdProduit.getMontantEcoleHT());
+                                    cmdProduitDTO.addMontantParentTTCNonPaye(cmdProduit.getMontantParentTTC());
+                                    cmdProduitDTO.addMontantEcoleTTCNonPaye(cmdProduit.getMontantEcoleTTC());
+                                }
                             }
-                        }
 
-                        cmdDTO.setId(cmdEleve.getId());
+                            cmdDTO.setId(cmdEleve.getCommandeFamille().getIdentifiant());
 
-                    }
-                    else if (cmdEleve.getCommandeFamille().getStatut().equals(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE)) {
-                        // Commande Paye
-                        for (CommandeProduit cmdProduit : cmdEleve.getProduitsCommandes()) {
-                            if (cmdProduit.getProduit().getId().equals(produit.getId())) {
-                                cmdProduitDTO.addQuantite(cmdProduit.getQuantite());
-                                cmdProduitDTO.addMontantParentHT(cmdProduit.getMontantParentHT());
-                                cmdProduitDTO.addMontantEcoleHT(cmdProduit.getMontantEcoleHT());
-                                cmdProduitDTO.addMontantParentTTC(cmdProduit.getMontantParentTTC());
-                                cmdProduitDTO.addMontantEcoleTTC(cmdProduit.getMontantEcoleTTC());
+                        } else {
+                            // Commande Paye
+                            for (CommandeProduit cmdProduit : cmdEleve.getProduitsCommandes()) {
+                                if (cmdProduit.getProduit().getId().equals(produit.getId())) {
+                                    cmdProduitDTO.addQuantite(cmdProduit.getQuantite());
+                                    cmdProduitDTO.addMontantParentHT(cmdProduit.getMontantParentHT());
+                                    cmdProduitDTO.addMontantEcoleHT(cmdProduit.getMontantEcoleHT());
+                                    cmdProduitDTO.addMontantParentTTC(cmdProduit.getMontantParentTTC());
+                                    cmdProduitDTO.addMontantEcoleTTC(cmdProduit.getMontantEcoleTTC());
+                                }
                             }
                         }
                     }
@@ -631,10 +639,11 @@ public class EcoleCommandesController extends AbstractRestHandler {
         CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
 
         // On update la commande que si elle est dans le bon statut
-        if (cmdFamilleEnBase.getStatut().equals(StatutCommandeFamille.EN_ATTENTE_PAYEMENT)) {
+        if (cmdFamilleEnBase.getStatut().equals(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE)
+                        && cmdFamilleEnBase.getStatutPaiement().equals(StatutPaiementCommandeFamille.NON_PAYE)) {
 
             cmdFamilleEnBase.setDateValidation(DateUtils.getCurrentDate());
-            cmdFamilleEnBase.setStatut(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE);
+            cmdFamilleEnBase.setStatutPaiement(StatutPaiementCommandeFamille.PAYE);
             // sauvegarde de la commande
             commandeFamilleRepository.save(cmdFamilleEnBase);
         }

@@ -2,14 +2,14 @@
 
 	<div class="col-md-12">
 
-		<!-- Page de présentation des commandes de l'élève -->
+		<!-- Page de prÃ©sentation des commandes de l'Ã©lÃ¨ve -->
 		
 		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">Commandes des élèves</h3>
 				</div>
-				<!-- Liste des synthèses de commandes  -->
+				<!-- Liste des synthÃ¨ses de commandes  -->
 				<div class="panel-body">
 					<div class="table-responsive col-md-12">
 						<table class="table table-hover noBottomMargin">
@@ -30,7 +30,7 @@
 									<td>{{commande.montantParentTTC | number : 2 }} €</td>
 									<td ">
 										<button  title="Visualiser la commande" class="btn btn-sm btn-success" ng-click="openCommande(commande.identifiant)"><span class="glyphicon glyphicon-eye-open"></span></button>
-							    		<button  title="Valider le paiement" class="btn btn-sm btn-primary" ng-click="validerPaiementCommande(commande)" ng-show="commande.statut=='EN_ATTENTE_PAYEMENT'"><span class="glyphicon glyphicon-ok"></span></button>
+							    		<button  title="Valider le paiement" class="btn btn-sm btn-primary" ng-click="validerPaiementCommande(commande)" ng-show="commande.statutPaiement==StatutPaiementCommandeFamille.NON_PAYE"><span class="glyphicon glyphicon-ok"></span></button>
 									</td>
 								</tr>
 							</tbody>
@@ -44,7 +44,7 @@
 				<div class="panel-heading">
 					<h3 class="panel-title">Contenu de la commande</h3>
 				</div>
-			<!-- Détail de la commande  -->
+			<!-- DÃ©tail de la commande  -->
 			<div ui-view="content-ecole-commande"></div>
 			</div>
 		</div>

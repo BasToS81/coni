@@ -6,21 +6,21 @@
 		    <div class="col-xs-2 bs-wizard-step complete">
 		      <div class="text-center bs-wizard-stepnum">Commande</div>
 		      <div class="progress"><div class="progress-bar"></div></div>
-		      <a href="#/famille/commande/payement" class="bs-wizard-dot"></a>
+		      <a href="#/famille/commande/paiement" class="bs-wizard-dot"></a>
 		      <div class="bs-wizard-info text-center"></div>
 		    </div>
 		    
 		    <div class="col-xs-2 bs-wizard-step complete">
 		      <div class="text-center bs-wizard-stepnum">Validation</div>
 		      <div class="progress"><div class="progress-bar"></div></div>
-		      <a href="#/famille/commande/payement" class="bs-wizard-dot"></a>
+		      <a href="#/famille/commande/paiement" class="bs-wizard-dot"></a>
 		      <div class="bs-wizard-info text-center"></div>
 		    </div>
 		    
 		    <div class="col-xs-2 bs-wizard-step complete"><!-- active -->
-		      <div class="text-center bs-wizard-stepnum">Payement</div>
+		      <div class="text-center bs-wizard-stepnum">Paiement</div>
 		      <div class="progress"><div class="progress-bar"></div></div>
-		      <a href="#/famille/commande/payement" class="bs-wizard-dot"></a>
+		      <a href="#/famille/commande/paiement" class="bs-wizard-dot"></a>
 		      <div class="bs-wizard-info text-center"></div>
 		    </div>
 		    
@@ -36,22 +36,22 @@
 
 	<div class="col-md-2"></div>
 	<div class="col-md-8">
-		<h1> Payement </h1>
+		<h1> Paiement </h1>
 		<h4> Numéro de la commande : {{commandeEnCours.identifiant}}</h4>
 		
 		<div class="col-md-4">&nbsp;</div>
 		
 		<div class="panel panel-default">
-			<div class="panel-heading">Payement choisi : {{comandeEnCours.moyenPayement}}</div>
+			<div class="panel-heading">Paiement choisi : {{comandeEnCours.moyenPaiement}}</div>
 			<div class="panel-body">
 				<div class="" ng-if="internet">
-					Vous avez choisi le payement par internet, vous allez être automatiquement redirigé vers le site de payement.
+					Vous avez choisi le paiement par internet, vous allez être automatiquement redirigé vers le site de paiement.
 				</div>
 				<div class="" ng-if="cheque">
-					Vous avez choisi le payement par cheque, merci de le transmettre le plus rapidement possible au responsable des photographies scolaires de votre établissement.
+					Vous avez choisi le paiement par cheque, merci de le transmettre le plus rapidement possible au responsable des photographies scolaires de votre établissement.
 				</div>
 				<div class="" ng-if="espece">
-					Vous avez choisi le payement par espèce, merci de tout transmettre le plus rapidement possible au responsable des photographies scolaires de votre établissement.
+					Vous avez choisi le paiement par espèce, merci de tout transmettre le plus rapidement possible au responsable des photographies scolaires de votre établissement.
 				</div>
 			</div>
 		</div>

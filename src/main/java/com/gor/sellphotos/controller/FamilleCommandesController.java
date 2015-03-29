@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.gor.sellphotos.dao.CommandeEleve;
 import com.gor.sellphotos.dao.CommandeFamille;
 import com.gor.sellphotos.dao.CommandeFamille.StatutCommandeFamille;
+import com.gor.sellphotos.dao.CommandeFamille.StatutPaiementCommandeFamille;
 import com.gor.sellphotos.dao.CommandeProduit;
 import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dao.Famille;
@@ -202,8 +203,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
             // Pas de commande pour cette famille en cours.
             // création de celle ci
             resultat = createCommandeFamille(authentication);
-        }
-        else {
+        } else {
             LOGGER.debug("commande famille : {}", cmdFamille.getIdentifiant());
             // récupération de la commnade existante
             resultat = getCommandeFamilleEtProduits(identifiantEcole, cmdFamille);
@@ -381,9 +381,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public CommandeFamilleDTOEleve saveCommandeFamille(
-                    Authentication authentication,
-                    @RequestBody CommandeFamilleDTOEleve commandeFamille) {
+    public CommandeFamilleDTOEleve saveCommandeFamille(Authentication authentication, @RequestBody CommandeFamilleDTOEleve commandeFamille) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();
@@ -401,9 +399,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public CommandeFamilleDTOEleve saveCommandeFamilleModePaiement(
-                    Authentication authentication,
-                    @RequestBody CommandeFamilleDTOEleve commandeFamille) {
+    public CommandeFamilleDTOEleve saveCommandeFamilleModePaiement(Authentication authentication, @RequestBody CommandeFamilleDTOEleve commandeFamille) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();
@@ -414,8 +410,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommandeEnCours);
 
-        if (commandeFamille.getMoyenPayement() != null) {
-            cmdFamilleEnBase.setMoyenPayement(commandeFamille.getMoyenPayement());
+        if (commandeFamille.getMoyenPaiement() != null) {
+            cmdFamilleEnBase.setMoyenPaiement(commandeFamille.getMoyenPaiement());
         }
 
         return getCommandeFamilleEtProduits(identifiantEcole, cmdFamilleEnBase);
@@ -425,9 +421,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public CommandeFamilleDTOEleve validateCommandeFamille(
-                    Authentication authentication,
-                    @RequestBody CommandeFamilleDTOEleve commandeFamille) {
+    public CommandeFamilleDTOEleve validateCommandeFamille(Authentication authentication, @RequestBody CommandeFamilleDTOEleve commandeFamille) {
 
         SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();
@@ -438,18 +432,18 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommandeEnCours);
 
-        // Sauvegarde du moyen de payement
+        // Sauvegarde du moyen de paiement
 
-        if (commandeFamille.getMoyenPayement() != null) {
-            cmdFamilleEnBase.setMoyenPayement(commandeFamille.getMoyenPayement());
+        if (commandeFamille.getMoyenPaiement() != null) {
+            cmdFamilleEnBase.setMoyenPaiement(commandeFamille.getMoyenPaiement());
         }
 
         cmdFamilleEnBase.setDateValidation(DateUtils.getCurrentDate());
-        if ("INTERNET".compareTo(cmdFamilleEnBase.getMoyenPayement()) == 0) {
-            cmdFamilleEnBase.setStatut(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE);
-        }
-        else {
-            cmdFamilleEnBase.setStatut(StatutCommandeFamille.EN_ATTENTE_PAYEMENT);
+        cmdFamilleEnBase.setStatut(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE);
+        if ("INTERNET".compareTo(cmdFamilleEnBase.getMoyenPaiement()) == 0) {
+            cmdFamilleEnBase.setStatutPaiement(StatutPaiementCommandeFamille.PAYE);
+        } else {
+            cmdFamilleEnBase.setStatutPaiement(StatutPaiementCommandeFamille.NON_PAYE);
         }
 
         // sauvegarde de la commande
@@ -462,8 +456,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
         return getCommandeFamilleDTO(cmdFamilleEnBase);
     }
 
-    private CommandeFamilleDTOEleve saveCommande(Authentication authentication, CommandeFamilleDTOEleve nouvelleCommandeFamille,
-                    Long identifiantEcole, CommandeFamille cmdFamilleEnBase) {
+    private CommandeFamilleDTOEleve saveCommande(Authentication authentication, CommandeFamilleDTOEleve nouvelleCommandeFamille, Long identifiantEcole,
+                    CommandeFamille cmdFamilleEnBase) {
 
         List<CommandeEleveDTOEleve> commandesEleve = nouvelleCommandeFamille.getCommandesEleve();
 
