@@ -74,7 +74,8 @@ public class CommandeEleve {
      * @param produitsCommandes the produitsCommandes to set
      */
     public void setProduitsCommandes(List<CommandeProduit> produitsCommandes) {
-        this.produitsCommandes = produitsCommandes;
+        this.produitsCommandes.clear();
+        this.produitsCommandes.addAll(produitsCommandes);
     }
 
     public void addProduitCommande(CommandeProduit produitCommande) {

@@ -152,7 +152,8 @@ public class EcoleCommandesController extends AbstractRestHandler {
             commandeEcoleRepository.save(commandeEcoleEnCours);
             sessionData.setIdentifiantCommmandeEnCours(commandeEcoleEnCours.getId());
 
-        } else {
+        }
+        else {
             commandeEcoleEnCours = commandeEcoleStatutEnCours.get(0);
         }
 
@@ -315,6 +316,8 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("saving new commandes eleves de la classe {}", commandesClasseSyntheseDTO.getNom());
 
+        double tva = FinanceUtils.getCurrentTVA(tvaRepository);
+
         // On parcourt toutes les commandes et on créer des nouvelles commandes familles pour chaque élève si pas de commandes en attente de payement déjà
         // existante.
         for (CommandeElevePayeEtNonPayeDTOEcole cmdEleveDTO : commandesClasseSyntheseDTO.getCommandeEleve()) {
@@ -337,11 +340,14 @@ public class EcoleCommandesController extends AbstractRestHandler {
                     // Mise à jour de celle ci
 
                     // Effacer tous les produits existants
-                    commandeProduitRepository.delete(commandeAPayer.getProduitsCommandes());
+                    for (CommandeProduit cmdP : commandeAPayer.getProduitsCommandes()) {
+                        commandeProduitRepository.delete(cmdP);
+                    }
                     commandeAPayer.setMontantEcoleHT(0);
                     commandeAPayer.setMontantEcoleTTC(0);
                     commandeAPayer.setMontantParentHT(0);
                     commandeAPayer.setMontantParentTTC(0);
+                    commandeAPayer.setProduitsCommandes(new ArrayList<CommandeProduit>());
                     LOGGER.debug("suppression des produits commandés");
 
                     for (CommandeProduitPayeEtNonPayeDTOEcole produitsCommandesPayeEtNonPayeDTO : cmdEleveDTO.getProduitsCommandes()) {
@@ -352,16 +358,36 @@ public class EcoleCommandesController extends AbstractRestHandler {
                             CommandeProduit commandeProduit = new CommandeProduit();
                             Produit produit = produitRepository.findOne(produitsCommandesPayeEtNonPayeDTO.getProduit().getId());
                             commandeProduit.setProduit(produit);
-                            commandeProduit.setQuantite(produitsCommandesPayeEtNonPayeDTO.getQuantiteNonPaye(), tvaRepository);
+                            commandeProduit.setQuantite(produitsCommandesPayeEtNonPayeDTO.getQuantiteNonPaye(), tva);
 
                             commandeAPayer.addProduitCommande(commandeProduit);
                             LOGGER.debug("Ajout du produit dans la commande {}, quantite = {}", produit.getId(), commandeProduit.getQuantite());
 
                         }
                     }
-                    commandeProduitRepository.save(commandeAPayer.getProduitsCommandes());
-                    commandeEleveRepository.save(commandeAPayer);
-                    LOGGER.debug("Sauvegarde de la commande");
+
+                    if (commandeAPayer.getProduitsCommandes().size() == 0) {
+                        // plus de commande
+                        // On supprime la commande Eleve.
+                        CommandeFamille commandeFamille = commandeAPayer.getCommandeFamille();
+                        commandeFamille.getCommandesEleve().remove(commandeAPayer);
+                        commandeEleveRepository.delete(commandeAPayer);
+
+                        LOGGER.debug("Suppression de la commande eleve");
+
+                        if (commandeFamille.getCommandesEleve().size() == 0) {
+                            commandeFamille.setStatut(StatutCommandeFamille.ABANDONNEE);
+
+                            LOGGER.debug("Passage de la commande à abandonnee");
+                        }
+                        commandeFamilleRepository.save(commandeFamille);
+                    }
+                    else {
+
+                        commandeProduitRepository.save(commandeAPayer.getProduitsCommandes());
+                        commandeEleveRepository.save(commandeAPayer);
+                        LOGGER.debug("Sauvegarde de la commande");
+                    }
                 }
 
             }
@@ -390,20 +416,25 @@ public class EcoleCommandesController extends AbstractRestHandler {
                         CommandeProduit commandeProduit = new CommandeProduit();
                         Produit produit = produitRepository.findOne(produitsCommandesPayeEtNonPayeDTO.getProduit().getId());
                         commandeProduit.setProduit(produit);
-                        commandeProduit.setQuantite(produitsCommandesPayeEtNonPayeDTO.getQuantiteNonPaye(), tvaRepository);
+                        commandeProduit.setQuantite(produitsCommandesPayeEtNonPayeDTO.getQuantiteNonPaye(), tva);
 
                         commandeAPayer.addProduitCommande(commandeProduit);
                         LOGGER.debug("Ajout du produit dans la commande {}, quantite = {}", produit.getId(), commandeProduit.getQuantite());
                     }
                 }
-                commandeProduitRepository.save(commandeAPayer.getProduitsCommandes());
+                if (commandeAPayer.getProduitsCommandes().size() > 0) {
+                    commandeProduitRepository.save(commandeAPayer.getProduitsCommandes());
 
-                cmdFamille.addCommandeEleve(commandeAPayer);
+                    cmdFamille.addCommandeEleve(commandeAPayer);
 
-                commandeEleveRepository.save(commandeAPayer);
-                commandeFamilleRepository.save(cmdFamille);
-                LOGGER.debug("Sauvegarde des produits, de la commande eleve et commande famille");
-
+                    commandeEleveRepository.save(commandeAPayer);
+                    commandeFamilleRepository.save(cmdFamille);
+                    LOGGER.debug("Sauvegarde des produits, de la commande eleve et commande famille");
+                }
+                else {
+                    // Pas de sauvegarde des produits
+                    LOGGER.debug("Pas de sauvegarde de la produit");
+                }
             }
 
         }
@@ -486,7 +517,8 @@ public class EcoleCommandesController extends AbstractRestHandler {
 
                         cmdDTO.setId(cmdEleve.getId());
 
-                    } else if (cmdEleve.getCommandeFamille().getStatut().equals(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE)) {
+                    }
+                    else if (cmdEleve.getCommandeFamille().getStatut().equals(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE)) {
                         // Commande Paye
                         for (CommandeProduit cmdProduit : cmdEleve.getProduitsCommandes()) {
                             if (cmdProduit.getProduit().getId().equals(produit.getId())) {
