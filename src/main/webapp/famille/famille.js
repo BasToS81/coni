@@ -1,7 +1,35 @@
-myApp.controller('FamilleCtrl', ['$scope', '$http', 'Auth', '$stateParams', function($scope, $http, Auth, $stateParams) {
+myApp.controller('FamilleCtrl', ['$scope', '$http', 'Auth', '$stateParams','$modal', function($scope, $http, Auth, $stateParams,$modal) {
 
 	$scope.nomEcole=Auth.getUserData().nomEcole;
 	$scope.eleves = Auth.getUserData().eleves;
+	
+	
+	$scope.open = function (titre, cheminImage, size) {
+
+	    var modalInstance = $modal.open({
+	      templateUrl: 'photoPleinEcran.html',
+	      controller: function($scope, $modalInstance, cheminAccesImage, titre) {
+	    	  $scope.cheminAccesImage=cheminAccesImage;
+	    	  $scope.titre=titre;
+	    	  $scope.cancel = function () {
+	    		    $modalInstance.dismiss('cancel');
+	    	  };
+	      },
+	      size: size,
+	      resolve: {
+	    	  cheminAccesImage: function () {
+	            return "/data/" + cheminImage + ".jpg";
+	          },
+	          titre: function() {
+	        	return titre;
+	          }
+	        }
+	    });
+	    
+	};
+	
+	
+	
 }
 ]);
 
