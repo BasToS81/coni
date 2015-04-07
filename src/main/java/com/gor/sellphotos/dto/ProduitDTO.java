@@ -4,7 +4,9 @@ public class ProduitDTO {
 
     private Long id;
 
-    private String identifiant;
+    private String reference;
+
+    private String label;
 
     private String designation;
 
@@ -28,20 +30,6 @@ public class ProduitDTO {
      */
     public void setId(Long id) {
         this.id = id;
-    }
-
-    /**
-     * @return the identifiant
-     */
-    public String getIdentifiant() {
-        return identifiant;
-    }
-
-    /**
-     * @param identifiant the identifiant to set
-     */
-    public void setIdentifiant(String identifiant) {
-        this.identifiant = identifiant;
     }
 
     /**
@@ -112,6 +100,34 @@ public class ProduitDTO {
      */
     public void setTypeProduit(String typeProduit) {
         this.typeProduit = typeProduit;
+    }
+
+    /**
+     * @return the reference
+     */
+    public String getReference() {
+        return reference;
+    }
+
+    /**
+     * @param reference the reference to set
+     */
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    /**
+     * @return the label
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * @param label the label to set
+     */
+    public void setLabel(String label) {
+        this.label = label;
     }
 
 }

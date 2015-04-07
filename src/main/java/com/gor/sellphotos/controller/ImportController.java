@@ -3,7 +3,7 @@ package com.gor.sellphotos.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
-import java.util.Arrays;
+import java.nio.file.Files;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.gor.sellphotos.dao.Classe;
-import com.gor.sellphotos.dao.CommandeEleve;
-import com.gor.sellphotos.dao.CommandeProduit;
 import com.gor.sellphotos.dao.Ecole;
 import com.gor.sellphotos.dao.Eleve;
 import com.gor.sellphotos.dao.Famille;
@@ -29,7 +27,6 @@ import com.gor.sellphotos.dao.Responsable;
 import com.gor.sellphotos.dao.Tva;
 import com.gor.sellphotos.dto.ImportDTO;
 import com.gor.sellphotos.repository.ClasseRepository;
-import com.gor.sellphotos.repository.CommandeEleveRepository;
 import com.gor.sellphotos.repository.EcoleRepository;
 import com.gor.sellphotos.repository.EleveRepository;
 import com.gor.sellphotos.repository.FamilleRepository;
@@ -38,6 +35,8 @@ import com.gor.sellphotos.repository.ProduitRepository;
 import com.gor.sellphotos.repository.ResponsableRepository;
 import com.gor.sellphotos.repository.TvaRepository;
 import com.gor.sellphotos.utils.DateUtils;
+import com.gor.sellphotos.utils.FileUtils;
+import com.gor.sellphotos.utils.SecuriteUtils;
 
 /**
  *
@@ -46,6 +45,12 @@ import com.gor.sellphotos.utils.DateUtils;
 public class ImportController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImportController.class);
+
+    // Dossier contenant les photos des écoles
+    private static final File dossierData = new File("./src/main/webapp/data/");
+
+    // Dossier d'import (fichiers zip)
+    private static final File dossierImport = new File("./src/test/resources/import/");
 
     @Autowired
     private EcoleRepository ecoleRepository;
@@ -80,7 +85,6 @@ public class ImportController {
         String resultatImport = "Non OK";
 
         /* TODO mettre ce chemin en configuration */
-        File dossierImport = new File("./src/test/resources/import/");
 
         resultatImport = "OK";
 
@@ -88,10 +92,28 @@ public class ImportController {
             try {
                 LOGGER.debug("dossier import existant");
 
-                // Pour chaque dossier trouvé
-                int i = 1;
-                for (File dossierEcole : dossierImport.listFiles()) {
-                    chargeConfigurationEcole(dossierEcole, i++);
+                // Pour chaque fichier Zip trouvé
+                FilenameFilter zipFileFilter = new FilenameFilter() {
+
+                    public boolean accept(File file, String name) {
+                        return name.toLowerCase().endsWith(".zip");
+                    }
+                };
+                for (File zipImportFile : dossierImport.listFiles(zipFileFilter)) {
+
+                    LOGGER.debug("Zip file a traiter : {}", zipImportFile);
+
+                    // Unzip du fichier dans un dossierTemporaire
+                    FileUtils.unzip(zipImportFile.getAbsolutePath(), dossierImport.getAbsolutePath(), "");
+
+                    // Chargement des données du dossier de l'école temporaire
+                    File dossierEcoleAImporter = new File(dossierImport, zipImportFile.getName().replace(".zip", ""));
+                    if (dossierEcoleAImporter.exists()) {
+                        chargeConfigurationEcole(dossierEcoleAImporter);
+                    }
+
+                    // Suppression du dossier de l'école temporaire
+                    FileUtils.deleteDirectory(dossierEcoleAImporter);
                 }
 
             }
@@ -108,8 +130,6 @@ public class ImportController {
 
         LOGGER.debug("fin d'import de données : {}", resultatImport);
 
-        // generateEcole("SGL", 4, 10);
-
         Tva tva = new Tva();
         tva.setTva(20.0);
         tva.setDateDebutValidite(DateUtils.parseDate("01/01/2014"));
@@ -118,15 +138,18 @@ public class ImportController {
         return new ImportDTO(resultatImport);
     }
 
-    private void chargeConfigurationEcole(File dossierEcole, int index) throws Exception {
-        LOGGER.debug("dossier ecole : " + dossierEcole.getName());
+    private void chargeConfigurationEcole(File dossierEcole) throws Exception {
+        LOGGER.debug("dossier ecole : {}", dossierEcole.getName());
 
         // On charge la configuration de l'école
         Properties ecolePropertie = new Properties();
-        ecolePropertie.load(new FileInputStream(dossierEcole.getPath() + File.separatorChar + "ecole_donnees.properties"));
+        FileInputStream inEcoleProperties = new FileInputStream(dossierEcole.getPath() + File.separatorChar + "ecole_donnees.properties");
+        ecolePropertie.load(inEcoleProperties);
+        inEcoleProperties.close();
 
         Ecole ecole = new Ecole();
         ecole.setNumeroEcole(ecolePropertie.getProperty("numeroEcole"));
+        ecole.setReferenceTechnique(ecolePropertie.getProperty("referenceTechnique"));
         ecole.setSaison(ecolePropertie.getProperty("saison"));
         ecole.setNomEtablissement(ecolePropertie.getProperty("nomEtablissement"));
         ecole.setAdresseEtablissement(ecolePropertie.getProperty("adresseEtablissement"));
@@ -137,10 +160,17 @@ public class ImportController {
         ecole.setDateLimiteDesCommandesEcoles(DateUtils.parseDate(ecolePropertie.getProperty("dateLimiteDesCommandesEcoles")));
         ecole.setDateLimiteAcces(DateUtils.parseDate(ecolePropertie.getProperty("dateLimiteAcces")));
 
-        // TODO : genérer l'identifiant chiffé
-        ecole.setIdentifiant_chiffre("idChiffreEcole_" + index + ".jpg");
+        ecole.setIdentifiantChiffre(SecuriteUtils.crypterTexte(ecole.getNumeroEcole() + "-" + ecole.getSaison()));
 
         ecoleRepository.save(ecole);
+
+        LOGGER.debug("sauvegarde ecole");
+
+        // Création du dossier dans les data du site
+        File dossierDataEcole = new File(dossierData, ecole.getIdentifiantChiffre());
+        dossierDataEcole.mkdir();
+
+        LOGGER.debug("Création du dossier école {} ", dossierDataEcole);
 
         /* RESPONSABLES */
         String donneesDesResponsables = ecolePropertie.getProperty("identifiantsResponsables");
@@ -180,7 +210,8 @@ public class ImportController {
         LOGGER.debug("Ajout de {} produits à réaliser", nbProduits);
         for (int i = 1; i < nbProduits + 1; i++) {
             Produit produit = new Produit();
-            produit.setIdentifiant(ecolePropertie.getProperty("Modele.produit_" + i + ".identifiant"));
+            produit.setReference(ecolePropertie.getProperty("Modele.produit_" + i + ".reference"));
+            produit.setLabel(ecolePropertie.getProperty("Modele.produit_" + i + ".label"));
             produit.setDesignation(ecolePropertie.getProperty("Modele.produit_" + i + ".designation"));
             LOGGER.debug(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_parent_ht"));
             produit.setPrixParentHT(Double.parseDouble(ecolePropertie.getProperty("Modele.produit_" + i + ".prix_parent_ht")));
@@ -201,29 +232,44 @@ public class ImportController {
                 return name.toLowerCase().startsWith("classe_");
             }
         };
-        int i = 1 + index * 10;
+
         for (File dossierClasse : dossierEcole.listFiles(classeDossierFilter)) {
-            chargeConfigurationClasse(dossierClasse, ecole, i++);
+            chargeConfigurationClasse(dossierClasse, ecole, dossierDataEcole);
         }
 
         ecoleRepository.save(ecole);
 
     }
 
-    private void chargeConfigurationClasse(File dossierClasse, Ecole ecole, int index) throws Exception {
+    private void chargeConfigurationClasse(File dossierClasse, Ecole ecole, File dossierDataEcole) throws Exception {
         LOGGER.debug("dossier classe : " + dossierClasse.getName());
 
         // On charge la configuration de l'école
         Properties classePropertie = new Properties();
-        classePropertie.load(new FileInputStream(dossierClasse.getPath() + File.separatorChar + "classe_donnees.properties"));
+        FileInputStream inClasseProperties = new FileInputStream(dossierClasse.getPath() + File.separatorChar + "classe_donnees.properties");
+        classePropertie.load(inClasseProperties);
+        inClasseProperties.close();
 
         Classe classe = new Classe();
         classe.setNom(classePropertie.getProperty("nom"));
 
-        // TODO : générer l'identifiant chiffré
-        classe.setIdentifiantChiffre("idChiffreClasse_" + index);
+        classe.setIdentifiantChiffre(SecuriteUtils.crypterTexte(ecole.getNumeroEcole() + "-" + classe.getNom()));
 
         classeRepository.save(classe);
+
+        // Création du dossier data de la classe
+        File dossierDataClasse = new File(dossierDataEcole, classe.getIdentifiantChiffre());
+        dossierDataClasse.mkdir();
+
+        LOGGER.debug("Création du dossier classe {} ", dossierDataClasse);
+
+        // Copie du groupe de la classe
+        File fichierGroupeClasse = new File(dossierClasse, "classe_" + classe.getNom() + ".jpg");
+        File dossierDataGroupeClasse = new File(dossierDataClasse, classe.getIdentifiantChiffre() + ".jpg");
+        Files.copy(fichierGroupeClasse.toPath(), dossierDataGroupeClasse.toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+        LOGGER.debug("Copie de la photo de groupe :{} vers {} ", fichierGroupeClasse, dossierDataGroupeClasse);
 
         int nbEleves = Integer.parseInt(classePropertie.getProperty("nbEleves"));
         LOGGER.debug("nbEleves = {}", nbEleves);
@@ -241,7 +287,7 @@ public class ImportController {
             eleve.setDateLimiteAcces(ecole.getDateLimiteAcces());
 
             // TODO générer l'identifiant chiffre
-            eleve.setIdentifiantChiffre("idChiffreEleve_" + (i + index * 10));
+            eleve.setIdentifiantChiffre(SecuriteUtils.crypterTexte(ecole.getNumeroEcole() + "-" + classe.getNom() + "-" + eleve.getIdentifiant()));
 
             LOGGER.debug("Ajout eleve ", identifiant);
 
@@ -265,102 +311,18 @@ public class ImportController {
 
             eleveRepository.save(eleve);
 
+            // Copie fichier avec renommage
+            File dossierPhotoEleve = new File(dossierClasse, eleve.getIdentifiant() + ".jpg");
+            File dossierDataPhotoEleve = new File(dossierDataClasse, eleve.getIdentifiantChiffre() + ".jpg");
+            Files.copy(dossierPhotoEleve.toPath(), dossierDataPhotoEleve.toPath(),
+                            java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+            LOGGER.debug("Copie de la photo :{} vers {} ", dossierPhotoEleve, dossierDataPhotoEleve);
+
         }
 
         classe.setEcole(ecole);
         classeRepository.save(classe);
-    }
-
-    @Autowired
-    CommandeEleveRepository commandeEleveRepository;
-
-    protected Produit PRODUIT_PHOTO_INDIVID;
-
-    protected Produit PRODUIT_PHOTOS_GROUPE;
-
-    protected void initProduits() {
-        Produit produit = produitRepository.findByIdentifiant("PHOTO_INDIVID");
-        if (produit == null) {
-            produit = new Produit();
-            produit.setDesignation("Photo eleve");
-            produit.setIdentifiant("PHOTO_INDIVID");
-            produit.setPrixEcoleHT(10.0);
-            produit.setPrixParentHT(20.0);
-            produit.setOrdre(1);
-            produitRepository.save(produit);
-        }
-        PRODUIT_PHOTO_INDIVID = produit;
-
-        produit = produitRepository.findByIdentifiant("PHOTO_GROUPE");
-        if (produit == null) {
-            produit = new Produit();
-            produit.setDesignation("Photo groupe");
-            produit.setIdentifiant("PHOTO_GROUPE");
-            produit.setPrixEcoleHT(5.0);
-            produit.setPrixParentHT(15.0);
-            produit.setOrdre(1);
-            produitRepository.save(produit);
-        }
-        PRODUIT_PHOTOS_GROUPE = produit;
-
-    }
-
-    public Ecole generateEcole(String prefix, int nbClasse, int nbEleve) {
-
-        initProduits();
-
-        Ecole ecole = new Ecole();
-        ecoleRepository.save(ecole);
-
-        Responsable resp = new Responsable();
-        resp.setNom("aa");
-        resp.setIdentifiant("aa");
-        resp.setCodeAcces("aa");
-        resp.setEcole(ecole);
-        responsableRepository.save(resp);
-
-        ecole.addResponsables(resp);
-        ecoleRepository.save(ecole);
-
-        for (int i = 0; i < nbClasse; i++) {
-            Classe classe = new Classe();
-            classe.setNom("Classe" + "_" + prefix + "_" + i);
-            classe.setIdentifiantChiffre("C" + prefix + "_" + i);
-            classe.setEcole(ecole);
-            classeRepository.save(classe);
-
-            for (int j = 0; j < nbEleve; j++) {
-                Eleve eleve = new Eleve();
-                eleve.setNom("Eleve" + "_" + nbEleve + "_" + j);
-                eleve.setClasse(classe);
-                eleveRepository.save(eleve);
-
-                // Ajoute 1 commande tous les 2 élèves
-                // if (j % 2 == 0) {
-                CommandeEleve commande = new CommandeEleve();
-                commande.setEleve(eleve);
-                commande.setMontantEcoleHT(10.0);
-                commande.setMontantParentHT(15.0);
-                CommandeProduit commandeProduit1 = new CommandeProduit();
-                commandeProduit1.setMontantEcoleHT(PRODUIT_PHOTO_INDIVID.getPrixEcoleHT());
-                commandeProduit1.setMontantParentHT(PRODUIT_PHOTO_INDIVID.getPrixParentHT());
-                commandeProduit1.setQuantite(1);
-                commandeProduit1.setProduit(PRODUIT_PHOTO_INDIVID);
-                commandeProduit1.setCommandeEleve(commande);
-
-                CommandeProduit commandeProduit2 = new CommandeProduit();
-                commandeProduit2.setMontantEcoleHT(PRODUIT_PHOTOS_GROUPE.getPrixEcoleHT());
-                commandeProduit2.setMontantParentHT(PRODUIT_PHOTOS_GROUPE.getPrixParentHT());
-                commandeProduit2.setQuantite(1);
-                commandeProduit2.setProduit(PRODUIT_PHOTOS_GROUPE);
-                commandeProduit2.setCommandeEleve(commande);
-
-                commande.setProduitsCommandes(Arrays.asList(commandeProduit1, commandeProduit2));
-
-                commandeEleveRepository.save(commande);
-            }
-        }
-        return ecole;
     }
 
 }

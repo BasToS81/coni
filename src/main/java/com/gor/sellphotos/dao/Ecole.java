@@ -25,6 +25,9 @@ public class Ecole {
     private String identifiantChiffre;
 
     @Basic
+    private String referenceTechnique;
+
+    @Basic
     private String numeroEcole;
 
     @Basic
@@ -90,14 +93,13 @@ public class Ecole {
      * @return the identifiant_chiffre
      */
     public String getIdentifiantChiffre() {
-        /* TODO : Mettre à jour l'identifiant chiffre */
-        return "idChiffreEcole_" + getId();
+        return this.identifiantChiffre;
     }
 
     /**
      * @param identifiant_chiffre the identifiant_chiffre to set
      */
-    public void setIdentifiant_chiffre(String identifiantChiffre) {
+    public void setIdentifiantChiffre(String identifiantChiffre) {
         this.identifiantChiffre = identifiantChiffre;
     }
 
@@ -334,6 +336,20 @@ public class Ecole {
     public String toString() {
         return "Utilisateur [id=" + id + ", nom=" + nomEtablissement + ", numeroEcole=" + numeroEcole + ", identifiant_chiffre=" + identifiantChiffre
                         + ", ville=" + villeEtablissement + "]";
+    }
+
+    /**
+     * @return the referenceTechnique
+     */
+    public String getReferenceTechnique() {
+        return referenceTechnique;
+    }
+
+    /**
+     * @param referenceTechnique the referenceTechnique to set
+     */
+    public void setReferenceTechnique(String referenceTechnique) {
+        this.referenceTechnique = referenceTechnique;
     }
 
 }

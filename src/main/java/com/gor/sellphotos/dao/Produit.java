@@ -14,7 +14,10 @@ public class Produit {
     private Long id;
 
     @Basic
-    private String identifiant;
+    private String reference;
+
+    @Basic
+    private String label;
 
     @Basic
     private String designation;
@@ -40,20 +43,6 @@ public class Produit {
      */
     public void setId(Long id) {
         this.id = id;
-    }
-
-    /**
-     * @return the identifiant
-     */
-    public String getIdentifiant() {
-        return identifiant;
-    }
-
-    /**
-     * @param identifiant the identifiant to set
-     */
-    public void setIdentifiant(String identifiant) {
-        this.identifiant = identifiant;
     }
 
     /**
@@ -114,9 +103,37 @@ public class Produit {
 
     @Override
     public String toString() {
-        return "Produit [id=" + id + ", designation=" + designation + ", identifiant=" + identifiant + ", PrixParentHT=" + prixParentHT + ", PrixEcoleHT="
+        return "Produit [id=" + id + ", designation=" + designation + ", reference=" + reference + ", PrixParentHT=" + prixParentHT + ", PrixEcoleHT="
                         + prixEcoleHT + ", ordre=" + ordre
                         + "]";
+    }
+
+    /**
+     * @return the reference
+     */
+    public String getReference() {
+        return reference;
+    }
+
+    /**
+     * @param reference the reference to set
+     */
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    /**
+     * @return the label
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * @param label the label to set
+     */
+    public void setLabel(String label) {
+        this.label = label;
     }
 
 }

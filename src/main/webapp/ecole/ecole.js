@@ -340,6 +340,13 @@ myApp.controller('EcoleCommandeVisualisationCtrl', ['$scope', '$http', '$state',
 myApp.controller('EcoleCommandesCtrl', [ '$scope', '$http', '$state', 'Auth', '$stateParams', function($scope, $http, $state, Auth, $stateParams) {
 	$scope.commandes = null;
 	$scope.commandesNonPayees = null;
+	$scope.achatTotal=0;
+	$scope.venteTotal=0;
+
+	$scope.calculTotal = function(achat, vente) {
+		$scope.achatTotal=achat+$scope.achatTotal;
+		$scope.venteTotal=vente+$scope.venteTotal;
+	}
 	
 	
 	$scope.getCommandesList = function() { 
@@ -391,6 +398,22 @@ myApp.controller('EcoleClasseCommandeCtrl', ['$scope', '$http', '$state', 'Auth'
 	$scope.edition = false;
 	
 	$scope.montantTotal=[];
+	
+	// gestion du systeme de page
+	$scope.totalItems = $scope.classe.modeleEtTarif.produits.length;
+	$scope.currentPage = 1;
+	$scope.setPage = function (pageNo) {
+	  $scope.currentPage = pageNo;
+	};
+	
+	$scope.pageChanged = function() {
+	  //$log.log('Page changed to: ' + $scope.currentPage);
+	};
+	
+	$scope.maxSize = 7;
+	//$scope.bigTotalItems = 175;
+	//$scope.bigCurrentPage = 1;
+	// fin gestion du systeme de page	
 	
 	
 	$scope.calcul = function( commandeEnCours, produit ) { 

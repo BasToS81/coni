@@ -14,7 +14,7 @@ public interface ProduitRepository extends CrudRepository<Produit, Long> {
                     "FROM ModeleEtTarif mt LEFT JOIN mt.produits p " +
                     "WHERE mt.id = :idModele";
 
-    public Produit findByIdentifiant(String identifiant);
+    public Produit findByReference(String reference);
 
     @Query(FIND_BY_MODELE)
     public List<Produit> findByModele(@Param("idModele") Long idModele);

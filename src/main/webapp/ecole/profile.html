@@ -102,6 +102,7 @@
 								<th>Date de la commande</th>
 								<th>Montant d'achat</th>
 								<th>Montant de vente</th>
+								<th>Bénéfices</th>
 								<th>&nbsp;</th>
 							</tr>
 						</thead>
@@ -112,6 +113,9 @@
 								<td>{{commande.dateCommande}}</td>
 								<td>{{commande.montantEcoleTTC | number : 2 }} €</td>
 								<td>{{commande.montantParentTTC | number : 2 }} €</td>
+								<td ng-init="calculTotal(commande.montantEcoleTTC,commande.montantParentTTC)">
+									{{commande.montantParentTTC-commande.montantEcoleTTC | number : 2 }} €
+								</td>
 								<td>
 									<button title="Visualiser la commande"
 										class="btn btn-sm btn-success"
@@ -126,6 +130,15 @@
 										<span class="glyphicon glyphicon-remove"></span>
 									</button>
 								</td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td><h5>{{ achatTotal | number : 2 }} €</h5></td>
+								<td><h5>{{ venteTotal | number : 2 }} €</h5></td>
+								<td><h5>{{ venteTotal-achatTotal | number : 2 }} €</h5></td>
+								<td>&nbsp;</td>
 							</tr>
 						</tbody>
 					</table>
