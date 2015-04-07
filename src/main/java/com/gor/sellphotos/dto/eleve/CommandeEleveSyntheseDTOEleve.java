@@ -1,5 +1,9 @@
 package com.gor.sellphotos.dto.eleve;
 
+import java.util.Date;
+
+import com.gor.sellphotos.utils.DateUtils;
+
 public class CommandeEleveSyntheseDTOEleve {
 
     private Long identifiant;
@@ -162,4 +166,24 @@ public class CommandeEleveSyntheseDTOEleve {
         this.statutPaiement = statutPaiement;
     }
 
+    /**
+     * @param dateCommande the dateCommande to set
+     */
+    public void setDateCommandeFromDate(Date dateCommande) {
+        this.dateCommande = DateUtils.formatDate(dateCommande);
+    }
+
+    /**
+     * @param dateLivraison the dateLivraison to set
+     */
+    public void setDateLivraisonFromDate(Date dateLivraison) {
+        this.dateLivraison = DateUtils.formatDate(dateLivraison);
+    }
+
+    /**
+     * @param dateValidation the dateValidation to set
+     */
+    public void setDateValidationFromDate(Date dateValidation) {
+        this.dateValidation = DateUtils.formatDate(dateValidation);
+    }
 }

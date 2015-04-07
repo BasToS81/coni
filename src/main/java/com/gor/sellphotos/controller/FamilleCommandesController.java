@@ -31,6 +31,7 @@ import com.gor.sellphotos.dto.eleve.CommandeEleveDTOEleve;
 import com.gor.sellphotos.dto.eleve.CommandeEleveSyntheseDTOEleve;
 import com.gor.sellphotos.dto.eleve.CommandeFamilleDTOEleve;
 import com.gor.sellphotos.dto.eleve.CommandeProduitDTOEleve;
+import com.gor.sellphotos.exception.SellPhotosException;
 import com.gor.sellphotos.repository.CommandeEleveRepository;
 import com.gor.sellphotos.repository.CommandeFamilleRepository;
 import com.gor.sellphotos.repository.CommandeProduitRepository;
@@ -97,6 +98,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
             cmdDTO = MapperUtils.convert(commandeFamille, CommandeEleveSyntheseDTOEleve.class);
 
+            // Récupération de la TVA à la date de validation de la commande.
             double tva = FinanceUtils.getTVAValue(commandeFamille.getDateValidation(), tvaRepository);
 
             cmdDTO.setTva(tva);
@@ -193,8 +195,6 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("loading commande for update ");
 
-        /* TODO : S'assurer que c'est bien la commande de l'élève */
-
         // récupérer la commande modifiable.
         Famille fam = familleRepository.findByIdentifiantUtilisateur(identifiantEleve);
         CommandeFamille cmdFamille = fam.getCommandeEnCours();
@@ -203,7 +203,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
             // Pas de commande pour cette famille en cours.
             // création de celle ci
             resultat = createCommandeFamille(authentication);
-        } else {
+        }
+        else {
             LOGGER.debug("commande famille : {}", cmdFamille.getIdentifiant());
             // récupération de la commnade existante
             resultat = getCommandeFamilleEtProduits(identifiantEcole, cmdFamille);
@@ -220,7 +221,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         commandeFamilleDTO = MapperUtils.convert(cmdFamille, CommandeFamilleDTOEleve.class);
 
-        double tva = FinanceUtils.getTVAValue(null, tvaRepository);
+        // Récupérer la tva actuelle
+        double tva = FinanceUtils.getCurrentTVA(tvaRepository);
         commandeFamilleDTO.setTva(tva);
 
         for (Eleve elev : cmdFamille.getFamille().getEleves()) {
@@ -266,8 +268,6 @@ public class FamilleCommandesController extends AbstractRestHandler {
             List<Produit> listeDesProduitsDuModele = null;
 
             listeDesProduitsDuModele = produitRepository.findByModele(modele.getId());
-
-            /* TODO : améliorer l'algorithme en copiant les produits commandés et en retirant ceux trouvés de la liste pour diminuer le nombre de recherche. */
 
             for (Produit produit : listeDesProduitsDuModele) {
 
@@ -319,16 +319,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
         String identifiantEleve = sessionData.getIdentifiantUtilisateur();
         Long identifiantEcole = sessionData.getIdentifiantEcole();
 
-        // TODO verifier que la commande appartient bien à l'élève et que l'élève appartien bien à l'école.
+        CommandeFamille cmdFamilleEnBase =
+                        commandeFamilleRepository.findByIdentifiantEtIdEleveEtIdEcole(identifiantCommande, identifiantEleve, identifiantEcole);
 
-        CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
+        LOGGER.debug("loading commande id={}, cmd={}", identifiantCommande, cmdFamilleEnBase);
 
-        LOGGER.debug("loading commande {}", identifiantCommande);
-
-        /* TODO : S'assurer que c'est bien la commande de l'élève */
-        CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
-
-        return getCommandeFamilleDTO(cmdFamille);
+        return getCommandeFamilleDTO(cmdFamilleEnBase);
 
     }
 
@@ -345,8 +341,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("loading commande {}", identifiantCommandeEnCours);
 
-        /* TODO : S'assurer que c'est bien la commande de l'élève */
-        CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommandeEnCours);
+        CommandeFamille cmdFamilleEnBase =
+                        commandeFamilleRepository.findByIdentifiantEtIdEleveEtIdEcole(identifiantCommandeEnCours, identifiantEleve, identifiantEcole);
+
+        if (cmdFamilleEnBase == null) {
+            throw new SellPhotosException(SellPhotosException.COMMANDE_NON_TROUVEE);
+        }
 
         return getCommandeFamilleDTO(cmdFamilleEnBase);
 
@@ -357,6 +357,7 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         commandeFamilleDTO = MapperUtils.convert(cmdFamille, CommandeFamilleDTOEleve.class);
 
+        // Récupération de la tva à la date de la validation de la commande
         double tva = FinanceUtils.getTVAValue(cmdFamille.getDateValidation(), tvaRepository);
         commandeFamilleDTO.setTva(tva);
 
@@ -390,7 +391,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("saving commande en cours : {}", identifiantCommandeEnCours);
 
-        CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommandeEnCours);
+        CommandeFamille cmdFamilleEnBase =
+                        commandeFamilleRepository.findByIdentifiantEtIdEleveEtIdEcole(identifiantCommandeEnCours, identifiantEleve, identifiantEcole);
+
+        if (cmdFamilleEnBase == null) {
+            throw new SellPhotosException("COMMANDE_NON_TROUVEE");
+        }
 
         return saveCommande(authentication, commandeFamille, identifiantEcole, cmdFamilleEnBase);
     }
@@ -408,7 +414,12 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("saving Mode Paiement commande en cours : {}", identifiantCommandeEnCours);
 
-        CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommandeEnCours);
+        CommandeFamille cmdFamilleEnBase =
+                        commandeFamilleRepository.findByIdentifiantEtIdEleveEtIdEcole(identifiantCommandeEnCours, identifiantEleve, identifiantEcole);
+
+        if (cmdFamilleEnBase == null) {
+            throw new SellPhotosException("COMMANDE_NON_TROUVEE");
+        }
 
         if (commandeFamille.getMoyenPaiement() != null) {
             cmdFamilleEnBase.setMoyenPaiement(commandeFamille.getMoyenPaiement());
@@ -430,10 +441,14 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
         LOGGER.debug("validate commande en cours{}", identifiantCommandeEnCours);
 
-        CommandeFamille cmdFamilleEnBase = commandeFamilleRepository.findByIdentifiant(identifiantCommandeEnCours);
+        CommandeFamille cmdFamilleEnBase =
+                        commandeFamilleRepository.findByIdentifiantEtIdEleveEtIdEcole(identifiantCommandeEnCours, identifiantEleve, identifiantEcole);
+
+        if (cmdFamilleEnBase == null) {
+            throw new SellPhotosException("COMMANDE_NON_TROUVEE");
+        }
 
         // Sauvegarde du moyen de paiement
-
         if (commandeFamille.getMoyenPaiement() != null) {
             cmdFamilleEnBase.setMoyenPaiement(commandeFamille.getMoyenPaiement());
         }
@@ -442,7 +457,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
         cmdFamilleEnBase.setStatut(StatutCommandeFamille.EN_ATTENTE_VALID_RESPONSABLE);
         if ("INTERNET".compareTo(cmdFamilleEnBase.getMoyenPaiement()) == 0) {
             cmdFamilleEnBase.setStatutPaiement(StatutPaiementCommandeFamille.PAYE);
-        } else {
+        }
+        else {
             cmdFamilleEnBase.setStatutPaiement(StatutPaiementCommandeFamille.NON_PAYE);
         }
 
@@ -472,7 +488,8 @@ public class FamilleCommandesController extends AbstractRestHandler {
             }
         }
 
-        double tva = FinanceUtils.getTVAValue(nouvelleCommandeFamille.getDateValidation(), tvaRepository);
+        // Récupération de la TVA courrante (commande non validée encore).
+        double tva = FinanceUtils.getCurrentTVA(tvaRepository);
 
         cmdFamilleEnBase.setCommandesEleve(new ArrayList<CommandeEleve>());
         cmdFamilleEnBase.setMontantParentHT(0);
@@ -488,14 +505,22 @@ public class FamilleCommandesController extends AbstractRestHandler {
 
             // création des nouvelles données
             CommandeEleve cmd = new CommandeEleve();
-            cmd.setEleve(eleveRepository.findByIdentifiant(cmdDTO.getEleve().getIdentifiant()));
+            Eleve eleve = eleveRepository.findByIdentifiant(cmdDTO.getEleve().getIdentifiant());
+            if (eleve == null) {
+                throw new SellPhotosException(SellPhotosException.ELEVE_NON_TROUVE);
+            }
+            if (!cmdFamilleEnBase.getFamille().getEleves().contains(eleve)) {
+                // Si la famille contient bien l'élève alors on remonte une erreur
+                throw new SellPhotosException(SellPhotosException.ELEVE_NON_EXISTANT_DANS_FAMILLE);
+            }
+            cmd.setEleve(eleve);
             cmd.setFamille(cmdFamilleEnBase.getFamille());
             cmd.setCommandeFamille(cmdFamilleEnBase);
 
             ModeleEtTarif modele = modeleEtTarifRepository.findByIdEcole(identifiantEcole);
             List<Produit> listeDesProduitsDuModele = produitRepository.findByModele(modele.getId());
 
-            /* TODO : améliorer l'algorithme en copiant les produits commandés et en retirant ceux trouvés de la liste pour diminuer le nombre de recherche. */
+            /* L'algorithme permet de s'assurer que les produits en entrées sont bien ceux du modele de l'école */
 
             for (Produit produit : listeDesProduitsDuModele) {
 
@@ -543,9 +568,15 @@ public class FamilleCommandesController extends AbstractRestHandler {
     public List<CommandeEleveSyntheseDTOEleve> deleteCommandeFamille(@RequestParam("identifiant") Long identifiantCommande, Authentication authentication) {
         LOGGER.debug("deleting commande {}", identifiantCommande);
 
-        // TODO: Check if commande appartient bien à l'utilisateur OK
+        SecuritySessionData sessionData = ((UPAWithSessionDataToken) authentication).getSessionData();
+        String identifiantEleve = sessionData.getIdentifiantUtilisateur();
+        Long identifiantEcole = sessionData.getIdentifiantEcole();
 
-        CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiant(identifiantCommande);
+        CommandeFamille cmdFamille = commandeFamilleRepository.findByIdentifiantEtIdEleveEtIdEcole(identifiantCommande, identifiantEleve, identifiantEcole);
+        if (cmdFamille == null) {
+            LOGGER.debug("Identifiant Ecole= {}, identifiant eleve={}", identifiantEcole, identifiantEleve);
+            throw new SellPhotosException(SellPhotosException.COMMANDE_NON_TROUVEE);
+        }
         for (CommandeEleve cmd : cmdFamille.getCommandesEleve()) {
             for (CommandeProduit cmdProd : cmd.getProduitsCommandes()) {
                 commandeProduitRepository.delete(cmdProd);
@@ -557,5 +588,4 @@ public class FamilleCommandesController extends AbstractRestHandler {
         LOGGER.debug(" end deleting commande {}", cmdFamille);
         return getCommandesFamille(authentication);
     }
-
 }

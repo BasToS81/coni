@@ -16,6 +16,12 @@ public interface CommandeFamilleRepository extends CrudRepository<CommandeFamill
     public final static String FIND_BY_ID_ELEVE = "SELECT cf " + "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf " + "LEFT JOIN ce.eleve e "
                     + "WHERE e.identifiant = :idEleve";
 
+    public final static String FIND_BY_IDENTIFIANT_ET_ID_ELEVE_ET_ID_ECOLE = "SELECT cf FROM Eleve e , CommandeFamille cf "
+                    + " INNER JOIN e.famille f "
+                    + "WHERE e.identifiant = :idEleve AND cf MEMBER OF f.commandes "
+                    + " AND f.ecole.id = :idEcole "
+                    + " AND cf.identifiant = :idCommande ";
+
     public final static String FIND_VALIDATE_BY_ID_ELEVE = "SELECT cf " + "FROM CommandeEleve ce LEFT JOIN ce.commandeFamille cf " + "LEFT JOIN ce.eleve e "
                     + "WHERE e.identifiant = :idEleve and cf.statut in ('EN_ATTENTE_VALID_RESPONSABLE')";
 
@@ -40,6 +46,10 @@ public interface CommandeFamilleRepository extends CrudRepository<CommandeFamill
                     + "WHERE e.id = :idEcole AND cf.statutPaiement = 'NON_PAYE' ";
 
     public CommandeFamille findByIdentifiant(Long identifiant);
+
+    @Query(FIND_BY_IDENTIFIANT_ET_ID_ELEVE_ET_ID_ECOLE)
+    public CommandeFamille findByIdentifiantEtIdEleveEtIdEcole(@Param("idCommande") Long identifiant, @Param("idEleve") String identifiantEleve,
+                    @Param("idEcole") Long identifiantEcole);
 
     @Query(FIND_BY_ID_ELEVE)
     public List<CommandeFamille> findByIdentifiantEleve(@Param("idEleve") String identifiantEleve);

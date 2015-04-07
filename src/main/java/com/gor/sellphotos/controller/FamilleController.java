@@ -64,13 +64,14 @@ public class FamilleController extends AbstractRestHandler {
             // Ajout des éléments de sécurité
             sessionData.setIdentifiantEcole(famille.getEcole().getId());
             sessionData.setIdentifiantChiffreEcole(famille.getEcole().getIdentifiantChiffre());
+            LOGGER.debug("Ajout des données d'école dans la session : {}", sessionData.getIdentifiantEcole());
 
             List<EleveDTO> elevesDTO = new ArrayList<EleveDTO>();
             for (Eleve eleve : famille.getEleves()) {
                 EleveDTO eleveDTO = new EleveDTO();
-                LOGGER.debug("ecole : " + famille.getEcole().toString());
-                LOGGER.debug("eleve : " + eleve.toString());
-                LOGGER.debug("classe : " + eleve.getClasse().toString());
+                LOGGER.debug("ecole : {}", famille.getEcole().toString());
+                LOGGER.debug("eleve : ecole :", eleve.toString());
+                LOGGER.debug("classe : ecole :", eleve.getClasse().toString());
                 eleveDTO.setCheminAccesImageEleve(famille.getEcole().getIdentifiantChiffre() + "/" + eleve.getClasse().getIdentifiantChiffre() + "/"
                                 + eleve.getIdentifiantChiffre());
 
@@ -92,5 +93,4 @@ public class FamilleController extends AbstractRestHandler {
         LOGGER.debug("famille {}", famille);
         return familleDTO;
     }
-
 }

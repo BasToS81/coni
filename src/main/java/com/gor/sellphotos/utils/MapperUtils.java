@@ -15,6 +15,7 @@ import com.gor.sellphotos.dao.Ecole;
 import com.gor.sellphotos.dto.EcoleDTO;
 import com.gor.sellphotos.dto.ecole.CommandeEcoleDTO;
 import com.gor.sellphotos.dto.ecole.CommandeFamilleDTOEcole;
+import com.gor.sellphotos.dto.eleve.CommandeEleveSyntheseDTOEleve;
 
 public class MapperUtils {
 
@@ -67,12 +68,34 @@ public class MapperUtils {
                                 b.setDateLivraisonFromDate(a.getDateLivraison());
                                 b.setDateValidationFromDate(a.getDateValidation());
 
-                                LOGGER.debug("map CommandeEcole to CommandeEcoleDTO {}", a);
+                                LOGGER.debug("map CommandeEcole to CommandeFamilleDTOEcole {}", a);
                             }
 
                         }
                         ).register();
+        factory.classMap(CommandeFamille.class, CommandeEleveSyntheseDTOEleve.class).byDefault().customize(
 
+                        new CustomMapper<CommandeFamille, CommandeEleveSyntheseDTOEleve>() {
+
+                            /*
+                             * (non-Javadoc)
+                             * @see ma.glasnost.orika.CustomMapper#mapAtoB(java.lang.Object, java.lang.Object, ma.glasnost.orika.MappingContext)
+                             */
+                            @Override
+                            public void mapAtoB(CommandeFamille a, CommandeEleveSyntheseDTOEleve b, MappingContext context) {
+                                // TODO Auto-generated method stub
+                                super.mapAtoB(a, b, context);
+
+                                // add your custom mapping code here
+                                b.setDateCommandeFromDate(a.getDateCommande());
+                                b.setDateLivraisonFromDate(a.getDateLivraison());
+                                b.setDateValidationFromDate(a.getDateValidation());
+
+                                LOGGER.debug("map CommandeEcole to CommandeEleveSyntheseDTOEleve {}", a);
+                            }
+
+                        }
+                        ).register();
         LOGGER.debug("register map CommandeEcole to CommandeEcoleDTO");
         mapper = factory.getMapperFacade();
     }
