@@ -158,7 +158,8 @@ public class ImportController {
         ecole.setNomResponsablePrincipal(ecolePropertie.getProperty("nomResponsablePrincipal"));
         ecole.setDateLimiteDesCommandesEleves(DateUtils.parseDate(ecolePropertie.getProperty("dateLimiteDesCommandesEleves")));
         ecole.setDateLimiteDesCommandesEcoles(DateUtils.parseDate(ecolePropertie.getProperty("dateLimiteDesCommandesEcoles")));
-        ecole.setDateLimiteAcces(DateUtils.parseDate(ecolePropertie.getProperty("dateLimiteAcces")));
+        ecole.setDateLimiteAccesEcole(DateUtils.parseDate(ecolePropertie.getProperty("dateLimiteAccesEcole")));
+        ecole.setDateLimiteAccesEleves(DateUtils.parseDate(ecolePropertie.getProperty("dateLimiteAccesEleves")));
 
         ecole.setIdentifiantChiffre(SecuriteUtils.crypterTexte(ecole.getNumeroEcole() + "-" + ecole.getSaison()));
 
@@ -188,6 +189,7 @@ public class ImportController {
                     resp.setIdentifiant(listDonneesDuResponsable[1]);
                     resp.setCodeAcces(listDonneesDuResponsable[2]);
                     resp.setEcole(ecole);
+                    resp.setDateLimiteAcces(ecole.getDateLimiteAccesEcole());
                     responsableRepository.save(resp);
                     ecole.addResponsables(resp);
                     // sauvegarde du responsable
@@ -284,7 +286,7 @@ public class ImportController {
             if (eleve.getNom() == null || eleve.getNom().length() == 0) {
                 eleve.setNom(eleve.getIdentifiant());
             }
-            eleve.setDateLimiteAcces(ecole.getDateLimiteAcces());
+            eleve.setDateLimiteAcces(ecole.getDateLimiteAccesEleves());
 
             // TODO générer l'identifiant chiffre
             eleve.setIdentifiantChiffre(SecuriteUtils.crypterTexte(ecole.getNumeroEcole() + "-" + classe.getNom() + "-" + eleve.getIdentifiant()));

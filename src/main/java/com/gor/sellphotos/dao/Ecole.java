@@ -67,7 +67,10 @@ public class Ecole {
     private Date dateLimiteDesCommandesEcoles;
 
     @Basic
-    private Date dateLimiteAcces;
+    private Date dateLimiteAccesEcole;
+
+    @Basic
+    private Date dateLimiteAccesEleves;
 
     public Ecole() {
         responsables = new ArrayList<Responsable>();
@@ -318,20 +321,6 @@ public class Ecole {
         this.dateLimiteDesCommandesEcoles = dateLimiteDesCommandesEcoles;
     }
 
-    /**
-     * @return the dateLimiteAcces
-     */
-    public Date getDateLimiteAcces() {
-        return dateLimiteAcces;
-    }
-
-    /**
-     * @param dateLimiteAcces the dateLimiteAcces to set
-     */
-    public void setDateLimiteAcces(Date dateLimiteAcces) {
-        this.dateLimiteAcces = dateLimiteAcces;
-    }
-
     @Override
     public String toString() {
         return "Utilisateur [id=" + id + ", nom=" + nomEtablissement + ", numeroEcole=" + numeroEcole + ", identifiant_chiffre=" + identifiantChiffre
@@ -350,6 +339,34 @@ public class Ecole {
      */
     public void setReferenceTechnique(String referenceTechnique) {
         this.referenceTechnique = referenceTechnique;
+    }
+
+    /**
+     * @return the dateLimiteAccesEcole
+     */
+    public Date getDateLimiteAccesEcole() {
+        return dateLimiteAccesEcole;
+    }
+
+    /**
+     * @param dateLimiteAccesEcole the dateLimiteAccesEcole to set
+     */
+    public void setDateLimiteAccesEcole(Date dateLimiteAccesEcole) {
+        this.dateLimiteAccesEcole = dateLimiteAccesEcole;
+    }
+
+    /**
+     * @return the dateLimiteAccesEleves
+     */
+    public Date getDateLimiteAccesEleves() {
+        return dateLimiteAccesEleves;
+    }
+
+    /**
+     * @param dateLimiteAccesEleves the dateLimiteAccesEleves to set
+     */
+    public void setDateLimiteAccesEleves(Date dateLimiteAccesEleves) {
+        this.dateLimiteAccesEleves = dateLimiteAccesEleves;
     }
 
 }
